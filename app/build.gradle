@@ -1,0 +1,87 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.kapt'
+    id 'dagger.hilt.android.plugin'
+}
+
+android {
+    namespace 'ru.sign.conditional.diplomanework'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "ru.sign.conditional.diplomanework"
+        minSdk 24
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures.viewBinding = true
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "BASE_URL", '"https://netomedia.ru"'
+        }
+        debug {
+            buildConfigField "String", "BASE_URL", '"https://netomedia.ru"'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    def core_version = "1.10.1"
+    def appcompat_version = "1.6.1"
+    def activity_version = "1.7.2"
+    def mdc_version = "1.9.0"
+    def constraint_layout_version = "2.1.4"
+    def lifecycle_version = "2.6.1"
+    def navigation_version = "2.5.3"
+    def room_version = "2.5.1"
+    def glide_version = "4.14.2"
+    def retrofit_version = "2.9.0"
+    def coroutines_version = "1.6.4"
+    def paging_version = "3.1.1"
+    def exoplayer_version = "1.0.2"
+    def junit_version = "4.13.2"
+    def test_ext_version = "1.1.5"
+    def test_espresso_version = "3.5.1"
+
+    implementation "androidx.core:core-ktx:$core_version"
+    implementation "androidx.appcompat:appcompat:$appcompat_version"
+    implementation "com.google.android.material:material:$mdc_version"
+    implementation "androidx.constraintlayout:constraintlayout:$constraint_layout_version"
+    implementation "androidx.activity:activity-ktx:$activity_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    implementation "androidx.paging:paging-runtime-ktx:$paging_version"
+    implementation "androidx.room:room-paging:$room_version"
+    implementation "androidx.media3:media3-exoplayer:$exoplayer_version"
+    implementation "androidx.media3:media3-ui:$exoplayer_version"
+
+    kapt "androidx.room:room-compiler:$room_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+
+    testImplementation "junit:junit:$junit_version"
+    androidTestImplementation "androidx.test.ext:junit:$test_ext_version"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$test_espresso_version"
+}
