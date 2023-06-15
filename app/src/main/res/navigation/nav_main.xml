@@ -12,4 +12,9 @@
 
     </fragment>
 
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="ru.sign.conditional.diplomanework.activity.LoginFragment"
+        tools:layout="@layout/fragment_login"/>
+
 </navigation>

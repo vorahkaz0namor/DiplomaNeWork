@@ -1,0 +1,37 @@
+{
+  "id": 2,
+  "authorId": 1,
+  "author": "\u041d\u0438\u043a\u0438\u0442\u0430",
+  "authorAvatar": "@sample/avatar",
+  "authorJob": null,
+  "content": "В 2004 году или около того Майкл Физерс прислал мне электронное письмо, в котором сообщил, что если переупорядочить мои принципы, из их первых букв можно составить слово SOLID — так появились принципы SOLID.\n1. SRP: Single Responsibility Principle — принцип единственной ответственности.\n2.  OCP: Open-Closed Principle — принцип открытости/закрытости.\n3. LSP: Liskov Substitution Principle — принцип подстановки Барбары Лисков.\n4. ISP: Interface Segregation Principle — принцип разделения интерфейсов.\n5. DIP: Dependency Inversion Principle — принцип инверсии зависимости.",
+  "published": "2022-07-13T12:52:00.568267Z",
+  "coords": {
+    "lat": "0.000000",
+    "long": "0.000000"
+  },
+  "link": "https://www.youtube.com/playlist?listPLrCZzMib1e9ptI7bPXFG8X5xEiCBt5qYE",
+  "likeOwnerIds": [3, 19, 7],
+  "mentionIds": [],
+  "mentionedMe": false,
+  "likedByMe": false,
+  "attachment": {
+    "url": "https://ik.imagekit.io/jwudrxfj5ek/64e1ebe0-62cf-47b9-8bef-b83b1024ca25._zRXaLdWj5.jpeg",
+    "type": "IMAGE"
+  },
+  "ownedByMe": false,
+  "users": {
+    "19": {
+      "name": "\u041c\u0430\u043a\u0441\u0438\u043c \u041f\u0435\u0443\u0448\u0430",
+      "avatar": "https://ik.imagekit.io/jwudrxfj5ek/4bb076c9-ed7e-497e-bad4-a8236ec21edb.__-Jg0nasn.jpg"
+    },
+    "7": {
+      "name": "Stanislav",
+      "avatar": null
+    },
+    "3": {
+      "name": "Artem",
+      "avatar": "https://ik.imagekit.io/jwudrxfj5ek/ebc00137-a25f-4ef6-8b15-7b31587f24bb._c3xNLvlFOf.jpg"
+    }
+  }
+}
