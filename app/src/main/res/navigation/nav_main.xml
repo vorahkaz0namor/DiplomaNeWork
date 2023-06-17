@@ -9,12 +9,19 @@
         android:id="@+id/feedFragment"
         android:name="ru.sign.conditional.diplomanework.activity.FeedFragment"
         tools:layout="@layout/fragment_feed">
-
+        <action
+            android:id="@+id/action_feedFragment_to_editPostFragment"
+            app:destination="@id/editPostFragment"/>
     </fragment>
 
     <fragment
         android:id="@+id/loginFragment"
         android:name="ru.sign.conditional.diplomanework.activity.LoginFragment"
         tools:layout="@layout/fragment_login"/>
+
+    <fragment
+        android:id="@+id/editPostFragment"
+        android:name="ru.sign.conditional.diplomanework.activity.EditPostFragment"
+        tools:layout="@layout/fragment_edit_post"/>
 
 </navigation>

@@ -33,4 +33,16 @@
     <string name="jobs_item">Jobs</string>
     <string name="empty_posts_message">The posts list is empty.\nWhen you create a new post, it will appear here.</string>
     <string name="retry_loading">Retry</string>
+    <string name="new_post">Create new post…</string>
+    <string name="attachment_preview">Attachment_preview</string>
+    <string name="delete_attachment">Delete attachment</string>
+    <string name="add_from_gallery">Add image from gallery</string>
+    <string name="add_from_camera">Add image from camera</string>
+    <string name="error_loading">Loading image error</string>
+    <string name="new_post_was_created">New post was created successfully</string>
+    <string name="the_post_was_edited">The post was edited successfully</string>
+    <string name="error_saving">The post wasn\'t saved on server…\n(%1$s)\nTry to repeat saving from the post card.</string>
+    <string name="error_editing">The edited post wasn\'t saved…\n(%1$s)</string>
+    <string name="publish_post">Publish post</string>
+    <string name="empty_content">Content of the post can\'t be empty!</string>
 </resources>

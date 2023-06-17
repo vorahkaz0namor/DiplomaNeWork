@@ -169,28 +169,33 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                     }
                 }
             }
+            // Редактирование поста
             edited.observe(viewLifecycleOwner) { post ->
                 if (post.id != 0)
-                    navController
+                    navController.navigate(
+                        R.id.action_feedFragment_to_editPostFragment
+                    )
             }
+            // Переход на карточку поста
             viewScopeWithRepeat {
                 singlePost.collectLatest { post ->
                     if (post != null && post.id != 0)
                         navController
                 }
             }
-            viewScopeWithRepeat {
-                viewAttachment.collectLatest { post ->
-                    if (post.id != 0)
-                        navController
-                }
+            // Просмотр вложения поста
+            viewAttachment.observe(viewLifecycleOwner) { post ->
+                if (post.id != 0)
+                    navController
             }
         }
         authViewModel.apply {
+            // Изменение состяния аутентификации
             data.observe(viewLifecycleOwner) {
                 snackbarDismiss()
                 postAdapter.refresh()
             }
+            // Проверка авторизации
             checkAuthorized.observe(viewLifecycleOwner) {
                 if (it) {
                     if (!authorized)
@@ -200,6 +205,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                         )
                 }
             }
+            // Проброс ошибки аутентификации
             authError.observe(viewLifecycleOwner) { code ->
                 if (code != HTTP_OK &&
                     (code != HTTP_BAD_REQUEST ||
@@ -213,6 +219,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
 
     private fun setupListeners() {
         binding.recyclerView.apply {
+            // Создание нового поста
             addNewPost.setOnClickListener {
                 if (!authViewModel.authorized)
                     AuthDialogFragment().show(
@@ -221,22 +228,14 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                     )
                 else {
                     postViewModel.getDraftCopy()
-                    navController
+                    navController.navigate(
+                        R.id.action_feedFragment_to_editPostFragment
+                    )
                 }
             }
+            // Обновление списка постов после свайпа по нему
             postsRefresh.setOnRefreshListener {
                 postAdapter.refresh()
-            }
-        }
-    }
-
-    private fun firstStart() {
-        authViewModel.apply {
-            data.observe(viewLifecycleOwner) {
-                binding.progressBarView.apply {
-                    progressBar.isVisible = !authorized
-                    progressBarInverse.isVisible = authorized
-                }
             }
         }
     }

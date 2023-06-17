@@ -94,12 +94,8 @@
             android:id="@+id/clear_avatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Widget.AppTheme.MenuButton"
+            style="@style/Widget.AppTheme.ClearAvatarButton"
             app:icon="@drawable/ic_cancel_or_clear_24"
-            app:iconTint="@color/ripple_button"
-            app:iconSize="@dimen/avatar_cancel"
-            app:layout_constraintHeight="@dimen/avatar_cancel"
-            app:layout_constraintWidth="@dimen/avatar_cancel"
             app:layout_constraintEnd_toEndOf="@id/avatar_preview"
             app:layout_constraintTop_toTopOf="@id/avatar_preview"
             />

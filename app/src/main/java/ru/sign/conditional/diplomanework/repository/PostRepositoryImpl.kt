@@ -63,8 +63,7 @@ class PostRepositoryImpl @Inject constructor(
 
     override suspend fun savePost(post: Post, media: MediaModel?) {
         try {
-            val localSavedPostId =
-                postDao.savePost(PostEntity.fromDto(post))
+            Log.d("BEFORE SAFE", post.attachment.toString())
             val uploadedMedia =
                 if (media != null)
                     Attachment(
@@ -73,15 +72,21 @@ class PostRepositoryImpl @Inject constructor(
                     )
                 else
                     post.attachment
+            val postWithMedia = post.copy(
+                attachment = uploadedMedia
+            )
+            val localSavedPostId =
+                postDao.savePost(PostEntity.fromDto(postWithMedia))
+            Log.d("DAO SAFE", postWithMedia.attachment.toString())
             val postResponse = postApiService.savePost(
-                post.copy(
-                    id = post.idFromServer,
-                    attachment = uploadedMedia
+                postWithMedia.copy(
+                    id = post.idFromServer
                 )
             )
             if (postResponse.isSuccessful) {
                 val savedPost = postResponse.body()
                     ?: throw HttpException(postResponse)
+                Log.d("API SAFE", savedPost.attachment.toString())
                 postDao.savePost(PostEntity.fromDto(
                     savedPost.copy(
                         id = localSavedPostId,

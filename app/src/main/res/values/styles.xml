@@ -50,8 +50,20 @@
 
     <style name="Widget.AppTheme.NeWorkRoundedOutlined" parent="Widget.AppTheme.NeWorkOutlinedTextInput">
         <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.ExtraLarge</item>
-        <item name="boxStrokeColor">@color/ripple_button</item>
+        <item name="android:clickable">false</item>
         <item name="android:focusable">false</item>
+    </style>
+
+    <style name="Widget.AppTheme.ClearAvatarButton" parent="Widget.AppTheme.MenuButton">
+        <item name="iconTint">@color/ripple_button</item>
+        <item name="iconSize">@dimen/avatar_cancel</item>
+        <item name="layout_constraintHeight">@dimen/avatar_cancel</item>
+        <item name="layout_constraintWidth">@dimen/avatar_cancel</item>
+    </style>
+
+    <style name="Widget.AppTheme.ClearPreviewButton" parent="Widget.AppTheme.NeWorkButton">
+        <item name="backgroundTint">@color/ripple_button</item>
+        <item name="android:textColor">?attr/colorControlNormal</item>
     </style>
 
 </resources>
