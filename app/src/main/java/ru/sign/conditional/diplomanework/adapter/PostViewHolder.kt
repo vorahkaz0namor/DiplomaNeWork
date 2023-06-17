@@ -49,6 +49,7 @@ class PostViewHolder(
             }
             likes.isChecked = post.likedByMe
             likes.text = likesCount(post.likeOwnerIds.size)
+            link.text = post.link ?: ""
         }
     }
 

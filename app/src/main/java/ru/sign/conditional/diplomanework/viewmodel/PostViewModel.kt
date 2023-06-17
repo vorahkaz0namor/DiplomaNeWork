@@ -2,6 +2,8 @@ package ru.sign.conditional.diplomanework.viewmodel
 
 import android.net.Uri
 import android.util.Log
+import androidx.core.net.toFile
+import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -54,21 +56,15 @@ class PostViewModel @Inject constructor(
     private val _postEvent = SingleLiveEvent(HTTP_CONTINUE)
     val postEvent: LiveData<Int>
         get() = _postEvent
-    val edited = MutableLiveData(emptyPost)
-    private val _viewAttachment = MutableStateFlow(emptyPost)
-    val viewAttachment: StateFlow<Post>
-        get() = _viewAttachment.stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5_000),
-            emptyPost
-        )
-    private val _media = MutableStateFlow<MediaModel?>(null)
-    val media: StateFlow<MediaModel?>
-        get() = _media.stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5_000),
-            null
-        )
+    private val _edited = MutableLiveData(emptyPost)
+    val edited: LiveData<Post>
+        get() = _edited
+    private val _viewAttachment = MutableLiveData(emptyPost)
+    val viewAttachment: LiveData<Post>
+        get() = _viewAttachment
+    private val _media = MutableLiveData<MediaModel?>(null)
+    val media: LiveData<MediaModel?>
+        get() = _media
     private var _draftCopy: DraftCopy? = null
     val draftCopy: DraftCopy?
         get() = _draftCopy
@@ -154,30 +150,20 @@ class PostViewModel @Inject constructor(
 
     // CREATE & UPDATE functions
 
-    fun setEditPost(post: Post) { edited.value = post }
+    fun setEditPost(post: Post) { _edited.value = post }
 
     fun setImage(uri: Uri, file: File) {
-        viewModelScope.launch {
-            _media.emit(MediaModel(uri, file))
-        }
+            _media.value = MediaModel(uri, file)
     }
 
-    fun showAttachment(post: Post) {
-        viewModelScope.launch {
-            _viewAttachment.emit(post)
-        }
-    }
+    fun showAttachment(post: Post) { _viewAttachment.value = post }
 
     fun savePost(text: CharSequence?) {
-        if (validationPost(text))
+        if (!text.isNullOrBlank())
             save(text.toString())
         else
             _postEvent.value = HTTP_OK
     }
-
-    private fun validationPost(text: CharSequence?) =
-        (!text.isNullOrBlank() && edited.value?.content != text.trim())
-                || media.value != null
 
     private fun save(newContent: String) {
         viewModelScope.launch {
@@ -250,19 +236,16 @@ class PostViewModel @Inject constructor(
 
     // DELETE functions
 
-    fun clearEditPost() { edited.value = emptyPost }
+    fun clearEditPost() { _edited.value = emptyPost }
 
     fun clearImage() {
-        viewModelScope.launch {
-            _media.emit(null)
-        }
+        _edited.value = _edited.value?.copy(
+            attachment = null
+        )
+        _media.value = null
     }
 
-    fun clearAttachment() {
-        viewModelScope.launch {
-            _viewAttachment.emit(emptyPost)
-        }
-    }
+    fun clearAttachment() { _viewAttachment.value = emptyPost }
 
     fun removePostById(post: Post) {
         viewModelScope.launch {
