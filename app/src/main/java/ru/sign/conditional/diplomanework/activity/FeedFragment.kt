@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
@@ -28,6 +29,7 @@ import ru.sign.conditional.diplomanework.model.asRemotePresentationState
 import ru.sign.conditional.diplomanework.util.AndroidUtils.viewScope
 import ru.sign.conditional.diplomanework.util.AndroidUtils.viewScopeWithRepeat
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.HTTP_UNKNOWN_ERROR
+import ru.sign.conditional.diplomanework.util.NeWorkHelper.allStatesToString
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.overview
 import ru.sign.conditional.diplomanework.util.viewBinding
 import ru.sign.conditional.diplomanework.viewmodel.AuthViewModel
@@ -76,6 +78,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                     footer = loadStateFooter
                 )
         }
+        postViewModel.appealTo()
         navController = findNavController()
     }
 
@@ -113,34 +116,47 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                     if (it) {
                         binding.recyclerView.posts.smoothScrollToPosition(0)
                         val currentId = totalState.value.id
-                        Log.d("WRITE UISTATE.SCROLL", currentId.toString())
+                        Log.d("SCROLLED TO MAX POST ID", currentId.toString())
                         stateChanger(UiAction.Scroll(currentId = currentId))
                     }
+                }
+                Log.d("FEED WAS WROTE", "appealTo = ${postViewModel.appealTo}")
+                binding.recyclerView.posts.apply {
+                    if (postViewModel.appealTo != 1L)
+                        stopScroll()
+                    else
+                        smoothScrollToPosition(0)
                 }
             }
             // Состояние загрузки постов
             viewScope.launch {
                 postAdapter.loadStateFlow.collectLatest { loadState ->
                     snackbarDismiss()
+                    var headerStateName: String
+                    var footerStateName: String
                     loadStateHeader.loadState =
                         loadState.mediator?.refresh
                             .takeIf {
                                 it is LoadState.Loading ||
                                 it is LoadState.Error
-                            }
+                            }.also { headerStateName = "mediator.refresh" }
                         ?: loadState.mediator?.prepend
                             .takeIf {
                                 it is LoadState.Loading ||
                                 it is LoadState.Error
-                            }
-                        ?: loadState.source.refresh
+                            }.also { headerStateName = "mediator.prepend" }
+                        ?: loadState.source.refresh.also { headerStateName = "source.refresh" }
                     loadStateFooter.loadState =
                         loadState.mediator?.append
                             .takeIf {
                                 it is LoadState.Loading ||
                                 it is LoadState.Error
-                            }
-                        ?: loadState.source.append
+                            }.also { footerStateName = "mediator.append" }
+                        ?: loadState.source.append.also { footerStateName = "source.append" }
+//                    Log.d("HEADER & FOOTER",
+//                        "INCOMING STATE =\n${loadState.allStatesToString()}\n" +
+//                                "HEADER STATE =\n$headerStateName = ${loadStateHeader.loadState}\n" +
+//                                "FOOTER STATE =\n$footerStateName = ${loadStateFooter.loadState}")
                     val errorState = loadState.refresh as? LoadState.Error
                         ?: loadState.prepend as? LoadState.Error
                         ?: loadState.append as? LoadState.Error

@@ -7,6 +7,7 @@ import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.HttpException
@@ -14,6 +15,7 @@ import ru.sign.conditional.diplomanework.api.AuxApiService
 import ru.sign.conditional.diplomanework.api.PostApiService
 import ru.sign.conditional.diplomanework.dao.AuxDao
 import ru.sign.conditional.diplomanework.dao.PostDao
+import ru.sign.conditional.diplomanework.dao.PostRemoteKeyDao
 import ru.sign.conditional.diplomanework.dto.*
 import ru.sign.conditional.diplomanework.entity.DraftCopyEntity
 import ru.sign.conditional.diplomanework.entity.PostEntity
@@ -24,6 +26,7 @@ import javax.inject.Inject
 
 class PostRepositoryImpl @Inject constructor(
     private val postDao: PostDao,
+    private val postRemoteKeyDao: PostRemoteKeyDao,
     private val auxDao: AuxDao,
     private val postApiService: PostApiService,
     private val auxApiService: AuxApiService,
@@ -50,7 +53,7 @@ class PostRepositoryImpl @Inject constructor(
         }
 
     override suspend fun getLatestPostId(): Int =
-        postDao.getLatestPostId() ?: 0
+        postRemoteKeyDao.max() ?: 0
 
     override suspend fun getPostById(id: Int): Flow<Post?> =
         postDao.getPostById(id)

@@ -39,6 +39,10 @@ class PostViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {
+    // Счетчик количества запусков FeedFragment'а
+    private var _appealTo = 0L
+    val appealTo: Long
+        get() = _appealTo
     private val emptyPost = Post(
         id = 0,
         author = "",
@@ -98,7 +102,7 @@ class PostViewModel @Inject constructor(
         cachedPagingDataFromRepo = postRepository.data
             .mapLatest {
                 val maxId = postRepository.getLatestPostId()
-                Log.d("WRITE UISTATE.ID", maxId.toString())
+                Log.d("GOT MAX POST ID", maxId.toString())
                 stateChanger(UiAction.Get(id = maxId))
                 it
             }
@@ -108,12 +112,12 @@ class PostViewModel @Inject constructor(
         totalState = combine(idsGot, idsScrolled) { flowOne, flowTwo ->
             flowOne to flowTwo
         }
-            .map { (get, scroll) ->
+            .mapLatest { (get, scroll) ->
                 val uiState = UiState(
                     id = get.id,
                     lastIdScrolled = scroll.currentId
                 )
-                Log.d("UPDATE TOTALSTATE", uiState.toString())
+                Log.d("UPDATE COMMON STATE", uiState.toString())
                 uiState
             }
             .stateIn(
@@ -122,9 +126,14 @@ class PostViewModel @Inject constructor(
                     .WhileSubscribed(stopTimeoutMillis = 7_000),
                 initialValue = UiState()
             )
+        Log.d("INIT VM", "appealTo = $appealTo")
     }
 
     // READ functions
+
+    fun appealTo() = (++_appealTo).also {
+        Log.d("FEED START", "$it times")
+    }
 
     fun getPostById(id: Int) {
         viewModelScope.launch {

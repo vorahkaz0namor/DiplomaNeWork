@@ -12,5 +12,16 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="actionBarStyle">@style/Theme.DiplomaNeWork.AppBar</item>
+        <item name="actionBarTheme">@style/Theme.DiplomaNeWork.CustomActionBar</item>
     </style>
+
+    <style name="Theme.DiplomaNeWork.AppBar" parent="@style/Widget.MaterialComponents.Light.ActionBar.Solid">
+        <item name="background">@color/ripple_button</item>
+    </style>
+
+    <style name="Theme.DiplomaNeWork.CustomActionBar" parent="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
+        <item name="iconTint">?attr/colorControlNormal</item>
+    </style>
+
 </resources>

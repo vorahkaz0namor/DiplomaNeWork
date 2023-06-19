@@ -11,6 +11,7 @@ import androidx.core.view.MenuProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ru.sign.conditional.diplomanework.R
@@ -82,11 +83,18 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
         appNavController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.feedFragment -> if (currentMenuProvider == null) setAuthMenu()
-                R.id.loginFragment -> currentMenuProvider?.let {
-                    removeMenuProvider(it)
-                    currentMenuProvider = null
-                }
+                R.id.loginFragment, R.id.editPostFragment ->
+                    currentMenuProvider?.let {
+                        removeMenuProvider(it)
+                        currentMenuProvider = null
+                    }
             }
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressedDispatcher.onBackPressed()
+        return appNavController.navigateUp(appBarConfiguration) ||
+                super.onSupportNavigateUp()
     }
 }

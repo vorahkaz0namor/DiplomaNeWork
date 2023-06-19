@@ -3,6 +3,7 @@ package ru.sign.conditional.diplomanework.util
 import android.util.Log
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
+import androidx.paging.CombinedLoadStates
 import com.bumptech.glide.Glide
 import okhttp3.internal.http.HTTP_FORBIDDEN
 import okhttp3.internal.http.HTTP_NOT_FOUND
@@ -133,4 +134,9 @@ object NeWorkHelper {
         Log.d(action, "CAUGHT EXCEPTION => $e\n" +
                 "DESCRIPTION => ${overview(exceptionCheck(e))}")
     }
+
+    fun CombinedLoadStates.allStatesToString(): String =
+        "CombinedLoadStates:\nrefresh = $refresh,\nprepend = $prepend,\nappend = $append;\n" +
+                "source.refresh = ${source.refresh},\nsource.prepend = ${source.prepend},\nsource.append = ${source.append};\n" +
+                "mediator.refresh = ${mediator?.refresh},\nmediator.prepend = ${mediator?.prepend},\nmediator.append = ${mediator?.append}."
 }

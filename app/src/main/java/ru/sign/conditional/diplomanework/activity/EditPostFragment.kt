@@ -2,6 +2,7 @@ package ru.sign.conditional.diplomanework.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -11,7 +12,6 @@ import androidx.activity.addCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toFile
-import androidx.core.net.toUri
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -103,13 +103,20 @@ class EditPostFragment : Fragment(R.layout.fragment_edit_post) {
                 attachment != null &&
                 attachment.type != AttachmentType.AUDIO
             binding.previewContainer.isVisible = it != null || attachmentValidation
-            if (attachmentValidation)
-                binding.imagePreview.loadImage(
-                    url = attachment!!.url,
-                    type = attachment.type.name
-                )
-            else
-                binding.imagePreview.setImageURI(it?.uri)
+            binding.imagePreview.apply {
+                when {
+                    it != null ->
+                        loadImage(
+                            url = it.uri.toString(),
+                            type = AttachmentType.IMAGE.name
+                        )
+                    attachmentValidation ->
+                        loadImage(
+                            url = attachment!!.url,
+                            type = attachment.type.name
+                        )
+                }
+            }
         }
         postViewModel.postEvent.observe(viewLifecycleOwner) { code ->
                 post?.let { post ->
