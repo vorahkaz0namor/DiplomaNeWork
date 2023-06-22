@@ -56,47 +56,25 @@ object NeWorkHelper {
                 .format(DateTimeFormatter.ofPattern("dd MMMM yyyy, HH:mm:ss"))
     }
 
-    private fun ImageView.loadSelective(
-        url: String = "",
-        resourceId: Int = 0,
-        type: String,
+    fun ImageView.loadImage(
+        url: String,
+        type: String = AttachmentType.AVATAR.name,
         @DrawableRes placeholder: Int = R.drawable.ic_loading_32,
         @DrawableRes fallback: Int = R.drawable.ic_error_32,
-        timeout: Int = 8_000
+        timeout: Int = 5_000
     ) {
         Glide.with(this)
-            .load(
-                if (resourceId == 0)
-                    url
-                else
-                    resourceId
-            )
+            .load(url)
             .timeout(timeout)
             .placeholder(placeholder)
             .error(fallback)
-            .apply {
-                (if (type == AttachmentType.AVATAR.name)
-                    circleCrop()
+            .let {
+                if (type == AttachmentType.AVATAR.name)
+                    it.circleCrop()
                 else
-                    dontTransform()
-                ).into(this@loadSelective)
+                    it.dontTransform()
             }
-    }
-
-    fun ImageView.loadImage(
-        url: String,
-        type: String = AttachmentType.AVATAR.name
-    ) {
-        loadSelective(url = url, type = type)
-    }
-
-    fun ImageView.loadImage(
-        resourceId: Int = 0
-    ) {
-        loadSelective(
-            resourceId = resourceId,
-            type = AttachmentType.AVATAR.name
-        )
+            .into(this)
     }
 
     fun likesCount(count: Int): String {

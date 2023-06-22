@@ -18,7 +18,7 @@
         android:id="@+id/post_container"
         android:layout_width="match_parent"
         android:layout_height="@dimen/zero_dp"
-        app:layout_constraintBottom_toTopOf="@id/post_bar"
+        app:layout_constraintBottom_toTopOf="@id/link_preview"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
@@ -66,6 +66,22 @@
 
     </ScrollView>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/link_preview"
+        style="@style/Widget.AppTheme.NeWorkOutlinedTextInput"
+        android:hint="@string/link_the_word"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/post_bar"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textUri"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
     <LinearLayout
         android:id="@+id/post_bar"
         android:background="@color/ripple_button"
@@ -89,6 +105,16 @@
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_add_from_camera_32"
             android:contentDescription="@string/add_from_camera" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_link"
+            android:checkable="true"
+            style="@style/Widget.AppTheme.MenuButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/link_selector"
+            android:pointerIcon="hand"
+            android:contentDescription="@string/link_description" />
 
     </LinearLayout>
 

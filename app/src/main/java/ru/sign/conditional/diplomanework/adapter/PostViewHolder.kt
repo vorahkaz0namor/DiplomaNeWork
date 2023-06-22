@@ -24,27 +24,27 @@ class PostViewHolder(
     private fun fillingCardPost(post: Post) {
         binding.apply {
             avatar.apply {
-                if (!post.authorAvatar.isNullOrBlank())
+                if (!post.authorAvatar.isNullOrBlank()) {
                     loadImage(post.authorAvatar)
-                else
-                    loadImage(R.drawable.localuser)
+                }
+                else {
+                    setImageResource(R.drawable.localuser)
+                }
             }
             author.text = post.author
             published.text = timeCustomRepresentation(post.published)
             menu.isVisible = post.ownedByMe
             content.text = post.content
             postAttachment.apply {
-                when {
-                    post.attachment == null ||
-                    post.attachment.type == AttachmentType.AUDIO ->
-                        isVisible = false
-                    else -> {
-                        isVisible = true
-                        loadImage(
-                            url = post.attachment.url,
-                            type = post.attachment.type.name
-                        )
-                    }
+                val attachmentValidation =
+                    post.attachment != null &&
+                        post.attachment.type != AttachmentType.AUDIO
+                isVisible = attachmentValidation
+                if (attachmentValidation) {
+                    loadImage(
+                        url = post.attachment!!.url,
+                        type = post.attachment.type.name
+                    )
                 }
             }
             likes.isChecked = post.likedByMe

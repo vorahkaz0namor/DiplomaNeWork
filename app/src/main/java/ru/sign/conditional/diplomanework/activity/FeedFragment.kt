@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
@@ -99,10 +98,16 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                     .mapLatest { state ->
                         snackbarDismiss()
                         Log.d("POSTADAPTER LOADSTATE", state.name)
-                        state == PRESENTED
+                        val presented = state == PRESENTED
+                        if (presented && postViewModel.appealTo == 1L) {
+                            Log.d("FEED WAS WROTE", "appealTo = ${postViewModel.appealTo}")
+                            binding.recyclerView.posts.smoothScrollToPosition(0)
+                            stateChanger(UiAction.Scroll(currentId = totalState.value.id))
+                        }
+                        presented
                     }
                 val hasNotScrolledToCurrentId =
-                    totalState.map {
+                    totalState.mapLatest {
                         it.hasNotScrolledToCurrentId
                     }
                         .distinctUntilChanged()
@@ -119,13 +124,6 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                         Log.d("SCROLLED TO MAX POST ID", currentId.toString())
                         stateChanger(UiAction.Scroll(currentId = currentId))
                     }
-                }
-                Log.d("FEED WAS WROTE", "appealTo = ${postViewModel.appealTo}")
-                binding.recyclerView.posts.apply {
-                    if (postViewModel.appealTo != 1L)
-                        stopScroll()
-                    else
-                        smoothScrollToPosition(0)
                 }
             }
             // Состояние загрузки постов
@@ -202,7 +200,9 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             // Просмотр вложения поста
             viewAttachment.observe(viewLifecycleOwner) { post ->
                 if (post.id != 0)
-                    navController
+                    navController.navigate(
+                        R.id.action_feedFragment_to_attachmentFragment
+                    )
             }
         }
         authViewModel.apply {

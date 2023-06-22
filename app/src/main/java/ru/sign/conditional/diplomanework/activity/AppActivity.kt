@@ -39,7 +39,8 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
     }
 
     private fun setAuthMenu() {
-        if (currentMenuProvider == null) {
+        if (currentMenuProvider == null &&
+                appNavController.currentDestination == appNavController.findDestination(R.id.feedFragment)) {
             currentMenuProvider = object : MenuProvider {
                 override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                     menuInflater.inflate(R.menu.menu_auth, menu)
@@ -83,7 +84,9 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
         appNavController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.feedFragment -> if (currentMenuProvider == null) setAuthMenu()
-                R.id.loginFragment, R.id.editPostFragment ->
+                R.id.loginFragment,
+                R.id.editPostFragment,
+                R.id.attachmentFragment ->
                     currentMenuProvider?.let {
                         removeMenuProvider(it)
                         currentMenuProvider = null

@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_feedFragment_to_editPostFragment"
             app:destination="@id/editPostFragment"/>
+        <action
+            android:id="@+id/action_feedFragment_to_attachmentFragment"
+            app:destination="@id/attachmentFragment"/>
     </fragment>
 
     <fragment
@@ -23,5 +26,10 @@
         android:id="@+id/editPostFragment"
         android:name="ru.sign.conditional.diplomanework.activity.EditPostFragment"
         tools:layout="@layout/fragment_edit_post"/>
+
+    <fragment
+        android:id="@+id/attachmentFragment"
+        android:name="ru.sign.conditional.diplomanework.activity.AttachmentFragment"
+        tools:layout="@layout/fragment_attachment"/>
 
 </navigation>

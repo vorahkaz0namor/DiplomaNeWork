@@ -2,8 +2,6 @@ package ru.sign.conditional.diplomanework.viewmodel
 
 import android.net.Uri
 import android.util.Log
-import androidx.core.net.toFile
-import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -126,7 +124,7 @@ class PostViewModel @Inject constructor(
                     .WhileSubscribed(stopTimeoutMillis = 7_000),
                 initialValue = UiState()
             )
-        Log.d("INIT VM", "appealTo = $appealTo")
+        Log.d("INIT VIEW MODEL", "appealTo = $appealTo")
     }
 
     // READ functions
@@ -162,14 +160,16 @@ class PostViewModel @Inject constructor(
     fun setEditPost(post: Post) { _edited.value = post }
 
     fun setImage(uri: Uri, file: File) {
-            _media.value = MediaModel(uri, file)
+        _media.value = MediaModel(uri, file)
     }
 
     fun showAttachment(post: Post) { _viewAttachment.value = post }
 
-    fun savePost(text: CharSequence?) {
-        if (!text.isNullOrBlank())
+    fun savePost(text: CharSequence?, link: CharSequence?) {
+        if (!text.isNullOrBlank()) {
+            saveLink(link)
             save(text.toString())
+        }
         else
             _postEvent.value = HTTP_OK
     }
@@ -243,9 +243,24 @@ class PostViewModel @Inject constructor(
         (draftCopy != null && edited.value?.content != draftCopy?.content)
                 || edited.value?.id == 0
 
+    fun addLink() { _edited.value = _edited.value?.copy(link = "") }
+
+    private fun saveLink(link: CharSequence?) {
+        _edited.value =
+            if (!link.isNullOrBlank()) {
+                _edited.value?.copy(
+                    link = link.toString().trim()
+                )
+            } else {
+                _edited.value?.copy(link = null)
+            }
+    }
+
     // DELETE functions
 
     fun clearEditPost() { _edited.value = emptyPost }
+
+    fun clearLink() { _edited.value = _edited.value?.copy(link = null) }
 
     fun clearImage() {
         _edited.value = _edited.value?.copy(

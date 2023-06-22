@@ -97,28 +97,44 @@ class EditPostFragment : Fragment(R.layout.fragment_edit_post) {
     }
 
     private fun subscribe() {
-        postViewModel.media.observe(viewLifecycleOwner) {
-            val attachment = post?.attachment
-            val attachmentValidation =
-                attachment != null &&
-                attachment.type != AttachmentType.AUDIO
-            binding.previewContainer.isVisible = it != null || attachmentValidation
-            binding.imagePreview.apply {
-                when {
-                    it != null ->
-                        loadImage(
-                            url = it.uri.toString(),
-                            type = AttachmentType.IMAGE.name
-                        )
-                    attachmentValidation ->
-                        loadImage(
-                            url = attachment!!.url,
-                            type = attachment.type.name
-                        )
+        postViewModel.apply {
+            media.observe(viewLifecycleOwner) {
+                val attachment = post?.attachment
+                val attachmentValidation =
+                    attachment != null &&
+                            attachment.type != AttachmentType.AUDIO
+                Log.d("LOGGING THE MEDIA MODEL",
+                    "isPresent = ${it != null}\n" +
+                            "uri = ${it?.uri}\n" +
+                            "file length = ${it?.file?.length()}")
+                Log.d("LOGGING THE ATTACHMENT",
+                    "isPresent = ${attachment != null}\n" +
+                            "url = ${attachment?.url}\n" +
+                            "type = ${attachment?.type}")
+                binding.previewContainer.isVisible = it != null || attachmentValidation
+                binding.imagePreview.apply {
+                    if (it != null) {
+                        Log.d("MEDIA MODEL NOT NULL!", it.file.name)
+                        setImageURI(it.uri)
+                    }
+                    else {
+                        if (attachmentValidation) {
+                            Log.d("ATTACHMENT NOT NULL?", attachment?.type.toString())
+                            loadImage(
+                                url = attachment!!.url,
+                                type = attachment.type.name
+                            )
+                        }
+                    }
                 }
             }
-        }
-        postViewModel.postEvent.observe(viewLifecycleOwner) { code ->
+            edited.observe(viewLifecycleOwner) {
+                val link = it.link
+                binding.addLink.isChecked = link != null
+                binding.linkPreview.isVisible = link != null
+                binding.linkPreview.editText?.setText(link)
+            }
+            postEvent.observe(viewLifecycleOwner) { code ->
                 post?.let { post ->
                     binding.apply {
                         val newContent = postContent.text.toString()
@@ -149,6 +165,7 @@ class EditPostFragment : Fragment(R.layout.fragment_edit_post) {
                     }
                     customNavigateUp(null)
                 }
+            }
         }
     }
 
@@ -175,7 +192,10 @@ class EditPostFragment : Fragment(R.layout.fragment_edit_post) {
                                     AndroidUtils.hideKeyboard(postContent)
                                     editPostGroup.isVisible = false
                                     progressBarView.progressBar.isVisible = true
-                                    postViewModel.savePost(postContent.text.toString())
+                                    postViewModel.savePost(
+                                        text = postContent.text.toString(),
+                                        link = linkPreview.editText?.text.toString()
+                                    )
                                 }
                                 true
                             }
@@ -200,6 +220,12 @@ class EditPostFragment : Fragment(R.layout.fragment_edit_post) {
             }
             deletePreview.setOnClickListener {
                 postViewModel.clearImage()
+            }
+            addLink.setOnClickListener {
+                if (post?.link != null)
+                    postViewModel.clearLink()
+                else
+                    postViewModel.addLink()
             }
         }
     }

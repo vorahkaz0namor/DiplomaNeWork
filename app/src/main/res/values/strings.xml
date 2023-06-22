@@ -45,4 +45,7 @@
     <string name="error_editing">The edited post wasn\'t saved…\n(%1$s)</string>
     <string name="publish_post">Publish post</string>
     <string name="empty_content">Content of the post can\'t be empty!</string>
+    <string name="link_the_word">Link</string>
+    <string name="link_description">Add/remove link</string>
+    <string name="post_attachment_full_view">Post attachment</string>
 </resources>
