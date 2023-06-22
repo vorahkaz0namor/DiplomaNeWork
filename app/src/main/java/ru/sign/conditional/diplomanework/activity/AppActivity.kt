@@ -40,7 +40,13 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
 
     private fun setAuthMenu() {
         if (currentMenuProvider == null &&
-                appNavController.currentDestination == appNavController.findDestination(R.id.feedFragment)) {
+                appNavController
+                    .currentDestination
+                    ?.id
+                ==
+                appNavController
+                    .graph
+                    .startDestinationId) {
             currentMenuProvider = object : MenuProvider {
                 override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                     menuInflater.inflate(R.menu.menu_auth, menu)
