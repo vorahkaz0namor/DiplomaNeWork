@@ -11,6 +11,7 @@ import ru.sign.conditional.diplomanework.R
 import ru.sign.conditional.diplomanework.databinding.FragmentAttachmentBinding
 import ru.sign.conditional.diplomanework.dto.AttachmentType
 import ru.sign.conditional.diplomanework.dto.Post
+import ru.sign.conditional.diplomanework.observer.ExoMediaLifecycleObserver
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.loadImage
 import ru.sign.conditional.diplomanework.util.viewBinding
 import ru.sign.conditional.diplomanework.viewmodel.PostViewModel
@@ -26,29 +27,30 @@ class AttachmentFragment : Fragment(R.layout.fragment_attachment) {
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             customNavigateUp()
         }
+        val attachment = post.attachment
+        if (attachment != null) {
+            if (attachment.type != AttachmentType.IMAGE)
+                ExoMediaLifecycleObserver(
+                    context = requireContext(),
+                    attachmentUrl = attachment.url
+                ) { player ->
+                    binding.exoplayerView.player = player
+                }
+                    .also { observer ->
+                        lifecycle.addObserver(observer)
+                    }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViews()
-        setupListeners()
-    }
-
-    private fun initViews() {
         binding.apply {
-            val attachmentValidation = post.attachment?.type != AttachmentType.AUDIO
-            attachmentPreview.isVisible = attachmentValidation
+            attachmentPreview.isVisible = post.attachment?.type == AttachmentType.IMAGE
             attachmentPreview.loadImage(
                 url = post.attachment!!.url,
                 type = post.attachment!!.type.name
             )
-            playButton.isVisible = post.attachment?.type == AttachmentType.VIDEO
-        }
-    }
-
-    private fun setupListeners() {
-        binding.playButton.setOnClickListener {
-
+            exoplayerView.isVisible = post.attachment?.type != AttachmentType.IMAGE
         }
     }
 

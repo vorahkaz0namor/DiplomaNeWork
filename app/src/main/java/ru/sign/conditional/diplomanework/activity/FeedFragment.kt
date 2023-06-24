@@ -77,6 +77,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                     footer = loadStateFooter
                 )
         }
+        // Учет очередного запуска FeedFragment'а
         postViewModel.appealTo()
         navController = findNavController()
     }
@@ -207,9 +208,11 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         }
         authViewModel.apply {
             // Изменение состяния аутентификации
-            data.observe(viewLifecycleOwner) {
-                snackbarDismiss()
-                postAdapter.refresh()
+            viewScope.launch {
+                data.observe(viewLifecycleOwner) {
+                    snackbarDismiss()
+                    postAdapter.refresh()
+                }
             }
             // Проверка авторизации
             checkAuthorized.observe(viewLifecycleOwner) {
@@ -222,12 +225,15 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                 }
             }
             // Проброс ошибки аутентификации
-            authError.observe(viewLifecycleOwner) { code ->
-                if (code != HTTP_OK &&
-                    (code != HTTP_BAD_REQUEST ||
-                            code != HTTP_NOT_FOUND)) {
-                    clearAuthError()
-                    postAdapter.refresh()
+            viewScope.launch {
+                authError.observe(viewLifecycleOwner) { code ->
+                    if (code != HTTP_OK &&
+                        (code != HTTP_BAD_REQUEST ||
+                                code != HTTP_NOT_FOUND)
+                    ) {
+                        clearAuthError()
+                        postAdapter.refresh()
+                    }
                 }
             }
         }
@@ -250,8 +256,10 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                 }
             }
             // Обновление списка постов после свайпа по нему
-            postsRefresh.setOnRefreshListener {
-                postAdapter.refresh()
+            viewScope.launch {
+                postsRefresh.setOnRefreshListener {
+                    postAdapter.refresh()
+                }
             }
         }
     }

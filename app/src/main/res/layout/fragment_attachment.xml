@@ -1,26 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
     android:background="@color/black"
     tools:context=".activity.AttachmentFragment">
 
-    <ImageView
-        android:id="@+id/attachment_preview"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:srcCompat="@sample/attachment"
-        android:layout_gravity="center"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/post_attachment_full_view"
-        />
+        android:layout_height="wrap_content">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/play_button"
-        style="@style/Widget.AppTheme.PlayButton"
-        android:layout_width="@dimen/play_button_width"
-        android:layout_height="wrap_content"
-        />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/zero_dp">
 
-</FrameLayout>
+            <ImageView
+                android:id="@+id/attachment_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/post_attachment_full_view"
+                tools:srcCompat="@sample/attachment" />
+
+<!--            <com.google.android.material.button.MaterialButton-->
+<!--                android:id="@+id/play_button"-->
+<!--                style="@style/Widget.AppTheme.PlayButton"-->
+<!--                android:layout_width="@dimen/play_button_width"-->
+<!--                android:layout_height="wrap_content" />-->
+
+        </FrameLayout>
+
+    </ScrollView>
+
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/exoplayer_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

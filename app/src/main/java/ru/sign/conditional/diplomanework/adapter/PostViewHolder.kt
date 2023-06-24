@@ -1,6 +1,6 @@
 package ru.sign.conditional.diplomanework.adapter
 
-import android.util.Log
+import android.view.View
 import android.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -35,17 +35,24 @@ class PostViewHolder(
             published.text = timeCustomRepresentation(post.published)
             menu.isVisible = post.ownedByMe
             content.text = post.content
-            postAttachment.apply {
-                val attachmentValidation =
-                    post.attachment != null &&
-                        post.attachment.type != AttachmentType.AUDIO
-                isVisible = attachmentValidation
-                if (attachmentValidation) {
-                    loadImage(
-                        url = post.attachment!!.url,
-                        type = post.attachment.type.name
+            val attachment = post.attachment
+            if (attachment != null) {
+                val imageValidation = attachment.type == AttachmentType.IMAGE
+                postAttachment.isVisible = imageValidation
+                if (imageValidation) {
+                    postAttachment.loadImage(
+                        url = attachment.url,
+                        type = attachment.type.name
                     )
                 }
+                mediaType.isVisible = !imageValidation
+                if (attachment.type == AttachmentType.VIDEO)
+                    mediaType.setImageResource(R.drawable.ic_video_attachment_48)
+                if (attachment.type == AttachmentType.AUDIO)
+                    mediaType.setImageResource(R.drawable.ic_audio_attachment_48)
+            } else {
+                postAttachment.isVisible = false
+                mediaType.isVisible = false
             }
             likes.isChecked = post.likedByMe
             likes.text = likesCount(post.likeOwnerIds.size)
@@ -55,41 +62,46 @@ class PostViewHolder(
 
     private fun setupListeners(post: Post) {
         binding.apply {
-            onInteractionListener.apply {
-                root.setOnClickListener {
-                    checkAuth()
-                    if (authorized)
-                        onShowSinglePost(post)
-                }
-                likes.setOnClickListener {
-                    checkAuth()
-                    if (authorized)
-                        onLike(post)
-                    else
-                        likes.isChecked = false
-                }
-                postAttachment.setOnClickListener {
-                    checkAuth()
-                    if (authorized)
-                        onShowAttachment(post)
-                }
-                menu.setOnClickListener {
-                    PopupMenu(it.context, it).apply {
-                        inflate(R.menu.post_options)
-                        setOnMenuItemClickListener { item ->
-                            when (item.itemId) {
-                                R.id.edit_post -> {
-                                    onEdit(post)
-                                    true
-                                }
-                                R.id.remove_post -> {
-                                    onRemove(post)
-                                    true
-                                }
-                                else -> false
+            setCustomOnClickListener(root) {
+                onInteractionListener.onShowSinglePost(post)
+            }
+            setCustomOnClickListener(likes) {
+                onInteractionListener.onLike(post)
+            }
+            setCustomOnClickListener(postAttachment, mediaType) {
+                onInteractionListener.onShowAttachment(post)
+            }
+            menu.setOnClickListener { view ->
+                PopupMenu(view.context, view).apply {
+                    inflate(R.menu.post_options)
+                    setOnMenuItemClickListener { item ->
+                        when (item.itemId) {
+                            R.id.edit_post -> {
+                                onInteractionListener.onEdit(post)
+                                true
                             }
+                            R.id.remove_post -> {
+                                onInteractionListener.onRemove(post)
+                                true
+                            }
+                            else -> false
                         }
-                    }.show()
+                    }
+                }.show()
+            }
+        }
+    }
+
+    private fun setCustomOnClickListener(vararg view: View, action: () -> Unit) {
+        view.map {
+            onInteractionListener.apply {
+                it.setOnClickListener {
+                    checkAuth()
+                    if (authorized)
+                        action()
+                    else
+                        if (it == binding.likes)
+                            binding.likes.isChecked = false
                 }
             }
         }

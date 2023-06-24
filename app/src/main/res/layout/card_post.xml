@@ -82,6 +82,19 @@
         tools:srcCompat="@sample/attachment"
         android:contentDescription="@string/post_attachment" />
 
+    <ImageView
+        android:id="@+id/media_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/content"
+        app:layout_constraintBottom_toTopOf="@id/barrierBottom"
+        android:visibility="invisible"
+        tools:visibility="visible"
+        tools:srcCompat="@drawable/ic_video_attachment_48"
+        app:tint="?attr/colorControlNormal"
+        android:contentDescription="@string/attachment_media_type"
+        />
+
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrierBottom"
         app:barrierDirection="bottom"

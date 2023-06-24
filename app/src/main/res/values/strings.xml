@@ -48,4 +48,5 @@
     <string name="link_the_word">Link</string>
     <string name="link_description">Add/remove link</string>
     <string name="post_attachment_full_view">Post attachment</string>
+    <string name="attachment_media_type">Attachment media type</string>
 </resources>
