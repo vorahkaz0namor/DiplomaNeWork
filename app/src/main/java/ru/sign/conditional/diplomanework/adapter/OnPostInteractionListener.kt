@@ -8,5 +8,4 @@ interface OnPostInteractionListener : OnInteractionListener {
     fun onRepeatSave(post: Post)
     fun onRemove(post: Post)
     fun onShowAttachment(post: Post)
-    fun onShowSinglePost(post: Post)
 }

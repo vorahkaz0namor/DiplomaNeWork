@@ -63,4 +63,6 @@
     <string name="edit_event_title">Edit event</string>
     <string name="remove_event_title">Remove event</string>
     <string name="unknown_type">Unknown ViewModel type</string>
+    <string name="repeat_save_button">Save</string>
+    <string name="repeat_save_desc">Save post to the server</string>
 </resources>

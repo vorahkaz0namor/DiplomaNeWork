@@ -54,22 +54,26 @@ class PostViewHolder(
                 postAttachment.isVisible = false
                 mediaType.isVisible = false
             }
-            likes.isChecked = post.likedByMe
-            likes.text = itemsCount(post.likeOwnerIds.size)
+            likes.apply {
+                isVisible = post.isOnServer
+                isChecked = post.likedByMe
+                text = itemsCount(post.likeOwnerIds.size)
+            }
+            repeatSavePost.isVisible = !post.isOnServer
             link.text = post.link ?: ""
         }
     }
 
     private fun setupListeners(post: Post) {
         binding.apply {
-            setCustomOnClickListener(root) {
-                onPostInteractionListener.onShowSinglePost(post)
-            }
             setCustomOnClickListener(likes) {
                 onPostInteractionListener.onLike(post)
             }
             setCustomOnClickListener(postAttachment, mediaType) {
                 onPostInteractionListener.onShowAttachment(post)
+            }
+            setCustomOnClickListener(repeatSavePost) {
+                onPostInteractionListener.onRepeatSave(post)
             }
             menu.setOnClickListener { view ->
                 PopupMenu(view.context, view).apply {

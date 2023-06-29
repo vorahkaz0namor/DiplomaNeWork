@@ -15,5 +15,6 @@ data class Post(
     val likedByMe: Boolean = false,
     override val attachment: Attachment? = null,
     val ownedByMe: Boolean = false,
+    val isOnServer: Boolean = idFromServer != 0,
     val users: Map<String, UserPreview> = emptyMap()
 ) : FeedItem

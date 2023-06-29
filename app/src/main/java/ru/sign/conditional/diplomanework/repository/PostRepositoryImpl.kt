@@ -55,15 +55,6 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun getLatestPostId(): Int =
         postRemoteKeyDao.max() ?: 0
 
-    override suspend fun getPostById(id: Int): Flow<Post?> =
-        postDao.getPostById(id)
-            .map {
-                it?.toDto()?.copy(
-                    users = getUsers(it.usersIds)
-                )
-            }
-            .flowOn(defaultDispatcher)
-
     override suspend fun savePost(post: Post, media: MediaModel?) {
         try {
             Log.d("BEFORE SAVE", post.attachment.toString())

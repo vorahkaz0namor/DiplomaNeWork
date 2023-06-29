@@ -50,9 +50,6 @@ class PostViewModel @Inject constructor(
     private val cachedPagingDataFromRepo: Flow<PagingData<FeedItem>>
     val dataFlow: Flow<PagingData<FeedItem>>
         get() = cachedPagingDataFromRepo
-    private var _singlePost: Flow<Post?> = flowOf(null)
-    val singlePost: Flow<Post?>
-        get() = _singlePost
     val stateChanger: (UiAction) -> Unit
     val totalState: StateFlow<UiState>
     private val _postEvent = SingleLiveEvent(HTTP_CONTINUE)
@@ -128,18 +125,6 @@ class PostViewModel @Inject constructor(
 
     fun appealTo() = (++_appealTo).also {
         Log.d("FEED START", "$it times")
-    }
-
-    fun getPostById(id: Int) {
-        viewModelScope.launch {
-            try {
-                _singlePost = postRepository.getPostById(id)
-                    .mapLatest { it }
-                    .flowOn(defaultDispatcher)
-            } catch (e: Exception) {
-                _postEvent.value = exceptionCheck(e)
-            }
-        }
     }
 
     fun getDraftCopy() {

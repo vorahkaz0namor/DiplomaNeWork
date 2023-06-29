@@ -9,7 +9,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import androidx.paging.map
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -198,14 +197,6 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                     navController.navigate(
                         R.id.action_feedFragment_to_editPostFragment
                     )
-            }
-            // Переход на карточку поста
-            viewScopeWithRepeat {
-                singlePost.collectLatest { post ->
-                    if (post != null && post.id != 0)
-                        navController
-                    // TODO <R.id.action_feedFragment_to_singlePostFragment>
-                }
             }
         }
         // Просмотр вложения поста

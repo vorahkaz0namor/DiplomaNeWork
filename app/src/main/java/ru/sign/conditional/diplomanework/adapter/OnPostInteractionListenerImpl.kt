@@ -30,8 +30,4 @@ class OnPostInteractionListenerImpl(
     override fun onShowAttachment(post: Post) {
         attachmentViewModel.showAttachment(post)
     }
-
-    override fun onShowSinglePost(post: Post) {
-        postViewModel.getPostById(post.id)
-    }
 }

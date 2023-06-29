@@ -21,9 +21,6 @@ interface PostDao {
     @Query("SELECT * FROM PostEntity WHERE idFromServer BETWEEN :lastId AND :firstId ORDER BY idFromServer DESC")
     fun getPage(lastId: Int, firstId: Int): PagingSource<Int, PostEntity>
 
-    @Query("SELECT * FROM PostEntity WHERE id = :id")
-    fun getPostById(id: Int): Flow<PostEntity?>
-
     // CREATE & UPDATE functions
 
     @Insert
