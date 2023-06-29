@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class PostRemoteKeyEntity(
+data class EventRemoteKeyEntity(
     @PrimaryKey
     val type: RemoteKeyType,
     val key: Int

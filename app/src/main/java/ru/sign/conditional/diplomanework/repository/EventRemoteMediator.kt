@@ -4,46 +4,41 @@ import androidx.paging.*
 import androidx.paging.LoadType.*
 import androidx.room.withTransaction
 import retrofit2.HttpException
-import ru.sign.conditional.diplomanework.api.PostApiService
-import ru.sign.conditional.diplomanework.dao.AuxDao
-import ru.sign.conditional.diplomanework.dao.PostDao
-import ru.sign.conditional.diplomanework.dao.PostRemoteKeyDao
+import ru.sign.conditional.diplomanework.api.EventApiService
+import ru.sign.conditional.diplomanework.dao.*
 import ru.sign.conditional.diplomanework.db.AppDb
-import ru.sign.conditional.diplomanework.dto.Post
-import ru.sign.conditional.diplomanework.entity.PostEntity
-import ru.sign.conditional.diplomanework.entity.PostRemoteKeyEntity
-import ru.sign.conditional.diplomanework.entity.RemoteKeyType
-import ru.sign.conditional.diplomanework.entity.UserPreviewEntity
+import ru.sign.conditional.diplomanework.dto.Event
+import ru.sign.conditional.diplomanework.entity.*
 
 @OptIn(ExperimentalPagingApi::class)
-class PostRemoteMediator(
+class EventRemoteMediator(
     private val appDb: AppDb,
-    private val postApiService: PostApiService,
-    private val postDao: PostDao,
-    private val postRemoteKeyDao: PostRemoteKeyDao,
+    private val eventApiService: EventApiService,
+    private val eventDao: EventDao,
+    private val eventRemoteKeyDao: EventRemoteKeyDao,
     private val auxDao: AuxDao
-) : RemoteMediator<Int, PostEntity>() {
+) : RemoteMediator<Int, EventEntity>() {
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, PostEntity>
+        state: PagingState<Int, EventEntity>
     ): MediatorResult {
         try {
-            val latestIdInLocal = postRemoteKeyDao.max()
-            val earliestIdInLocal = postRemoteKeyDao.min()
+            val latestIdInLocal = eventRemoteKeyDao.max()
+            val earliestIdInLocal = eventRemoteKeyDao.min()
             val response = when (loadType) {
                 REFRESH -> {
-                    postApiService.getLatestPosts(state.config.pageSize)
+                    eventApiService.getLatestEvents(state.config.pageSize)
                 }
                 PREPEND -> {
                     latestIdInLocal ?: return MediatorResult.Success(false)
-                    postApiService.getPostsAfter(
+                    eventApiService.getEventsAfter(
                         latestIdInLocal,
                         state.config.pageSize
                     )
                 }
                 APPEND -> {
                     earliestIdInLocal ?: return MediatorResult.Success(false)
-                    postApiService.getPostsBefore(
+                    eventApiService.getEventsBefore(
                         earliestIdInLocal,
                         state.config.pageSize
                     )
@@ -58,13 +53,13 @@ class PostRemoteMediator(
                         val lastId = body.last().id
                         when (loadType) {
                             REFRESH -> {
-                                postRemoteKeyDao.saveRemoteKeys(
+                                eventRemoteKeyDao.saveRemoteKeys(
                                     listOf(
-                                        PostRemoteKeyEntity(
+                                        EventRemoteKeyEntity(
                                             RemoteKeyType.AFTER,
                                             firstId
                                         ),
-                                        PostRemoteKeyEntity(
+                                        EventRemoteKeyEntity(
                                             RemoteKeyType.BEFORE,
                                             lastId
                                         )
@@ -72,9 +67,9 @@ class PostRemoteMediator(
                                 )
                             }
                             PREPEND -> {
-                                postRemoteKeyDao.saveRemoteKeys(
+                                eventRemoteKeyDao.saveRemoteKeys(
                                     listOf(
-                                        PostRemoteKeyEntity(
+                                        EventRemoteKeyEntity(
                                             RemoteKeyType.AFTER,
                                             firstId
                                         )
@@ -82,9 +77,9 @@ class PostRemoteMediator(
                                 )
                             }
                             APPEND -> {
-                                postRemoteKeyDao.saveRemoteKeys(
+                                eventRemoteKeyDao.saveRemoteKeys(
                                     listOf(
-                                        PostRemoteKeyEntity(
+                                        EventRemoteKeyEntity(
                                             RemoteKeyType.BEFORE,
                                             lastId
                                         )
@@ -92,7 +87,7 @@ class PostRemoteMediator(
                                 )
                             }
                         }
-                        updatePostsByIdFormServer(body)
+                        updateEventsByIdFormServer(body)
                     }
                 return MediatorResult.Success(endOfPaginationReached = body.isEmpty())
             } else
@@ -102,28 +97,28 @@ class PostRemoteMediator(
         }
     }
 
-    private suspend fun updatePostsByIdFormServer(posts: List<Post>) {
-        var loadedPosts: List<PostEntity> = emptyList()
-        val allExistingPosts = postDao.getAll()
-        posts.map { singlePost ->
-            val existingPost =
-                allExistingPosts.find { it.idFromServer == singlePost.id }
-            loadedPosts = loadedPosts.plus(PostEntity.fromDto(
-                if (existingPost != null)
-                    singlePost.copy(
-                        id = existingPost.id,
-                        idFromServer = existingPost.idFromServer
+    private suspend fun updateEventsByIdFormServer(events: List<Event>) {
+        var loadedEvents: List<EventEntity> = emptyList()
+        val allExistingEvents = eventDao.getAll()
+        events.map { singleEvent ->
+            val existingEvent =
+                allExistingEvents.find { it.idFromServer == singleEvent.id }
+            loadedEvents = loadedEvents.plus(EventEntity.fromDto(
+                if (existingEvent != null)
+                    singleEvent.copy(
+                        id = existingEvent.id,
+                        idFromServer = existingEvent.idFromServer
                     )
                 else
-                    singlePost.copy(
+                    singleEvent.copy(
                         id = 0,
-                        idFromServer = singlePost.id
+                        idFromServer = singleEvent.id
                     )
             ))
             auxDao.saveUserPreview(
-                UserPreviewEntity.fromDto(singlePost.users)
+                UserPreviewEntity.fromDto(singleEvent.users)
             )
         }
-        postDao.updatePostsByIdFromServer(loadedPosts)
+        eventDao.updateEventsByIdFromServer(loadedEvents)
     }
 }

@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/posts_list_title"
+            android:id="@+id/events_list_title"
             android:layout_width="match_parent"
             style="@style/Widget.AppTheme.NeWorkRoundedOutlined"
             app:layout_constraintTop_toTopOf="parent"
@@ -16,38 +16,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Widget.AppTheme.SectionEditText"
-                android:text="@string/posts_section"
+                android:text="@string/events_section"
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/add_new_post"
+            android:id="@+id/create_new_event"
             style="@style/Widget.AppTheme.NeWorkFAB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@id/posts_list_title"
-            app:layout_constraintEnd_toEndOf="@id/posts_list_title"
-            app:layout_constraintBottom_toBottomOf="@id/posts_list_title"
-            android:text="@string/start_a_post"
+            app:layout_constraintTop_toTopOf="@id/events_list_title"
+            app:layout_constraintEnd_toEndOf="@id/events_list_title"
+            app:layout_constraintBottom_toBottomOf="@id/events_list_title"
+            android:text="@string/create_event"
             />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/posts_refresh"
+        android:id="@+id/events_refresh"
         android:layout_width="match_parent"
         android:layout_height="@dimen/zero_dp"
-        app:layout_constraintTop_toBottomOf="@id/posts_list_title"
+        app:layout_constraintTop_toBottomOf="@id/events_list_title"
         app:layout_constraintBottom_toBottomOf="parent"
         >
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/posts"
+            android:id="@+id/events"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
             android:scrollbarSize="@dimen/scrollbar_width"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/card_post"
+            tools:listitem="@layout/card_event"
             />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -6,7 +6,6 @@
         <item name="android:minWidth">@dimen/zero_dp</item>
         <item name="android:textColor">?attr/colorControlNormal</item>
         <item name="rippleColor">@color/ripple_button</item>
-        <item name="layout_constraintHeight">@dimen/constraint_height</item>
         <item name="iconPadding">@dimen/main_indent</item>
         <item name="android:paddingTop">@dimen/zero_dp</item>
         <item name="android:paddingBottom">@dimen/zero_dp</item>
@@ -23,18 +22,56 @@
         <item name="android:textColor">?attr/colorControlNormal</item>
         <item name="strokeColor">?attr/colorControlNormal</item>
         <item name="strokeWidth">@dimen/stroke_width</item>
+        <item name="rippleColor">@color/ripple_button</item>
         <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="Widget.AppTheme.NeWorkCardFrame" parent="Widget.AppTheme.NeWorkOutlinedButton">
+        <item name="android:clickable">false</item>
+        <item name="cornerRadius">@dimen/card_padding</item>
+        <item name="strokeColor">@color/card_frame</item>
+        <item name="android:insetTop">@dimen/zero_dp</item>
     </style>
 
     <style name="Widget.AppTheme.LikeButton" parent="Widget.AppTheme.NeWorkButton">
         <item name="iconTint">@color/color_like_button</item>
-        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="backgroundTint">@color/custom_transparent</item>
+    </style>
+
+    <style name="Widget.AppTheme.EventTypeIndicator" parent="Widget.AppTheme.NeWorkButton">
+        <item name="android:clickable">false</item>
+        <item name="iconTint">@color/green</item>
+        <item name="icon">@drawable/ic_event_type_32</item>
+        <item name="iconGravity">textEnd</item>
+        <item name="backgroundTint">@color/custom_transparent</item>
+    </style>
+
+    <style name="Widget.AppTheme.ParticipantsIndicator" parent="Widget.AppTheme.NeWorkButton">
+        <item name="android:clickable">false</item>
+        <item name="icon">@drawable/ic_dot_16</item>
+        <item name="iconSize">@dimen/scrollbar_width</item>
+        <item name="iconPadding">@dimen/title_indent</item>
+        <item name="backgroundTint">@color/custom_transparent</item>
+    </style>
+
+    <style name="Widget.AppTheme.AttendInButton" parent="Widget.AppTheme.NeWorkButton">
+        <item name="icon">@drawable/attend_in_selector</item>
+        <item name="iconGravity">end</item>
+        <item name="iconPadding">@dimen/zero_dp</item>
+        <item name="backgroundTint">@color/custom_transparent</item>
+        <item name="android:pointerIcon">hand</item>
+        <item name="android:checkable">true</item>
     </style>
 
     <style name="Widget.AppTheme.NeWorkFAB" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="fabSize">mini</item>
         <item name="android:tint">?attr/colorControlNormal</item>
         <item name="android:backgroundTint">@color/ripple_button</item>
+        <item name="android:layout_gravity">center|end</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_marginEnd">@dimen/title_size</item>
+        <item name="layout_constraintHeight">@dimen/constraint_height</item>
+        <item name="android:padding">@dimen/zero_dp</item>
         <item name="borderWidth">@dimen/zero_dp</item>
         <item name="android:strokeColor">@color/ripple_button</item>
     </style>
@@ -51,6 +88,15 @@
     <style name="Widget.AppTheme.NeWorkRoundedOutlined" parent="Widget.AppTheme.NeWorkOutlinedTextInput">
         <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner.ExtraLarge</item>
         <item name="android:clickable">false</item>
+        <item name="android:focusable">false</item>
+        <item name="android:paddingStart">@dimen/main_indent</item>
+        <item name="android:paddingEnd">@dimen/main_indent</item>
+    </style>
+
+    <style name="Widget.AppTheme.SectionEditText" parent="ThemeOverlay.Material3.TextInputEditText">
+        <item name="android:textSize">@dimen/section_size</item>
+        <item name="android:padding">@dimen/scrollbar_width</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:focusable">false</item>
     </style>
 

@@ -50,11 +50,18 @@ object NeWorkHelper {
             else -> HTTP_UNKNOWN_ERROR
         }
     }
-    val timeCustomRepresentation = { time: CharSequence ->
-            Instant.parse(time)
-                .atOffset(OffsetDateTime.now().offset)
-                .format(DateTimeFormatter.ofPattern("dd MMMM yyyy, HH:mm:ss"))
-    }
+    fun publishedCustomRepresentation(
+        time: CharSequence,
+        pattern: String = "dd MMMM yyyy, HH:mm:ss"
+    ): String = Instant.parse(time)
+        .atOffset(OffsetDateTime.now().offset)
+        .format(DateTimeFormatter.ofPattern(pattern))
+
+    fun datetimeCustomRepresentation(time: CharSequence): String =
+        publishedCustomRepresentation(
+            time = time,
+            pattern = "E, MMM dd, yyyy, HH:mm"
+        )
 
     fun ImageView.loadImage(
         url: String,
@@ -77,7 +84,7 @@ object NeWorkHelper {
             .into(this)
     }
 
-    fun likesCount(count: Int): String {
+    fun itemsCount(count: Int): String {
         return when {
             count < 0 -> "0"
             count < 1_000 -> count.toString()

@@ -87,9 +87,10 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
     }
 
     private fun setupListeners() {
-        appNavController.addOnDestinationChangedListener { _, destination, _ ->
+        appNavController.addOnDestinationChangedListener { controller, destination, _ ->
             when (destination.id) {
-                R.id.feedFragment -> if (currentMenuProvider == null) setAuthMenu()
+                controller.graph.startDestinationId ->
+                    if (currentMenuProvider == null) setAuthMenu()
                 R.id.loginFragment,
                 R.id.editPostFragment,
                 R.id.attachmentFragment ->

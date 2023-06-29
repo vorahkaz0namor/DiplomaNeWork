@@ -9,10 +9,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import androidx.paging.map
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import okhttp3.internal.http.HTTP_BAD_REQUEST
 import okhttp3.internal.http.HTTP_NOT_FOUND
@@ -20,26 +22,25 @@ import okhttp3.internal.http.HTTP_OK
 import ru.sign.conditional.diplomanework.R
 import ru.sign.conditional.diplomanework.adapter.FeedItemAdapter
 import ru.sign.conditional.diplomanework.adapter.FeedItemLoadingStateAdapter
-import ru.sign.conditional.diplomanework.adapter.OnPostInteractionListenerImpl
-import ru.sign.conditional.diplomanework.databinding.FragmentFeedBinding
-import ru.sign.conditional.diplomanework.model.RemotePresentationState.*
+import ru.sign.conditional.diplomanework.adapter.OnEventInteractionListenerImpl
+import ru.sign.conditional.diplomanework.databinding.FragmentFeedEventBinding
+import ru.sign.conditional.diplomanework.model.RemotePresentationState.PRESENTED
 import ru.sign.conditional.diplomanework.model.UiAction
 import ru.sign.conditional.diplomanework.model.asRemotePresentationState
 import ru.sign.conditional.diplomanework.util.AndroidUtils.viewScope
 import ru.sign.conditional.diplomanework.util.AndroidUtils.viewScopeWithRepeat
-import ru.sign.conditional.diplomanework.util.NeWorkHelper.HTTP_UNKNOWN_ERROR
-import ru.sign.conditional.diplomanework.util.NeWorkHelper.overview
+import ru.sign.conditional.diplomanework.util.NeWorkHelper
 import ru.sign.conditional.diplomanework.util.viewBinding
 import ru.sign.conditional.diplomanework.viewmodel.AttachmentViewModel
 import ru.sign.conditional.diplomanework.viewmodel.AuthViewModel
-import ru.sign.conditional.diplomanework.viewmodel.PostViewModel
+import ru.sign.conditional.diplomanework.viewmodel.EventViewModel
 
-class FeedFragment : Fragment(R.layout.fragment_feed) {
-    private val binding by viewBinding(FragmentFeedBinding::bind)
+class FeedEventFragment : Fragment(R.layout.fragment_feed_event) {
+    private val binding by viewBinding(FragmentFeedEventBinding::bind)
     private val authViewModel: AuthViewModel by activityViewModels()
-    private val postViewModel: PostViewModel by activityViewModels()
+    private val eventViewModel: EventViewModel by activityViewModels()
     private val attachmentViewModel: AttachmentViewModel by activityViewModels()
-    private lateinit var postAdapter: FeedItemAdapter
+    private lateinit var eventAdapter: FeedItemAdapter
     private lateinit var loadStateHeader: FeedItemLoadingStateAdapter
     private lateinit var loadStateFooter: FeedItemLoadingStateAdapter
     private lateinit var navController: NavController
@@ -58,60 +59,49 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
     }
 
     private fun initViews() {
-        postAdapter = FeedItemAdapter(
-            OnPostInteractionListenerImpl(
-                postViewModel = postViewModel,
+        eventAdapter = FeedItemAdapter(
+            OnEventInteractionListenerImpl(
+                eventViewModel = eventViewModel,
                 attachmentViewModel = attachmentViewModel,
                 authViewModel = authViewModel
             )
         )
-        loadStateHeader = FeedItemLoadingStateAdapter { postAdapter.retry() }
-        loadStateFooter = FeedItemLoadingStateAdapter { postAdapter.retry() }
-        binding.recyclerView.posts.apply {
+        loadStateHeader = FeedItemLoadingStateAdapter { eventAdapter.retry() }
+        loadStateFooter = FeedItemLoadingStateAdapter { eventAdapter.retry() }
+        binding.recyclerView.events.apply {
             adapter =
-                postAdapter.withLoadStateHeaderAndFooter(
+                eventAdapter.withLoadStateHeaderAndFooter(
                     header = loadStateHeader,
                     footer = loadStateFooter
                 )
         }
-        // Учет очередного запуска FeedFragment'а
-        postViewModel.appealTo()
+        // Учет очередного запуска FeedEventFragment'а
+        eventViewModel.appealTo()
         navController = findNavController()
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun subscribe() {
-        postViewModel.apply {
-            // Отображение списка постов
+        eventViewModel.apply {
+            // Отображение списка событий
             viewScopeWithRepeat {
                 dataFlow.collectLatest {
                     snackbarDismiss()
-                    postAdapter.submitData(it)
+                    eventAdapter.submitData(it)
                 }
             }
-            // Прокрутка обновленного списка постов
+            // Прокрутка обновленного списка событий
             viewScopeWithRepeat {
-                val presented = postAdapter.loadStateFlow
+                val presented = eventAdapter.loadStateFlow
                     .asRemotePresentationState()
                     .mapLatest { state ->
                         snackbarDismiss()
-                        Log.d("POSTADAPTER LOADSTATE", state.name)
+                        Log.d("EVENTADAPTER LOADSTATE", state.name)
                         val presented = state == PRESENTED
-                        val isShownAdapterFirstItem =
-                            binding.recyclerView.posts
-                                .findViewHolderForAdapterPosition(0)
-                                ?.itemView
-                                ?.isShown
-                        Log.d("1st ITEM IN ADAPTER",
-                            "is shown = $isShownAdapterFirstItem")
-                        if (presented &&
-                            postViewModel.appealTo == 1L &&
-                            isShownAdapterFirstItem != true) {
-                            Log.d("FEED WAS WROTE", "appealTo = ${postViewModel.appealTo}")
-                            binding.recyclerView.posts.smoothScrollToPosition(0)
+                        if (presented && eventViewModel.appealTo == 1L) {
+                            Log.d("FEED EVENT WAS WROTE", "appealTo = ${eventViewModel.appealTo}")
+                            binding.recyclerView.events.smoothScrollToPosition(0)
                             stateChanger(UiAction.Scroll(currentId = totalState.value.id))
-                        } else {
-                            binding.recyclerView.posts.stopScroll()
                         }
                         presented
                     }
@@ -128,91 +118,84 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                 shouldScrollToTop.collectLatest {
                     Log.d("SHOULD SCROLL TO TOP?", it.toString().uppercase())
                     if (it) {
-                        binding.recyclerView.posts.smoothScrollToPosition(0)
+                        binding.recyclerView.events.smoothScrollToPosition(0)
                         val currentId = totalState.value.id
-                        Log.d("SCROLLED TO MAX POST ID", currentId.toString())
+                        Log.d("SCROLLED TO MAX EVENT ID", currentId.toString())
                         stateChanger(UiAction.Scroll(currentId = currentId))
                     }
                 }
             }
-            // Состояние загрузки постов
+            // Состояние загрузки событий
             viewScope.launch {
-                postAdapter.loadStateFlow.collectLatest { loadState ->
+                eventAdapter.loadStateFlow.collectLatest { loadState ->
                     snackbarDismiss()
-                    var headerStateName: String
-                    var footerStateName: String
                     loadStateHeader.loadState =
                         loadState.mediator?.refresh
                             .takeIf {
                                 it is LoadState.Loading ||
                                 it is LoadState.Error
-                            }.also { headerStateName = "mediator.refresh" }
+                            }
                         ?: loadState.mediator?.prepend
                             .takeIf {
                                 it is LoadState.Loading ||
                                 it is LoadState.Error
-                            }.also { headerStateName = "mediator.prepend" }
-                        ?: loadState.source.refresh.also { headerStateName = "source.refresh" }
+                            }
+                        ?: loadState.source.refresh
                     loadStateFooter.loadState =
                         loadState.mediator?.append
                             .takeIf {
                                 it is LoadState.Loading ||
-                                it is LoadState.Error
-                            }.also { footerStateName = "mediator.append" }
-                        ?: loadState.source.append.also { footerStateName = "source.append" }
-//                    Log.d("HEADER & FOOTER",
-//                        "INCOMING STATE =\n${loadState.allStatesToString()}\n" +
-//                                "HEADER STATE =\n$headerStateName = ${loadStateHeader.loadState}\n" +
-//                                "FOOTER STATE =\n$footerStateName = ${loadStateFooter.loadState}")
+                                        it is LoadState.Error
+                            }
+                        ?: loadState.source.append
                     val errorState = loadState.refresh as? LoadState.Error
                         ?: loadState.prepend as? LoadState.Error
                         ?: loadState.append as? LoadState.Error
                     binding.apply {
-                        recyclerView.postsRefresh.isRefreshing =
+                        recyclerView.eventsRefresh.isRefreshing =
                             loadState.mediator?.refresh is LoadState.Loading
-                        postsGroupView.isVisible = errorState !is LoadState.Error
+                        eventsGroupView.isVisible = errorState !is LoadState.Error
                         if (errorState is LoadState.Error) {
                             errorView.errorMessage.isVisible = true
-                            recyclerView.postsRefresh.isRefreshing = false
+                            recyclerView.eventsRefresh.isRefreshing = false
                         } else
                             errorView.errorMessage.isVisible = false
                     }
                     errorState?.let {
                         snackbar = Snackbar.make(
                             binding.root,
-                            it.error.message ?: overview(HTTP_UNKNOWN_ERROR),
+                            it.error.message ?: NeWorkHelper.overview(NeWorkHelper.HTTP_UNKNOWN_ERROR),
                             Snackbar.LENGTH_INDEFINITE
                         )
                             .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
                             .setAction(R.string.retry_loading) {
                                 snackbarDismiss()
-                                postAdapter.refresh()
+                                eventAdapter.refresh()
                             }
                         snackbar?.show()
                     }
                 }
             }
-            // Редактирование поста
-            edited.observe(viewLifecycleOwner) { post ->
-                if (post.id != 0)
-                    navController.navigate(
-                        R.id.action_feedFragment_to_editPostFragment
-                    )
+            // Редактирование события
+            edited.observe(viewLifecycleOwner) { event ->
+                if (event.id != 0)
+                    navController
+                // TODO <R.id.action_feedEventFragment_to_editEventFragment>
             }
-            // Переход на карточку поста
+            // Переход на карточку события
             viewScopeWithRepeat {
-                singlePost.collectLatest { post ->
-                    if (post != null && post.id != 0)
+                singleEvent.collectLatest { event ->
+                    if (event != null && event.id != 0)
                         navController
-                    // TODO <R.id.action_feedFragment_to_singlePostFragment>
+                    // TODO <R.id.action_feedEventFragment_to_singleEventFragment>
                 }
             }
         }
-        // Просмотр вложения поста
+        // Просмотр вложения события
         attachmentViewModel.viewAttachment.observe(viewLifecycleOwner) { item ->
             if (item.id != 0)
                 navController.navigate(
-                    R.id.action_feedFragment_to_attachmentFragment
+                    R.id.action_feedEventFragment_to_attachmentFragment
                 )
         }
         authViewModel.apply {
@@ -220,7 +203,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             viewScope.launch {
                 data.observe(viewLifecycleOwner) {
                     snackbarDismiss()
-                    postAdapter.refresh()
+                    eventAdapter.refresh()
                 }
             }
             // Проверка авторизации
@@ -241,7 +224,7 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                                 code != HTTP_NOT_FOUND)
                     ) {
                         clearAuthError()
-                        postAdapter.refresh()
+                        eventAdapter.refresh()
                     }
                 }
             }
@@ -250,24 +233,23 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
 
     private fun setupListeners() {
         binding.recyclerView.apply {
-            // Создание нового поста
-            addNewPost.setOnClickListener {
+            // Создание нового события
+            createNewEvent.setOnClickListener {
                 if (!authViewModel.authorized)
                     AuthDialogFragment().show(
                         childFragmentManager,
                         AuthDialogFragment.AUTH_TAG
                     )
                 else {
-                    postViewModel.getDraftCopy()
-                    navController.navigate(
-                        R.id.action_feedFragment_to_editPostFragment
-                    )
+//                    eventViewModel.getDraftCopy()
+                    navController
+                // TODO <R.id.action_feedEventFragment_to_editEventFragment>
                 }
             }
-            // Обновление списка постов после свайпа по нему
+            // Обновление списка событий после свайпа по нему
             viewScope.launch {
-                postsRefresh.setOnRefreshListener {
-                    postAdapter.refresh()
+                eventsRefresh.setOnRefreshListener {
+                    eventAdapter.refresh()
                 }
             }
         }

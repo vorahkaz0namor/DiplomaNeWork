@@ -5,8 +5,11 @@
     <dimen name="section_border_width">4dp</dimen>
     <dimen name="title_indent">6dp</dimen>
     <dimen name="scrollbar_width">8dp</dimen>
+    <dimen name="card_padding">12dp</dimen>
     <dimen name="main_indent">16dp</dimen>
+    <dimen name="text_view_button_size">16sp</dimen>
     <dimen name="avatar_cancel">20dp</dimen>
+    <dimen name="section_size">20sp</dimen>
     <dimen name="title_size">24sp</dimen>
     <dimen name="constraint_height">32dp</dimen>
     <dimen name="avatar_size">48dp</dimen>

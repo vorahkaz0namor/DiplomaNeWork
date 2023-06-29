@@ -18,6 +18,15 @@
     </fragment>
 
     <fragment
+        android:id="@+id/feedEventFragment"
+        android:name="ru.sign.conditional.diplomanework.activity.FeedEventFragment"
+        tools:layout="@layout/fragment_feed_event">
+        <action
+            android:id="@+id/action_feedEventFragment_to_attachmentFragment"
+            app:destination="@id/attachmentFragment"/>
+    </fragment>
+
+    <fragment
         android:id="@+id/loginFragment"
         android:name="ru.sign.conditional.diplomanework.activity.LoginFragment"
         tools:layout="@layout/fragment_login"/>

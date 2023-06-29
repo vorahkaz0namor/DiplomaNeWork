@@ -8,13 +8,13 @@ import ru.sign.conditional.diplomanework.R
 import ru.sign.conditional.diplomanework.databinding.CardPostBinding
 import ru.sign.conditional.diplomanework.dto.AttachmentType
 import ru.sign.conditional.diplomanework.dto.Post
-import ru.sign.conditional.diplomanework.util.NeWorkHelper.likesCount
+import ru.sign.conditional.diplomanework.util.NeWorkHelper.itemsCount
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.loadImage
-import ru.sign.conditional.diplomanework.util.NeWorkHelper.timeCustomRepresentation
+import ru.sign.conditional.diplomanework.util.NeWorkHelper.publishedCustomRepresentation
 
 class PostViewHolder(
     private val binding: CardPostBinding,
-    private val onInteractionListener: OnInteractionListener
+    private val onPostInteractionListener: OnPostInteractionListener
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(post: Post) {
         fillingCardPost(post)
@@ -32,7 +32,7 @@ class PostViewHolder(
                 }
             }
             author.text = post.author
-            published.text = timeCustomRepresentation(post.published)
+            published.text = publishedCustomRepresentation(post.published)
             menu.isVisible = post.ownedByMe
             content.text = post.content
             val attachment = post.attachment
@@ -55,7 +55,7 @@ class PostViewHolder(
                 mediaType.isVisible = false
             }
             likes.isChecked = post.likedByMe
-            likes.text = likesCount(post.likeOwnerIds.size)
+            likes.text = itemsCount(post.likeOwnerIds.size)
             link.text = post.link ?: ""
         }
     }
@@ -63,13 +63,13 @@ class PostViewHolder(
     private fun setupListeners(post: Post) {
         binding.apply {
             setCustomOnClickListener(root) {
-                onInteractionListener.onShowSinglePost(post)
+                onPostInteractionListener.onShowSinglePost(post)
             }
             setCustomOnClickListener(likes) {
-                onInteractionListener.onLike(post)
+                onPostInteractionListener.onLike(post)
             }
             setCustomOnClickListener(postAttachment, mediaType) {
-                onInteractionListener.onShowAttachment(post)
+                onPostInteractionListener.onShowAttachment(post)
             }
             menu.setOnClickListener { view ->
                 PopupMenu(view.context, view).apply {
@@ -77,11 +77,11 @@ class PostViewHolder(
                     setOnMenuItemClickListener { item ->
                         when (item.itemId) {
                             R.id.edit_post -> {
-                                onInteractionListener.onEdit(post)
+                                onPostInteractionListener.onEdit(post)
                                 true
                             }
                             R.id.remove_post -> {
-                                onInteractionListener.onRemove(post)
+                                onPostInteractionListener.onRemove(post)
                                 true
                             }
                             else -> false
@@ -94,7 +94,7 @@ class PostViewHolder(
 
     private fun setCustomOnClickListener(vararg view: View, action: () -> Unit) {
         view.map {
-            onInteractionListener.apply {
+            onPostInteractionListener.apply {
                 it.setOnClickListener {
                     checkAuth()
                     if (authorized)

@@ -44,7 +44,7 @@ class EditPostFragment : Fragment(R.layout.fragment_edit_post) {
             customNavigateUp(
                 DraftCopy(
                     postId = post?.id ?: 0,
-                    content = binding.postContent.text.toString()
+                    postContent = binding.postContent.text.toString()
                 )
             )
         }
@@ -67,7 +67,7 @@ class EditPostFragment : Fragment(R.layout.fragment_edit_post) {
         binding.postContent.setText(
             if (draftCopy != null) {
                 if (draftCopy.postId == post?.id)
-                    draftCopy.content
+                    draftCopy.postContent
                 else
                     post?.content
             } else

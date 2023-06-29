@@ -16,12 +16,12 @@ import okhttp3.internal.http.HTTP_CONTINUE
 import okhttp3.internal.http.HTTP_OK
 import ru.sign.conditional.diplomanework.dto.DraftCopy
 import ru.sign.conditional.diplomanework.dto.FeedItem
-import ru.sign.conditional.diplomanework.dto.Post
+import ru.sign.conditional.diplomanework.dto.Event
 import ru.sign.conditional.diplomanework.dto.UserPreview
 import ru.sign.conditional.diplomanework.model.MediaModel
 import ru.sign.conditional.diplomanework.model.UiAction
 import ru.sign.conditional.diplomanework.model.UiState
-import ru.sign.conditional.diplomanework.repository.PostRepository
+import ru.sign.conditional.diplomanework.repository.EventRepository
 import ru.sign.conditional.diplomanework.repository.UserRepository
 import ru.sign.conditional.diplomanework.util.AndroidUtils.defaultDispatcher
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.customLog
@@ -33,33 +33,34 @@ import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
-class PostViewModel @Inject constructor(
-    private val postRepository: PostRepository,
+class EventViewModel @Inject constructor(
+    private val eventRepository: EventRepository,
     private val userRepository: UserRepository
 ) : ViewModel() {
-    // Счетчик количества запусков FeedFragment'а
+    // Счетчик количества запусков FeedEventFragment'а
     private var _appealTo = 0L
     val appealTo: Long
         get() = _appealTo
-    private val emptyPost = Post(
+    private val emptyEvent = Event(
         id = 0,
         author = "",
         content = "",
+        datetime = "",
         published = ""
     )
     private val cachedPagingDataFromRepo: Flow<PagingData<FeedItem>>
     val dataFlow: Flow<PagingData<FeedItem>>
         get() = cachedPagingDataFromRepo
-    private var _singlePost: Flow<Post?> = flowOf(null)
-    val singlePost: Flow<Post?>
-        get() = _singlePost
+    private var _singleEvent: Flow<Event?> = flowOf(null)
+    val singleEvent: Flow<Event?>
+        get() = _singleEvent
     val stateChanger: (UiAction) -> Unit
     val totalState: StateFlow<UiState>
-    private val _postEvent = SingleLiveEvent(HTTP_CONTINUE)
-    val postEvent: LiveData<Int>
-        get() = _postEvent
-    private val _edited = MutableLiveData(emptyPost)
-    val edited: LiveData<Post>
+    private val _eventOccurrence = SingleLiveEvent(HTTP_CONTINUE)
+    val eventOccurrence: LiveData<Int>
+        get() = _eventOccurrence
+    private val _edited = MutableLiveData(emptyEvent)
+    val edited: LiveData<Event>
         get() = _edited
     private val _media = MutableLiveData<MediaModel?>(null)
     val media: LiveData<MediaModel?>
@@ -94,10 +95,10 @@ class PostViewModel @Inject constructor(
             .onStart {
                 emit( UiAction.Scroll(currentId = initialId) )
             }
-        cachedPagingDataFromRepo = postRepository.data
+        cachedPagingDataFromRepo = eventRepository.data
             .mapLatest {
-                val maxId = postRepository.getLatestPostId()
-                Log.d("GOT MAX POST ID", maxId.toString())
+                val maxId = eventRepository.getLatestEventId()
+                Log.d("GOT MAX EVENT ID", maxId.toString())
                 stateChanger(UiAction.Get(id = maxId))
                 it
             }
@@ -121,23 +122,23 @@ class PostViewModel @Inject constructor(
                     .WhileSubscribed(stopTimeoutMillis = 7_000),
                 initialValue = UiState()
             )
-        Log.d("INIT VIEW MODEL", "appealTo = $appealTo")
+        Log.d("INIT EVENT VIEW MODEL", "appealTo = $appealTo")
     }
 
     // READ functions
 
     fun appealTo() = (++_appealTo).also {
-        Log.d("FEED START", "$it times")
+        Log.d("FEED EVENT START", "$it times")
     }
 
-    fun getPostById(id: Int) {
+    fun getEventById(id: Int) {
         viewModelScope.launch {
             try {
-                _singlePost = postRepository.getPostById(id)
+                _singleEvent = eventRepository.getEventById(id)
                     .mapLatest { it }
                     .flowOn(defaultDispatcher)
             } catch (e: Exception) {
-                _postEvent.value = exceptionCheck(e)
+                _eventOccurrence.value = exceptionCheck(e)
             }
         }
     }
@@ -145,7 +146,7 @@ class PostViewModel @Inject constructor(
     fun getDraftCopy() {
         viewModelScope.launch {
             try {
-                _draftCopy = postRepository.getDraftCopy()
+                _draftCopy = eventRepository.getDraftCopy()
             } catch (e: Exception) {
                 customLog("GET DRAFT COPY", e)
             }
@@ -154,24 +155,22 @@ class PostViewModel @Inject constructor(
 
     // CREATE & UPDATE functions
 
-    fun setEditPost(post: Post) { _edited.value = post }
+    fun setEditEvent(event: Event) { _edited.value = event }
 
     fun setImage(uri: Uri, file: File) {
         _media.value = MediaModel(uri, file)
     }
 
-    fun savePost(text: CharSequence?, link: CharSequence?) {
-        if (!text.isNullOrBlank()) {
-            saveLink(link)
+    fun saveEvent(text: CharSequence?) {
+        if (!text.isNullOrBlank())
             save(text.toString())
-        }
         else
-            _postEvent.value = HTTP_OK
+            _eventOccurrence.value = HTTP_OK
     }
 
     private fun save(newContent: String) {
         viewModelScope.launch {
-            _postEvent.value =
+            _eventOccurrence.value =
                 try {
                     edited.value?.let {
                         val userPreview =
@@ -182,13 +181,13 @@ class PostViewModel @Inject constructor(
                                     name = it.author,
                                     avatar = it.authorAvatar
                                 )
-                        val post = it.copy(
+                        val event = it.copy(
                             author = userPreview.name,
                             authorAvatar = userPreview.avatar,
                             content = newContent,
                             published = LocalDateTime.now().toString()
                         )
-                        postRepository.savePost(post, media.value)
+                        eventRepository.saveEvent(event, media.value)
                     }
                     HTTP_OK
                 } catch (e: Exception) {
@@ -197,11 +196,11 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    fun repeatSavePost(post: Post) {
+    fun repeatSaveEvent(event: Event) {
         viewModelScope.launch {
-            _postEvent.value =
+            _eventOccurrence.value =
                 try {
-                    postRepository.savePost(post, media.value)
+                    eventRepository.saveEvent(event, media.value)
                     HTTP_OK
                 } catch (e: Exception) {
                     exceptionCheck(e)
@@ -209,13 +208,13 @@ class PostViewModel @Inject constructor(
         }
     }
 
-    fun likePostById(post: Post) {
+    fun editParticipantsInEventById(event: Event) {
         viewModelScope.launch {
             try {
                 val ownerId = userRepository.getOwnerId()
-                postRepository.likePostById(post, ownerId)
+                eventRepository.editParticipantsInEventById(event, ownerId)
             } catch (e: Exception) {
-                _postEvent.value = exceptionCheck(e)
+                _eventOccurrence.value = exceptionCheck(e)
             }
         }
     }
@@ -225,7 +224,7 @@ class PostViewModel @Inject constructor(
             _draftCopy = draftCopy
             if (validationDraftCopy())
                 try {
-                    postRepository.saveDraftCopy(
+                    eventRepository.saveDraftCopy(
                         draftCopy ?: DraftCopy()
                     )
                 } catch (e: Exception) {
@@ -235,27 +234,12 @@ class PostViewModel @Inject constructor(
     }
 
     private fun validationDraftCopy() =
-        (draftCopy != null && edited.value?.content != draftCopy?.postContent)
+        (draftCopy != null && edited.value?.content != draftCopy?.eventContent)
                 || edited.value?.id == 0
-
-    fun addLink() { _edited.value = _edited.value?.copy(link = "") }
-
-    private fun saveLink(link: CharSequence?) {
-        _edited.value =
-            if (!link.isNullOrBlank()) {
-                _edited.value?.copy(
-                    link = link.toString().trim()
-                )
-            } else {
-                _edited.value?.copy(link = null)
-            }
-    }
 
     // DELETE functions
 
-    fun clearEditPost() { _edited.value = emptyPost }
-
-    fun clearLink() { _edited.value = _edited.value?.copy(link = null) }
+    fun clearEditEvent() { _edited.value = emptyEvent }
 
     fun clearImage() {
         _edited.value = _edited.value?.copy(
@@ -264,12 +248,12 @@ class PostViewModel @Inject constructor(
         _media.value = null
     }
 
-    fun removePostById(post: Post) {
+    fun removeEventById(event: Event) {
         viewModelScope.launch {
             try {
-                postRepository.removePostById(post)
+                eventRepository.removeEventById(event)
             } catch (e: Exception) {
-                _postEvent.value = exceptionCheck(e)
+                _eventOccurrence.value = exceptionCheck(e)
             }
         }
     }

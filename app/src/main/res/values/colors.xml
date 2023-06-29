@@ -10,4 +10,6 @@
     <color name="ripple_button">#9F9292</color>
     <color name="red">#FF0000</color>
     <color name="custom_transparent">#00FFFFFF</color>
+    <color name="green">#559100</color>
+    <color name="card_frame">#00795D</color>
 </resources>

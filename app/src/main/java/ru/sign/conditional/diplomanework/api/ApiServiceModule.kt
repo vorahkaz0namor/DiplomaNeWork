@@ -70,4 +70,11 @@ class ApiServiceModule {
         retrofit: Retrofit
     ) : PostApiService =
         retrofit.create()
+
+    @Singleton
+    @Provides
+    fun eventApiService(
+        retrofit: Retrofit
+    ) : EventApiService =
+        retrofit.create()
 }
