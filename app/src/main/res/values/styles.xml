@@ -10,12 +10,48 @@
         <item name="android:paddingTop">@dimen/zero_dp</item>
         <item name="android:paddingBottom">@dimen/zero_dp</item>
         <item name="textAllCaps">false</item>
+        <item name="backgroundTint">@color/custom_transparent</item>
     </style>
 
     <style name="Widget.AppTheme.MenuButton" parent="Widget.AppTheme.NeWorkButton">
         <item name="iconPadding">@dimen/zero_dp</item>
         <item name="iconGravity">textEnd</item>
         <item name="tint">?attr/colorControlNormal</item>
+    </style>
+
+    <style name="Widget.AppTheme.LikeButton" parent="Widget.AppTheme.NeWorkButton">
+        <item name="iconTint">@color/color_like_button</item>
+    </style>
+
+    <style name="Widget.AppTheme.EventTypeIndicator" parent="Widget.AppTheme.NeWorkButton">
+        <item name="android:clickable">false</item>
+        <item name="iconTint">@color/green</item>
+        <item name="icon">@drawable/ic_event_type_32</item>
+        <item name="iconGravity">textEnd</item>
+    </style>
+
+    <style name="Widget.AppTheme.ParticipantsIndicator" parent="Widget.AppTheme.NeWorkButton">
+        <item name="android:clickable">false</item>
+        <item name="icon">@drawable/ic_dot_16</item>
+        <item name="iconSize">@dimen/scrollbar_width</item>
+        <item name="iconPadding">@dimen/title_indent</item>
+    </style>
+
+    <style name="Widget.AppTheme.AttendInButton" parent="Widget.AppTheme.NeWorkButton">
+        <item name="icon">@drawable/attend_in_selector</item>
+        <item name="iconGravity">end</item>
+        <item name="iconPadding">@dimen/zero_dp</item>
+        <item name="android:checkable">true</item>
+    </style>
+
+    <style name="Widget.AppTheme.ClearPreviewButton" parent="Widget.AppTheme.NeWorkButton">
+        <item name="backgroundTint">@color/ripple_button</item>
+    </style>
+
+    <style name="Widget.AppTheme.NeWorkActionButton" parent="Widget.AppTheme.NeWorkButton">
+        <item name="android:checkable">true</item>
+        <item name="iconPadding">@dimen/zero_dp</item>
+        <item name="iconTint">@color/color_selection_menu_item</item>
     </style>
 
     <style name="Widget.AppTheme.NeWorkOutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
@@ -31,36 +67,6 @@
         <item name="cornerRadius">@dimen/card_padding</item>
         <item name="strokeColor">@color/card_frame</item>
         <item name="android:insetTop">@dimen/zero_dp</item>
-    </style>
-
-    <style name="Widget.AppTheme.LikeButton" parent="Widget.AppTheme.NeWorkButton">
-        <item name="iconTint">@color/color_like_button</item>
-        <item name="backgroundTint">@color/custom_transparent</item>
-    </style>
-
-    <style name="Widget.AppTheme.EventTypeIndicator" parent="Widget.AppTheme.NeWorkButton">
-        <item name="android:clickable">false</item>
-        <item name="iconTint">@color/green</item>
-        <item name="icon">@drawable/ic_event_type_32</item>
-        <item name="iconGravity">textEnd</item>
-        <item name="backgroundTint">@color/custom_transparent</item>
-    </style>
-
-    <style name="Widget.AppTheme.ParticipantsIndicator" parent="Widget.AppTheme.NeWorkButton">
-        <item name="android:clickable">false</item>
-        <item name="icon">@drawable/ic_dot_16</item>
-        <item name="iconSize">@dimen/scrollbar_width</item>
-        <item name="iconPadding">@dimen/title_indent</item>
-        <item name="backgroundTint">@color/custom_transparent</item>
-    </style>
-
-    <style name="Widget.AppTheme.AttendInButton" parent="Widget.AppTheme.NeWorkButton">
-        <item name="icon">@drawable/attend_in_selector</item>
-        <item name="iconGravity">end</item>
-        <item name="iconPadding">@dimen/zero_dp</item>
-        <item name="backgroundTint">@color/custom_transparent</item>
-        <item name="android:pointerIcon">hand</item>
-        <item name="android:checkable">true</item>
     </style>
 
     <style name="Widget.AppTheme.NeWorkFAB" parent="Widget.MaterialComponents.FloatingActionButton">
@@ -105,11 +111,6 @@
         <item name="iconSize">@dimen/avatar_cancel</item>
         <item name="layout_constraintHeight">@dimen/avatar_cancel</item>
         <item name="layout_constraintWidth">@dimen/avatar_cancel</item>
-    </style>
-
-    <style name="Widget.AppTheme.ClearPreviewButton" parent="Widget.AppTheme.NeWorkButton">
-        <item name="backgroundTint">@color/ripple_button</item>
-        <item name="android:textColor">?attr/colorControlNormal</item>
     </style>
 
     <style name="Widget.AppTheme.PlayButton" parent="Widget.AppTheme.MenuButton">

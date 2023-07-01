@@ -118,7 +118,6 @@
             android:layout_height="wrap_content"
             android:checkable="true"
             android:contentDescription="@string/likes_count"
-            android:pointerIcon="hand"
             app:icon="@drawable/like_selector"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/barrierBottom"
