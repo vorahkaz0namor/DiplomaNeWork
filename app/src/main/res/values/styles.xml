@@ -21,6 +21,9 @@
 
     <style name="Widget.AppTheme.LikeButton" parent="Widget.AppTheme.NeWorkButton">
         <item name="iconTint">@color/color_like_button</item>
+        <item name="android:checkable">true</item>
+        <item name="icon">@drawable/like_selector</item>
+        <item name="contentDescription">@string/likes_count</item>
     </style>
 
     <style name="Widget.AppTheme.EventTypeIndicator" parent="Widget.AppTheme.NeWorkButton">
@@ -42,6 +45,8 @@
         <item name="iconGravity">end</item>
         <item name="iconPadding">@dimen/zero_dp</item>
         <item name="android:checkable">true</item>
+        <item name="android:backgroundTint">@color/custom_transparent</item>
+        <item name="contentDescription">@string/participated_by_me</item>
     </style>
 
     <style name="Widget.AppTheme.ClearPreviewButton" parent="Widget.AppTheme.NeWorkButton">

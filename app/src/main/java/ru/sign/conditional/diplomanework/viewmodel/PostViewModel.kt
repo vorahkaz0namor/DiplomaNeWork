@@ -14,10 +14,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import okhttp3.internal.http.HTTP_CONTINUE
 import okhttp3.internal.http.HTTP_OK
-import ru.sign.conditional.diplomanework.dto.DraftCopy
-import ru.sign.conditional.diplomanework.dto.FeedItem
-import ru.sign.conditional.diplomanework.dto.Post
-import ru.sign.conditional.diplomanework.dto.UserPreview
+import ru.sign.conditional.diplomanework.dto.*
 import ru.sign.conditional.diplomanework.model.MediaModel
 import ru.sign.conditional.diplomanework.model.UiAction
 import ru.sign.conditional.diplomanework.model.UiState
@@ -94,7 +91,7 @@ class PostViewModel @Inject constructor(
         cachedPagingDataFromRepo = postRepository.data
             .mapLatest {
                 val maxId = postRepository.getLatestPostId()
-                Log.d("GOT MAX POST ID", maxId.toString())
+//                Log.d("GOT MAX POST ID", maxId.toString())
                 stateChanger(UiAction.Get(id = maxId))
                 it
             }
@@ -109,7 +106,7 @@ class PostViewModel @Inject constructor(
                     id = get.id,
                     lastIdScrolled = scroll.currentId
                 )
-                Log.d("UPDATE COMMON STATE", uiState.toString())
+//                Log.d("UPDATE COMMON STATE", uiState.toString())
                 uiState
             }
             .stateIn(
@@ -118,14 +115,13 @@ class PostViewModel @Inject constructor(
                     .WhileSubscribed(stopTimeoutMillis = 7_000),
                 initialValue = UiState()
             )
-        Log.d("INIT VIEW MODEL", "appealTo = $appealTo")
+//        Log.d("INIT VIEW MODEL", "appealTo = $appealTo")
     }
 
     // READ functions
 
-    fun appealTo() = (++_appealTo).also {
-        Log.d("FEED START", "$it times")
-    }
+    fun appealTo() = (++_appealTo)
+//        .also { Log.d("FEED START", "$it times") }
 
     fun getDraftCopy() {
         viewModelScope.launch {

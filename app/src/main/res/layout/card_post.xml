@@ -116,16 +116,13 @@
             style="@style/Widget.AppTheme.LikeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checkable="true"
-            android:contentDescription="@string/likes_count"
-            app:icon="@drawable/like_selector"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/barrierBottom"
             tools:text="@sample/example_post.json/id" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/repeat_save_post"
-            style="@style/Widget.AppTheme.LikeButton"
+            style="@style/Widget.AppTheme.NeWorkButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible"

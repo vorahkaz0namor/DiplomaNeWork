@@ -14,7 +14,7 @@
             app:destination="@id/editPostFragment"/>
         <action
             android:id="@+id/action_feedFragment_to_attachmentFragment"
-            app:destination="@id/attachmentFragment"/>
+            app:destination="@id/attachmentFragmentOfPost"/>
     </fragment>
 
     <fragment
@@ -23,7 +23,7 @@
         tools:layout="@layout/fragment_feed_event">
         <action
             android:id="@+id/action_feedEventFragment_to_attachmentFragment"
-            app:destination="@id/attachmentFragment"/>
+            app:destination="@id/attachmentFragmentOfEvent"/>
     </fragment>
 
     <fragment
@@ -37,7 +37,12 @@
         tools:layout="@layout/fragment_edit_post"/>
 
     <fragment
-        android:id="@+id/attachmentFragment"
+        android:id="@+id/attachmentFragmentOfPost"
+        android:name="ru.sign.conditional.diplomanework.activity.AttachmentFragment"
+        tools:layout="@layout/fragment_attachment"/>
+
+    <fragment
+        android:id="@+id/attachmentFragmentOfEvent"
         android:name="ru.sign.conditional.diplomanework.activity.AttachmentFragment"
         tools:layout="@layout/fragment_attachment"/>
 

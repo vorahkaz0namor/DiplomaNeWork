@@ -100,7 +100,6 @@
             style="@style/Widget.AppTheme.AttendInButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/participated_by_me"
             app:layout_constraintBottom_toBottomOf="@id/author"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/author" />

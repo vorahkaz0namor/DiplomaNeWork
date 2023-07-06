@@ -17,4 +17,22 @@ data class Post(
     val ownedByMe: Boolean = false,
     val isOnServer: Boolean = idFromServer != 0,
     val users: Map<String, UserPreview> = emptyMap()
-) : FeedItem
+) : FeedItem {
+    override fun toString(): String =
+        "id = $id, " +
+        "idFromServer = $idFromServer, " +
+        "authorId = $authorId, " +
+        "author = $author\n" +
+        "authorAvatar = $authorAvatar\n" +
+        "authorJob = $authorJob\n" +
+        "content = $content\n" +
+        "published = $published, " +
+        "link = $link\n" +
+        "likeOwnerIds count = ${likeOwnerIds.size}, " +
+        "mentionIds count = ${mentionIds.size}, " +
+        "likedByMe = ${likedByMe.toString().uppercase()}\n" +
+        "attachment url = ${attachment?.url}\n" +
+        "ownedByMe = ${ownedByMe.toString().uppercase()}, " +
+        "isOnServer = ${isOnServer.toString().uppercase()}, " +
+        "users count = ${users.size}"
+}

@@ -1,7 +1,11 @@
 package ru.sign.conditional.diplomanework.adapter
 
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.util.Log
 import android.view.View
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.LinearInterpolator
 import android.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +14,7 @@ import ru.sign.conditional.diplomanework.databinding.CardEventBinding
 import ru.sign.conditional.diplomanework.dto.AttachmentType
 import ru.sign.conditional.diplomanework.dto.Event
 import ru.sign.conditional.diplomanework.dto.EventType
+import ru.sign.conditional.diplomanework.dto.Payload
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.datetimeCustomRepresentation
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.itemsCount
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.loadImage
@@ -21,6 +26,12 @@ class EventViewHolder(
     fun bind(event: Event) {
         fillingCardEvent(event)
         setupListeners(event)
+    }
+
+    fun bind(payload: Payload, event: Event?) {
+        fillingCardEvent(payload)
+        if (event != null)
+            setupListenersGivenPayload(event)
     }
 
     private fun fillingCardEvent(event: Event) {
@@ -67,12 +78,29 @@ class EventViewHolder(
         }
     }
 
+    private fun fillingCardEvent(payload: Payload) {
+        payload.apply {
+            participatedByMe?.let {
+                binding.attendIn.isChecked = it
+            }
+            participantsIds?.let {
+                binding.participants.apply {
+                    text = context.getString(
+                        R.string.participants_count,
+                        itemsCount(it.size)
+                    )
+                }
+            }
+        }
+    }
+
     private fun setupListeners(event: Event) {
         binding.apply {
             setCustomOnClickListener(viewEvent) {
                 onEventInteractionListener.onShowSingleEvent(event)
             }
             setCustomOnClickListener(attendIn) {
+                attendAnimation()
                 onEventInteractionListener.onAttend(event)
             }
             setCustomOnClickListener(eventAttachment, mediaType) {
@@ -99,6 +127,15 @@ class EventViewHolder(
         }
     }
 
+    private fun setupListenersGivenPayload(event: Event) {
+        binding.apply {
+            setCustomOnClickListener(attendIn) {
+                attendAnimation()
+                onEventInteractionListener.onAttend(event)
+            }
+        }
+    }
+
     private fun setCustomOnClickListener(vararg view: View, action: () -> Unit) {
         view.map {
             onEventInteractionListener.apply {
@@ -112,5 +149,18 @@ class EventViewHolder(
                 }
             }
         }
+    }
+
+    private fun attendAnimation() {
+        ObjectAnimator.ofPropertyValuesHolder(
+            binding.attendIn,
+            PropertyValuesHolder.ofFloat(View.SCALE_X, 1.2F, 1F),
+            PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.2F, 1F)
+        )
+            .apply {
+                duration = 300
+                interpolator = LinearInterpolator()
+            }
+            .start()
     }
 }

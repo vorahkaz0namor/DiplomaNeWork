@@ -96,12 +96,19 @@ class FeedEventFragment : Fragment(R.layout.fragment_feed_event) {
                     .asRemotePresentationState()
                     .mapLatest { state ->
                         snackbarDismiss()
-                        Log.d("EVENTADAPTER LOADSTATE", state.name)
                         val presented = state == PRESENTED
-                        if (presented && eventViewModel.appealTo == 1L) {
-                            Log.d("FEED EVENT WAS WROTE", "appealTo = ${eventViewModel.appealTo}")
+                        val isShownAdapterFirstItem =
+                            binding.recyclerView.events
+                                .findViewHolderForAdapterPosition(0)
+                                ?.itemView
+                                ?.isShown
+                        if (presented &&
+                            eventViewModel.appealTo == 1L &&
+                            isShownAdapterFirstItem != true) {
                             binding.recyclerView.events.smoothScrollToPosition(0)
                             stateChanger(UiAction.Scroll(currentId = totalState.value.id))
+                        } else {
+                            binding.recyclerView.events.stopScroll()
                         }
                         presented
                     }
@@ -116,11 +123,9 @@ class FeedEventFragment : Fragment(R.layout.fragment_feed_event) {
                     }
                         .distinctUntilChanged()
                 shouldScrollToTop.collectLatest {
-                    Log.d("SHOULD SCROLL TO TOP?", it.toString().uppercase())
                     if (it) {
                         binding.recyclerView.events.smoothScrollToPosition(0)
                         val currentId = totalState.value.id
-                        Log.d("SCROLLED TO MAX EVENT ID", currentId.toString())
                         stateChanger(UiAction.Scroll(currentId = currentId))
                     }
                 }

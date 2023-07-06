@@ -1,5 +1,6 @@
 package ru.sign.conditional.diplomanework.repository
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingData
 import androidx.paging.map
@@ -118,12 +119,14 @@ class EventRepositoryImpl @Inject constructor(
             if (event.participatedByMe) {
                 event.copy(
                     participantsIds = event.participantsIds.minus(ownerId),
-                    participatedByMe = false
+                    participatedByMe = false,
+                    users = event.users.minus(ownerId.toString())
                 )
             } else {
                 event.copy(
                     participantsIds = event.participantsIds.plus(ownerId),
-                    participatedByMe = true
+                    participatedByMe = true,
+                    users = event.users.plus(getUsers(listOf(ownerId.toString())))
                 )
             }
         eventDao.saveEvent(EventEntity.fromDto(newEvent))

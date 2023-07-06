@@ -98,7 +98,6 @@ class EventViewModel @Inject constructor(
         cachedPagingDataFromRepo = eventRepository.data
             .mapLatest {
                 val maxId = eventRepository.getLatestEventId()
-                Log.d("GOT MAX EVENT ID", maxId.toString())
                 stateChanger(UiAction.Get(id = maxId))
                 it
             }
@@ -113,7 +112,6 @@ class EventViewModel @Inject constructor(
                     id = get.id,
                     lastIdScrolled = scroll.currentId
                 )
-                Log.d("UPDATE COMMON STATE", uiState.toString())
                 uiState
             }
             .stateIn(
@@ -122,14 +120,11 @@ class EventViewModel @Inject constructor(
                     .WhileSubscribed(stopTimeoutMillis = 7_000),
                 initialValue = UiState()
             )
-        Log.d("INIT EVENT VIEW MODEL", "appealTo = $appealTo")
     }
 
     // READ functions
 
-    fun appealTo() = (++_appealTo).also {
-        Log.d("FEED EVENT START", "$it times")
-    }
+    fun appealTo() = (++_appealTo)
 
     fun getEventById(id: Int) {
         viewModelScope.launch {

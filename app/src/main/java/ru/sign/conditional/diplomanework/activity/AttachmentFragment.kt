@@ -25,7 +25,8 @@ class AttachmentFragment : Fragment(R.layout.fragment_attachment) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireActivity().onBackPressedDispatcher.addCallback(this) {
-            customNavigateUp()
+            attachmentViewModel.clearAttachment()
+            findNavController().navigateUp()
         }
         if (attachment != null) {
             if (attachment!!.type != AttachmentType.IMAGE)
@@ -51,10 +52,5 @@ class AttachmentFragment : Fragment(R.layout.fragment_attachment) {
             )
             exoplayerView.isVisible = attachment?.type != AttachmentType.IMAGE
         }
-    }
-
-    private fun customNavigateUp() {
-        attachmentViewModel.clearAttachment()
-        findNavController().navigateUp()
     }
 }

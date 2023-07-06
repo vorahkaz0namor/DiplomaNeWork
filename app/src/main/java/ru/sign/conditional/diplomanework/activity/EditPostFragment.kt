@@ -103,23 +103,12 @@ class EditPostFragment : Fragment(R.layout.fragment_edit_post) {
                 val attachmentValidation =
                     attachment != null &&
                             attachment.type != AttachmentType.AUDIO
-                Log.d("LOGGING THE MEDIA MODEL",
-                    "isPresent = ${it != null}\n" +
-                            "uri = ${it?.uri}\n" +
-                            "file length = ${it?.file?.length()}")
-                Log.d("LOGGING THE ATTACHMENT",
-                    "isPresent = ${attachment != null}\n" +
-                            "url = ${attachment?.url}\n" +
-                            "type = ${attachment?.type}")
                 binding.previewContainer.isVisible = it != null || attachmentValidation
                 binding.imagePreview.apply {
-                    if (it != null) {
-                        Log.d("MEDIA MODEL NOT NULL!", it.file.name)
+                    if (it != null)
                         setImageURI(it.uri)
-                    }
                     else {
                         if (attachmentValidation) {
-                            Log.d("ATTACHMENT NOT NULL?", attachment?.type.toString())
                             loadImage(
                                 url = attachment!!.url,
                                 type = attachment.type.name

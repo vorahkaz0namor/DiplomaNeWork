@@ -10,7 +10,7 @@ import okhttp3.internal.http.HTTP_NOT_FOUND
 import okhttp3.internal.http.HTTP_NO_CONTENT
 import retrofit2.HttpException
 import ru.sign.conditional.diplomanework.R
-import ru.sign.conditional.diplomanework.dto.AttachmentType
+import ru.sign.conditional.diplomanework.dto.*
 import java.math.BigDecimal
 import java.net.ConnectException
 import java.time.Instant
@@ -118,6 +118,16 @@ object NeWorkHelper {
     fun customLog(action: String, e: Exception) {
         Log.d(action, "CAUGHT EXCEPTION => $e\n" +
                 "DESCRIPTION => ${overview(exceptionCheck(e))}")
+    }
+
+    fun loggingFeedItem(logType: String, id: Int, participatedByMe: Boolean?, participants: Int?) {
+        Log.d("[$logType]FEEDITEM $id",
+            "participatedByMe = ${participatedByMe.toString().uppercase()}\n" +
+                    "participants = $participants")
+    }
+
+    fun diffLoggingItem(logType: String, item: Event?) {
+        Log.d("[$logType]EVENT ${(item as FeedItem).id}", item.toString())
     }
 
     fun CombinedLoadStates.allStatesToString(): String =

@@ -4,10 +4,7 @@ import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingData
 import androidx.paging.map
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.HttpException
@@ -20,7 +17,6 @@ import ru.sign.conditional.diplomanework.dto.*
 import ru.sign.conditional.diplomanework.entity.DraftCopyEntity
 import ru.sign.conditional.diplomanework.entity.PostEntity
 import ru.sign.conditional.diplomanework.model.MediaModel
-import ru.sign.conditional.diplomanework.util.AndroidUtils.defaultDispatcher
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.customLog
 import javax.inject.Inject
 
@@ -57,7 +53,6 @@ class PostRepositoryImpl @Inject constructor(
 
     override suspend fun savePost(post: Post, media: MediaModel?) {
         try {
-            Log.d("BEFORE SAVE", post.attachment.toString())
             val uploadedMedia =
                 if (media != null)
                     Attachment(
@@ -71,7 +66,6 @@ class PostRepositoryImpl @Inject constructor(
             )
             val localSavedPostId =
                 postDao.savePost(PostEntity.fromDto(postWithMedia))
-            Log.d("DAO SAVE", postWithMedia.attachment.toString())
             val postResponse = postApiService.savePost(
                 postWithMedia.copy(
                     id = post.idFromServer
@@ -80,7 +74,6 @@ class PostRepositoryImpl @Inject constructor(
             if (postResponse.isSuccessful) {
                 val savedPost = postResponse.body()
                     ?: throw HttpException(postResponse)
-                Log.d("API SAVE", savedPost.attachment.toString())
                 postDao.savePost(PostEntity.fromDto(
                     savedPost.copy(
                         id = localSavedPostId,
@@ -112,17 +105,19 @@ class PostRepositoryImpl @Inject constructor(
             if (post.likedByMe) {
                 post.copy(
                     likeOwnerIds = post.likeOwnerIds.minus(ownerId),
-                    likedByMe = false
+                    likedByMe = false,
+                    users = post.users.minus(ownerId.toString())
                 )
             } else {
                 post.copy(
                     likeOwnerIds = post.likeOwnerIds.plus(ownerId),
-                    likedByMe = true
+                    likedByMe = true,
+                    users = post.users.plus(getUsers(listOf(ownerId.toString())))
                 )
             }
         postDao.savePost(PostEntity.fromDto(postToUpdate))
-        Log.d("POST TO UPDATE", "likes = ${postToUpdate.likeOwnerIds.size}\n" +
-                "likedByMe = ${postToUpdate.likedByMe}")
+//        Log.d("POST TO UPDATE", "likes = ${postToUpdate.likeOwnerIds}\n" +
+//                "likedByMe = ${postToUpdate.likedByMe}")
         val postResponse = postApiService.let {
             if (post.likedByMe)
                 it.unlikePostById(post.idFromServer)
@@ -132,8 +127,8 @@ class PostRepositoryImpl @Inject constructor(
         if (postResponse.isSuccessful) {
             val loadedPost = postResponse.body()
                 ?: throw HttpException(postResponse)
-            Log.d("LOADED POST", "likes = ${loadedPost.likeOwnerIds.size}\n" +
-                    "likedByMe = ${loadedPost.likedByMe}")
+//            Log.d("LOADED POST", "likes = ${loadedPost.likeOwnerIds}\n" +
+//                    "likedByMe = ${loadedPost.likedByMe}")
             postDao.savePost(PostEntity.fromDto(
                 loadedPost.copy(
                     id = post.id,

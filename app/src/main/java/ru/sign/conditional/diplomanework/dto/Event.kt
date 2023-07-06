@@ -20,4 +20,25 @@ data class Event(
     val link: String? = null,
     val ownedByMe: Boolean = false,
     val users: Map<String, UserPreview> = emptyMap()
-) : FeedItem
+) : FeedItem {
+    override fun toString(): String =
+                "id = $id, " +
+                "idFromServer = $idFromServer, " +
+                "authorId = $authorId, " +
+                "author = $author\n" +
+                "authorAvatar = $authorAvatar\n" +
+                "authorJob = $authorJob, " +
+                "content = $content\n" +
+                "datetime = $datetime\n" +
+                "published = $published, " +
+                "type = ${type.name}\n" +
+                "likes count = ${likeOwnerIds.size}, " +
+                "likedByMe = ${likedByMe.toString().uppercase()}, " +
+                "speakers count = ${speakerIds.size}\n" +
+                "participants = $participantsIds, " +
+                "participatedByMe = ${participatedByMe.toString().uppercase()}\n" +
+                "attachment url = ${attachment?.url}\n" +
+                "link = $link, " +
+                "ownedByMe = ${ownedByMe.toString().uppercase()}, " +
+                "users count = ${users.size}"
+}

@@ -1,5 +1,6 @@
 package ru.sign.conditional.diplomanework.adapter
 
+import android.util.Log
 import android.view.View
 import android.widget.PopupMenu
 import androidx.core.view.isVisible
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.sign.conditional.diplomanework.R
 import ru.sign.conditional.diplomanework.databinding.CardPostBinding
 import ru.sign.conditional.diplomanework.dto.AttachmentType
+import ru.sign.conditional.diplomanework.dto.Payload
 import ru.sign.conditional.diplomanework.dto.Post
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.itemsCount
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.loadImage
@@ -19,6 +21,12 @@ class PostViewHolder(
     fun bind(post: Post) {
         fillingCardPost(post)
         setupListeners(post)
+    }
+
+    fun bind(payload: Payload, post: Post?) {
+        fillingCardPost(payload)
+        if (post != null)
+            setupListenersGivenPayload(post)
     }
 
     private fun fillingCardPost(post: Post) {
@@ -39,17 +47,20 @@ class PostViewHolder(
             if (attachment != null) {
                 val imageValidation = attachment.type == AttachmentType.IMAGE
                 postAttachment.isVisible = imageValidation
+                mediaType.isVisible = !imageValidation
                 if (imageValidation) {
                     postAttachment.loadImage(
                         url = attachment.url,
                         type = attachment.type.name
                     )
+                } else {
+                    mediaType.setImageResource(
+                        if (attachment.type == AttachmentType.VIDEO)
+                            R.drawable.ic_video_attachment_48
+                        else
+                            R.drawable.ic_audio_attachment_48
+                    )
                 }
-                mediaType.isVisible = !imageValidation
-                if (attachment.type == AttachmentType.VIDEO)
-                    mediaType.setImageResource(R.drawable.ic_video_attachment_48)
-                if (attachment.type == AttachmentType.AUDIO)
-                    mediaType.setImageResource(R.drawable.ic_audio_attachment_48)
             } else {
                 postAttachment.isVisible = false
                 mediaType.isVisible = false
@@ -61,6 +72,21 @@ class PostViewHolder(
             }
             repeatSavePost.isVisible = !post.isOnServer
             link.text = post.link ?: ""
+        }
+    }
+
+    private fun fillingCardPost(payload: Payload) {
+        payload.apply {
+            isOnServer?.let {
+                binding.likes.isVisible = it
+                binding.repeatSavePost.isVisible = !it
+            }
+            likedByMe?.let {
+                binding.likes.isChecked = it
+            }
+            likeOwnerIds?.let {
+                binding.likes.text = itemsCount(it.size)
+            }
         }
     }
 
@@ -92,6 +118,14 @@ class PostViewHolder(
                         }
                     }
                 }.show()
+            }
+        }
+    }
+
+    private fun setupListenersGivenPayload(post: Post) {
+        binding.apply {
+            setCustomOnClickListener(likes) {
+                onPostInteractionListener.onLike(post)
             }
         }
     }

@@ -94,19 +94,19 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                     .asRemotePresentationState()
                     .mapLatest { state ->
                         snackbarDismiss()
-                        Log.d("POSTADAPTER LOADSTATE", state.name)
+//                        Log.d("POSTADAPTER LOADSTATE", state.name)
                         val presented = state == PRESENTED
                         val isShownAdapterFirstItem =
                             binding.recyclerView.posts
                                 .findViewHolderForAdapterPosition(0)
                                 ?.itemView
                                 ?.isShown
-                        Log.d("1st ITEM IN ADAPTER",
-                            "is shown = $isShownAdapterFirstItem")
+//                        Log.d("1st ITEM IN ADAPTER",
+//                            "is shown = $isShownAdapterFirstItem")
                         if (presented &&
                             postViewModel.appealTo == 1L &&
                             isShownAdapterFirstItem != true) {
-                            Log.d("FEED WAS WROTE", "appealTo = ${postViewModel.appealTo}")
+//                            Log.d("SCROLLED BY FEEDPOST", "when appealTo = ${postViewModel.appealTo}")
                             binding.recyclerView.posts.smoothScrollToPosition(0)
                             stateChanger(UiAction.Scroll(currentId = totalState.value.id))
                         } else {
@@ -125,11 +125,11 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                     }
                         .distinctUntilChanged()
                 shouldScrollToTop.collectLatest {
-                    Log.d("SHOULD SCROLL TO TOP?", it.toString().uppercase())
+//                    Log.d("SHOULD SCROLL TO TOP?", it.toString().uppercase())
                     if (it) {
                         binding.recyclerView.posts.smoothScrollToPosition(0)
                         val currentId = totalState.value.id
-                        Log.d("SCROLLED TO MAX POST ID", currentId.toString())
+//                        Log.d("SCROLLED TO MAX POST ID", currentId.toString())
                         stateChanger(UiAction.Scroll(currentId = currentId))
                     }
                 }
@@ -138,27 +138,32 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             viewScope.launch {
                 postAdapter.loadStateFlow.collectLatest { loadState ->
                     snackbarDismiss()
-                    var headerStateName: String
-                    var footerStateName: String
+//                    var headerStateName: String
+//                    var footerStateName: String
                     loadStateHeader.loadState =
                         loadState.mediator?.refresh
                             .takeIf {
                                 it is LoadState.Loading ||
                                 it is LoadState.Error
-                            }.also { headerStateName = "mediator.refresh" }
+                            }
+//                            .also { headerStateName = "mediator.refresh" }
                         ?: loadState.mediator?.prepend
                             .takeIf {
                                 it is LoadState.Loading ||
                                 it is LoadState.Error
-                            }.also { headerStateName = "mediator.prepend" }
-                        ?: loadState.source.refresh.also { headerStateName = "source.refresh" }
+                            }
+//                            .also { headerStateName = "mediator.prepend" }
+                        ?: loadState.source.refresh
+//                            .also { headerStateName = "source.refresh" }
                     loadStateFooter.loadState =
                         loadState.mediator?.append
                             .takeIf {
                                 it is LoadState.Loading ||
                                 it is LoadState.Error
-                            }.also { footerStateName = "mediator.append" }
-                        ?: loadState.source.append.also { footerStateName = "source.append" }
+                            }
+//                            .also { footerStateName = "mediator.append" }
+                        ?: loadState.source.append
+//                            .also { footerStateName = "source.append" }
 //                    Log.d("HEADER & FOOTER",
 //                        "INCOMING STATE =\n${loadState.allStatesToString()}\n" +
 //                                "HEADER STATE =\n$headerStateName = ${loadStateHeader.loadState}\n" +

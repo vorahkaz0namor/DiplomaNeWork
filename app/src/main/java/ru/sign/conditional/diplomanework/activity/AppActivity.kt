@@ -11,7 +11,6 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
-import androidx.core.view.MenuItemCompat
 import androidx.core.view.MenuProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -45,7 +44,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(findViewById(R.id.custom_toolbar))
         init()
-        setAuthMenu()
+        setAppMenu()
         subscribe()
         setupListeners()
     }
@@ -56,43 +55,37 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
         setupActionBarWithNavController(appNavController, appBarConfiguration)
         postsActionProvider =
             createActionProvider(
-                layout = R.layout.posts_action_provider,
-                id = R.id.show_posts,
+                layoutId = R.layout.posts_action_provider,
+                viewId = R.id.show_posts,
                 destId = R.id.feedFragment
             ) { appNavController.apply { navigate(graph.startDestinationId) } }
         eventsActionProvider =
             createActionProvider(
-                layout = R.layout.events_action_provider,
-                id = R.id.show_events,
+                layoutId = R.layout.events_action_provider,
+                viewId = R.id.show_events,
                 destId = R.id.feedEventFragment
             ) { appNavController.navigate(R.id.feedEventFragment) }
         jobsActionProvider =
             createActionProvider(
-                layout = R.layout.jobs_action_provider,
-                id = R.id.show_jobs,
-                destId = R.id.attachmentFragment // TODO Must be set in the future
+                layoutId = R.layout.jobs_action_provider,
+                viewId = R.id.show_jobs,
+                destId = R.id.attachmentFragmentOfPost // TODO Must be set in the future
             ) { /* TODO Must be set in the future */ }
     }
 
-    private fun setAuthMenu() {
+    private fun setAppMenu() {
         if (validationForMenu(currentMenuProvider)) {
             currentMenuProvider = object : MenuProvider {
                 override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                     menuInflater.inflate(R.menu.app_menu, menu)
                     menu.setGroupVisible(R.id.unauthorized, !authViewModel.authorized)
                     menu.setGroupVisible(R.id.authorized, authViewModel.authorized)
-                    MenuItemCompat.setActionProvider(
-                        /* item = */ menu.findItem(R.id.posts_list),
-                        /* provider = */ postsActionProvider
-                    )
-                    MenuItemCompat.setActionProvider(
-                        /* item = */ menu.findItem(R.id.events_list),
-                        /* provider = */ eventsActionProvider
-                    )
-                    MenuItemCompat.setActionProvider(
-                        /* item = */ menu.findItem(R.id.jobs_list),
-                        /* provider = */ jobsActionProvider
-                    )
+                    menu.findItem(R.id.posts_list).actionView =
+                        postsActionProvider.onCreateActionView()
+                    menu.findItem(R.id.events_list).actionView =
+                        eventsActionProvider.onCreateActionView()
+                    menu.findItem(R.id.jobs_list).actionView =
+                        jobsActionProvider.onCreateActionView()
                 }
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
@@ -125,7 +118,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
 
     private fun subscribe() {
         authViewModel.data.observe(this) {
-            setAuthMenu()
+            setAppMenu()
         }
     }
 
@@ -134,11 +127,12 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
             when (destination.id) {
                 R.id.feedFragment,
                 R.id.feedEventFragment -> {
-                    if (currentMenuProvider == null) setAuthMenu()
+                    if (currentMenuProvider == null) setAppMenu()
                 }
                 R.id.loginFragment,
                 R.id.editPostFragment,
-                R.id.attachmentFragment -> {
+                R.id.attachmentFragmentOfPost,
+                R.id.attachmentFragmentOfEvent -> {
                     currentMenuProvider?.let {
                         removeMenuProvider(it)
                         currentMenuProvider = null
@@ -149,20 +143,20 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
     }
 
     private fun createActionProvider(
-        @LayoutRes layout: Int,
-        @IdRes id: Int,
+        @LayoutRes layoutId: Int,
+        @IdRes viewId: Int,
         @IdRes destId: Int,
         action: () -> Unit
     ): ActionProvider = object : ActionProvider(this@AppActivity) {
         override fun onCreateActionView(): View =
             LayoutInflater.from(this@AppActivity)
                 .inflate(
-                    /* resource = */ layout,
+                    /* resource = */ layoutId,
                     /* root = */ null
                 )
                 .also {
                     (it as MaterialButton)
-                        .findViewById<MaterialButton?>(id).apply {
+                        .findViewById<MaterialButton>(viewId).apply {
                             setOnClickListener { action() }
                             appNavController
                                 .addOnDestinationChangedListener { _, dest, _ ->
