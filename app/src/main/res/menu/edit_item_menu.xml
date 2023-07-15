@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/publish_post"
-        android:title="@string/publish_post"
+        android:id="@+id/publish"
+        android:title="@string/publish_item"
         android:icon="@drawable/ic_publish_32"
         app:showAsAction="ifRoom"/>
 

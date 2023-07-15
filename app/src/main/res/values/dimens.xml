@@ -2,7 +2,6 @@
 <resources>
     <dimen name="zero_dp">0dp</dimen>
     <dimen name="stroke_width">2dp</dimen>
-    <dimen name="section_border_width">4dp</dimen>
     <dimen name="title_indent">6dp</dimen>
     <dimen name="scrollbar_width">8dp</dimen>
     <dimen name="card_padding">12dp</dimen>
@@ -15,6 +14,7 @@
     <dimen name="avatar_size">48dp</dimen>
     <dimen name="avatar_preview">56dp</dimen>
     <dimen name="section_height">60dp</dimen>
-    <dimen name="play_button_width">64dp</dimen>
+    <dimen name="start_section_height">104dp</dimen>
     <dimen name="max_width_link">240dp</dimen>
+    <dimen name="cover_skeleton">280dp</dimen>
 </resources>

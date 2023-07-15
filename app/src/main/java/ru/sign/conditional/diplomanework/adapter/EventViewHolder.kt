@@ -4,7 +4,6 @@ import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.util.Log
 import android.view.View
-import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.PopupMenu
 import androidx.core.view.isVisible
@@ -16,6 +15,7 @@ import ru.sign.conditional.diplomanework.dto.Event
 import ru.sign.conditional.diplomanework.dto.EventType
 import ru.sign.conditional.diplomanework.dto.Payload
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.datetimeCustomRepresentation
+import ru.sign.conditional.diplomanework.util.NeWorkHelper.getEventNameFromContent
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.itemsCount
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.loadImage
 
@@ -65,7 +65,7 @@ class EventViewHolder(
                         R.color.red
                 )
             }
-            content.text = event.content
+            eventName.text = getEventNameFromContent(event.content)
             author.text = event.author
             participants.apply {
                 text = context.getString(

@@ -172,6 +172,7 @@ class FeedEventFragment : Fragment(R.layout.fragment_feed_event) {
                             it.error.message ?: NeWorkHelper.overview(NeWorkHelper.HTTP_UNKNOWN_ERROR),
                             Snackbar.LENGTH_INDEFINITE
                         )
+                            .setTextMaxLines(3)
                             .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
                             .setAction(R.string.retry_loading) {
                                 snackbarDismiss()
@@ -184,8 +185,9 @@ class FeedEventFragment : Fragment(R.layout.fragment_feed_event) {
             // Редактирование события
             edited.observe(viewLifecycleOwner) { event ->
                 if (event.id != 0)
-                    navController
-                // TODO <R.id.action_feedEventFragment_to_editEventFragment>
+                    navController.navigate(
+                        R.id.action_feedEventFragment_to_editEventFragment
+                    )
             }
             // Переход на карточку события
             viewScopeWithRepeat {
@@ -246,9 +248,10 @@ class FeedEventFragment : Fragment(R.layout.fragment_feed_event) {
                         AuthDialogFragment.AUTH_TAG
                     )
                 else {
-//                    eventViewModel.getDraftCopy()
-                    navController
-                // TODO <R.id.action_feedEventFragment_to_editEventFragment>
+                    eventViewModel.getDraftCopy()
+                    navController.navigate(
+                        R.id.action_feedEventFragment_to_editEventFragment
+                    )
                 }
             }
             // Обновление списка событий после свайпа по нему

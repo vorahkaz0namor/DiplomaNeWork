@@ -14,21 +14,23 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import okhttp3.internal.http.HTTP_CONTINUE
 import okhttp3.internal.http.HTTP_OK
-import ru.sign.conditional.diplomanework.dto.DraftCopy
-import ru.sign.conditional.diplomanework.dto.FeedItem
-import ru.sign.conditional.diplomanework.dto.Event
-import ru.sign.conditional.diplomanework.dto.UserPreview
+import ru.sign.conditional.diplomanework.dto.*
 import ru.sign.conditional.diplomanework.model.MediaModel
 import ru.sign.conditional.diplomanework.model.UiAction
 import ru.sign.conditional.diplomanework.model.UiState
 import ru.sign.conditional.diplomanework.repository.EventRepository
 import ru.sign.conditional.diplomanework.repository.UserRepository
 import ru.sign.conditional.diplomanework.util.AndroidUtils.defaultDispatcher
+import ru.sign.conditional.diplomanework.util.DatetimeKeeper
+import ru.sign.conditional.diplomanework.util.NeWorkDatetime
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.customLog
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.exceptionCheck
+import ru.sign.conditional.diplomanework.util.NeWorkHelper.datetimeWithOffset
 import ru.sign.conditional.diplomanework.util.SingleLiveEvent
 import java.io.File
+import java.time.Instant
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -59,15 +61,22 @@ class EventViewModel @Inject constructor(
     private val _eventOccurrence = SingleLiveEvent(HTTP_CONTINUE)
     val eventOccurrence: LiveData<Int>
         get() = _eventOccurrence
+    private val _datetimeIsntValid = SingleLiveEvent(true)
+    val datetimeIsntValid: LiveData<Boolean>
+        get() = _datetimeIsntValid
     private val _edited = MutableLiveData(emptyEvent)
     val edited: LiveData<Event>
         get() = _edited
+    private var _datetimeForLayout = MutableLiveData<NeWorkDatetime?>(null)
+    val datetimeForLayout: LiveData<NeWorkDatetime?>
+        get() = _datetimeForLayout
     private val _media = MutableLiveData<MediaModel?>(null)
     val media: LiveData<MediaModel?>
         get() = _media
     private var _draftCopy: DraftCopy? = null
     val draftCopy: DraftCopy?
         get() = _draftCopy
+    private val keeper = DatetimeKeeper()
 
     init {
         val initialId = 0
@@ -150,20 +159,38 @@ class EventViewModel @Inject constructor(
 
     // CREATE & UPDATE functions
 
-    fun setEditEvent(event: Event) { _edited.value = event }
+    fun setEditEvent(event: Event) {
+        viewModelScope.launch {
+            _edited.value = event
+            if (event.datetime.isNotBlank())
+                _datetimeForLayout.value = datetimeWithOffset(event.datetime)
+        }
+    }
 
     fun setImage(uri: Uri, file: File) {
         _media.value = MediaModel(uri, file)
     }
 
-    fun saveEvent(text: CharSequence?) {
-        if (!text.isNullOrBlank())
-            save(text.toString())
-        else
-            _eventOccurrence.value = HTTP_OK
+    fun setType(type: EventType) {
+        _edited.value = _edited.value?.copy(type = type)
     }
 
-    private fun save(newContent: String) {
+    fun setDatetime(datetime: NeWorkDatetime) {
+        _datetimeForLayout.value = keeper.datetimeValidation(datetime)
+    }
+
+    fun datetimeValidationBeforeSaveEvent() {
+        viewModelScope.launch {
+            _datetimeIsntValid.value =
+                datetimeForLayout.value?.offsetDateTime?.let {
+                    it < Instant.now()
+                            .atOffset(OffsetDateTime.now().offset)
+                            .plusMinutes(5)
+                } ?: true
+        }
+    }
+
+    fun saveEvent(description: String) {
         viewModelScope.launch {
             _eventOccurrence.value =
                 try {
@@ -179,7 +206,8 @@ class EventViewModel @Inject constructor(
                         val event = it.copy(
                             author = userPreview.name,
                             authorAvatar = userPreview.avatar,
-                            content = newContent,
+                            content = description,
+                            datetime = datetimeForLayout.value?.offsetDateTime.toString(),
                             published = LocalDateTime.now().toString()
                         )
                         eventRepository.saveEvent(event, media.value)
@@ -235,6 +263,8 @@ class EventViewModel @Inject constructor(
     // DELETE functions
 
     fun clearEditEvent() { _edited.value = emptyEvent }
+
+    fun clearDatetime() { _datetimeForLayout.value = null }
 
     fun clearImage() {
         _edited.value = _edited.value?.copy(

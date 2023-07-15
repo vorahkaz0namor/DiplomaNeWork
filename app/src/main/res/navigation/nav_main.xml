@@ -22,9 +22,17 @@
         android:name="ru.sign.conditional.diplomanework.activity.FeedEventFragment"
         tools:layout="@layout/fragment_feed_event">
         <action
+            android:id="@+id/action_feedEventFragment_to_editEventFragment"
+            app:destination="@id/editEventFragment"/>
+        <action
             android:id="@+id/action_feedEventFragment_to_attachmentFragment"
             app:destination="@id/attachmentFragmentOfEvent"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/editEventFragment"
+        android:name="ru.sign.conditional.diplomanework.activity.EditEventFragment"
+        tools:layout="@layout/fragment_edit_event"/>
 
     <fragment
         android:id="@+id/loginFragment"

@@ -13,4 +13,5 @@
     <color name="custom_transparent">#00FFFFFF</color>
     <color name="green">#559100</color>
     <color name="card_frame">#00795D</color>
+    <color name="cover_background">#276DC0D6</color>
 </resources>

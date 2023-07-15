@@ -131,6 +131,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                 }
                 R.id.loginFragment,
                 R.id.editPostFragment,
+                R.id.editEventFragment,
                 R.id.attachmentFragmentOfPost,
                 R.id.attachmentFragmentOfEvent -> {
                     currentMenuProvider?.let {

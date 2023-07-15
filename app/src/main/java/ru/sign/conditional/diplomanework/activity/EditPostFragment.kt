@@ -2,7 +2,6 @@ package ru.sign.conditional.diplomanework.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -10,8 +9,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toFile
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -26,6 +23,7 @@ import ru.sign.conditional.diplomanework.dto.AttachmentType
 import ru.sign.conditional.diplomanework.dto.DraftCopy
 import ru.sign.conditional.diplomanework.dto.Post
 import ru.sign.conditional.diplomanework.util.AndroidUtils
+import ru.sign.conditional.diplomanework.util.AndroidUtils.createImageLauncher
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.loadImage
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.overview
 import ru.sign.conditional.diplomanework.util.viewBinding
@@ -74,25 +72,8 @@ class EditPostFragment : Fragment(R.layout.fragment_edit_post) {
                 post?.content
         )
         imageLauncher =
-            registerForActivityResult(
-                ActivityResultContracts.StartActivityForResult()
-            ) {
-                if (it.resultCode == ImagePicker.RESULT_ERROR)
-                    Snackbar.make(
-                        binding.root,
-                        getString(R.string.error_loading),
-                        Snackbar.LENGTH_LONG
-                    )
-                        .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
-                        .show()
-                else {
-                    val uri = it.data?.data
-                        ?: return@registerForActivityResult
-                    postViewModel.setImage(
-                        uri = uri,
-                        file = uri.toFile()
-                    )
-                }
+            createImageLauncher(binding.root) { uri, file ->
+                postViewModel.setImage(uri = uri, file = file)
             }
     }
 
@@ -126,34 +107,24 @@ class EditPostFragment : Fragment(R.layout.fragment_edit_post) {
             postEvent.observe(viewLifecycleOwner) { code ->
                 post?.let { post ->
                     binding.apply {
-                        val newContent = postContent.text.toString()
-                        if (code == HTTP_OK)
-                            if (newContent != post.content)
-                                Toast.makeText(
-                                    context,
-                                    root.context.getString(
+                            Toast.makeText(
+                                context,
+                                root.context.getString(
+                                    if (code == HTTP_OK) {
                                         if (post.id == 0)
                                             R.string.new_post_was_created
                                         else
-                                            R.string.the_post_was_edited
-                                    ),
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            else
-                                Toast.makeText(
-                                    context,
-                                    root.context.getString(
-                                        if (post.idFromServer == 0)
-                                            R.string.error_saving
-                                        else
-                                            R.string.error_editing,
-                                        overview(code)
-                                    ),
-                                    Toast.LENGTH_LONG
-                                ).show()
+                                            R.string.the_post_was_saved
+                                    } else {
+                                        /* resId = */ R.string.error_saving_post
+                                    },
+                                    /* ...formatArgs = */ overview(code)
+                                ),
+                                Toast.LENGTH_LONG
+                            ).show()
                     }
-                    customNavigateUp(null)
                 }
+                customNavigateUp(null)
             }
         }
     }
@@ -163,12 +134,12 @@ class EditPostFragment : Fragment(R.layout.fragment_edit_post) {
             requireActivity().addMenuProvider(
                 /* provider = */ object : MenuProvider {
                     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                        menuInflater.inflate(R.menu.edit_post_menu, menu)
+                        menuInflater.inflate(R.menu.edit_item_menu, menu)
                     }
 
                     override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
                         when (menuItem.itemId) {
-                            R.id.publish_post -> {
+                            R.id.publish -> {
                                 if (postContent.text.isNullOrBlank()) {
                                     Snackbar.make(
                                         root,

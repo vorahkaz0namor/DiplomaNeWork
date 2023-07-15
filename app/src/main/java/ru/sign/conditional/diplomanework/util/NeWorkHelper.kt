@@ -50,6 +50,18 @@ object NeWorkHelper {
             else -> HTTP_UNKNOWN_ERROR
         }
     }
+
+    fun datetimeWithOffset(time: String): NeWorkDatetime =
+        Instant.parse(time).atOffset(OffsetDateTime.now().offset).let {
+            NeWorkDatetime(
+                year = it.year.toString(),
+                month = it.monthValue.toString(),
+                day = it.dayOfMonth.toString(),
+                hour = it.hour.toString(),
+                minute = it.minute.toString()
+            )
+        }
+
     fun publishedCustomRepresentation(
         time: CharSequence,
         pattern: String = "dd MMMM yyyy, HH:mm:ss"
@@ -79,7 +91,9 @@ object NeWorkHelper {
                 if (type == AttachmentType.AVATAR.name)
                     it.circleCrop()
                 else
-                    it.dontTransform()
+                    // TODO Temporarily was set small size
+                    // TODO Previously - dontTransform()
+                    it.sizeMultiplier(0.9F)
             }
             .into(this)
     }
@@ -114,6 +128,9 @@ object NeWorkHelper {
             }
         }
     }
+
+    fun getEventNameFromContent(content: String) =
+        content.substringBefore(".")
 
     fun customLog(action: String, e: Exception) {
         Log.d(action, "CAUGHT EXCEPTION => $e\n" +

@@ -33,11 +33,24 @@
         <item name="iconGravity">textEnd</item>
     </style>
 
+    <style name="Widget.AppTheme.EventTypeChooser" parent="Widget.AppTheme.NeWorkButton">
+        <item name="android:checkable">true</item>
+        <item name="rippleColor">@color/custom_transparent</item>
+        <item name="iconTint">@color/color_type_chooser</item>
+        <item name="icon">@drawable/chooser_selector</item>
+    </style>
+
     <style name="Widget.AppTheme.ParticipantsIndicator" parent="Widget.AppTheme.NeWorkButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:clickable">false</item>
-        <item name="icon">@drawable/ic_dot_16</item>
         <item name="iconSize">@dimen/scrollbar_width</item>
         <item name="iconPadding">@dimen/title_indent</item>
+    </style>
+
+    <style name="Widget.AppTheme.NeWorkDelimiter" parent="Widget.AppTheme.ParticipantsIndicator">
+        <item name="android:textSize">@dimen/title_size</item>
+        <item name="android:padding">@dimen/zero_dp</item>
     </style>
 
     <style name="Widget.AppTheme.AttendInButton" parent="Widget.AppTheme.NeWorkButton">
@@ -57,6 +70,17 @@
         <item name="android:checkable">true</item>
         <item name="iconPadding">@dimen/zero_dp</item>
         <item name="iconTint">@color/color_selection_menu_item</item>
+    </style>
+
+    <style name="Widget.AppTheme.CoverEventButton" parent="Widget.AppTheme.NeWorkButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/cover_skeleton</item>
+        <item name="backgroundTint">@color/cover_background</item>
+        <item name="icon">@drawable/ic_add_from_camera_32</item>
+        <item name="iconSize">@dimen/avatar_size</item>
+        <item name="iconGravity">textTop</item>
+        <item name="android:text">@string/upload_cover_event</item>
+        <item name="contentDescription">@string/place_for_cover</item>
     </style>
 
     <style name="Widget.AppTheme.NeWorkOutlinedButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
@@ -102,6 +126,19 @@
         <item name="android:focusable">false</item>
         <item name="android:paddingStart">@dimen/main_indent</item>
         <item name="android:paddingEnd">@dimen/main_indent</item>
+    </style>
+
+    <style name="Widget.AppTheme.DatetimeSection" parent="Widget.AppTheme.NeWorkOutlinedTextInput">
+        <item name="android:layout_width">@dimen/zero_dp</item>
+        <item name="android:layout_height">@dimen/start_section_height</item>
+        <item name="android:enabled">false</item>
+        <item name="expandedHintEnabled">false</item>
+    </style>
+
+    <style name="Widget.AppTheme.NeWorkDatetimeInput" parent="Widget.AppTheme.NeWorkOutlinedTextInput">
+        <item name="expandedHintEnabled">false</item>
+        <item name="android:layout_width">@dimen/start_section_height</item>
+        <item name="android:paddingBottom">@dimen/card_padding</item>
     </style>
 
     <style name="Widget.AppTheme.SectionEditText" parent="ThemeOverlay.Material3.TextInputEditText">
