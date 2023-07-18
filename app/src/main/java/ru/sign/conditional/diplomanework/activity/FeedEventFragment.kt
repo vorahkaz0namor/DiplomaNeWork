@@ -11,10 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import okhttp3.internal.http.HTTP_BAD_REQUEST
 import okhttp3.internal.http.HTTP_NOT_FOUND
@@ -190,12 +187,11 @@ class FeedEventFragment : Fragment(R.layout.fragment_feed_event) {
                     )
             }
             // Переход на карточку события
-            viewScopeWithRepeat {
-                singleEvent.collectLatest { event ->
-                    if (event != null && event.id != 0)
-                        navController
-                    // TODO <R.id.action_feedEventFragment_to_singleEventFragment>
-                }
+            eventIdToView.observe(viewLifecycleOwner) { id ->
+                if (id != 0)
+                    navController.navigate(
+                        R.id.action_feedEventFragment_to_singleEventFragment
+                    )
             }
         }
         // Просмотр вложения события

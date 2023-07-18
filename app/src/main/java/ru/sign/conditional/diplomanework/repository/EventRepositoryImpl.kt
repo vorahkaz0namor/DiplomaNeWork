@@ -4,10 +4,8 @@ import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingData
 import androidx.paging.map
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.HttpException
@@ -55,13 +53,11 @@ class EventRepositoryImpl @Inject constructor(
     override suspend fun getLatestEventId(): Int =
         eventRemoteKeyDao.max() ?: 0
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun getEventById(id: Int): Flow<Event?> =
         eventDao.getEventById(id)
-            .let {
-                flow {
-                    emit(it?.toDto()?.copy(users = getUsers(it.usersIds)))
-                }
-                    .flowOn(defaultDispatcher)
+            .mapLatest {
+                it?.toDto()?.copy(users = getUsers(it.usersIds))
             }
                 .flowOn(defaultDispatcher)
 

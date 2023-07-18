@@ -69,7 +69,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
             createActionProvider(
                 layoutId = R.layout.jobs_action_provider,
                 viewId = R.id.show_jobs,
-                destId = R.id.attachmentFragmentOfPost // TODO Must be set in the future
+                destId = R.id.attachmentFragment // TODO Must be set in the future
             ) { /* TODO Must be set in the future */ }
     }
 
@@ -132,8 +132,8 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                 R.id.loginFragment,
                 R.id.editPostFragment,
                 R.id.editEventFragment,
-                R.id.attachmentFragmentOfPost,
-                R.id.attachmentFragmentOfEvent -> {
+                R.id.singleEventFragment,
+                R.id.attachmentFragment -> {
                     currentMenuProvider?.let {
                         removeMenuProvider(it)
                         currentMenuProvider = null

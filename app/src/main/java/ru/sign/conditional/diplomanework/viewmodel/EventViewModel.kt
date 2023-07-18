@@ -67,6 +67,9 @@ class EventViewModel @Inject constructor(
     private val _edited = MutableLiveData(emptyEvent)
     val edited: LiveData<Event>
         get() = _edited
+    private val _eventIdToView = MutableLiveData(emptyEvent.id)
+    val eventIdToView: LiveData<Int>
+        get() = _eventIdToView
     private var _datetimeForLayout = MutableLiveData<NeWorkDatetime?>(null)
     val datetimeForLayout: LiveData<NeWorkDatetime?>
         get() = _datetimeForLayout
@@ -138,9 +141,11 @@ class EventViewModel @Inject constructor(
     fun getEventById(id: Int) {
         viewModelScope.launch {
             try {
+                _eventIdToView.value = id
                 _singleEvent = eventRepository.getEventById(id)
                     .mapLatest { it }
                     .flowOn(defaultDispatcher)
+                _eventIdToView.value = emptyEvent.id
             } catch (e: Exception) {
                 _eventOccurrence.value = exceptionCheck(e)
             }

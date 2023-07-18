@@ -34,7 +34,12 @@ class EventViewHolder(
             setupListenersGivenPayload(event)
     }
 
-    private fun fillingCardEvent(event: Event) {
+    fun bindSingleEvent(event: Event) {
+        fillingSingleCardEvent(event)
+        setupListenersOnSingleCardEvent(event)
+    }
+
+    private fun commonFillingCardEvent(event: Event) {
         binding.apply {
             val attachment = event.attachment
             if (attachment != null) {
@@ -65,7 +70,6 @@ class EventViewHolder(
                         R.color.red
                 )
             }
-            eventName.text = getEventNameFromContent(event.content)
             author.text = event.author
             participants.apply {
                 text = context.getString(
@@ -76,6 +80,11 @@ class EventViewHolder(
             attendIn.isChecked = event.participatedByMe
             menu.isVisible = event.ownedByMe
         }
+    }
+
+    private fun fillingCardEvent(event: Event) {
+        commonFillingCardEvent(event)
+        binding.eventName.text = getEventNameFromContent(event.content)
     }
 
     private fun fillingCardEvent(payload: Payload) {
@@ -94,11 +103,19 @@ class EventViewHolder(
         }
     }
 
-    private fun setupListeners(event: Event) {
+    private fun fillingSingleCardEvent(event: Event) {
+        commonFillingCardEvent(event)
         binding.apply {
-            setCustomOnClickListener(viewEvent) {
-                onEventInteractionListener.onShowSingleEvent(event)
-            }
+            eventName.isVisible = false
+            eventContent.isVisible = true
+            eventContent.text = event.content
+            viewEvent.isVisible = event.ownedByMe
+            viewEvent.setText(R.string.event_menu_title)
+        }
+    }
+
+    private fun setupCommonListeners(event: Event) {
+        binding.apply {
             setCustomOnClickListener(attendIn) {
                 attendAnimation()
                 onEventInteractionListener.onAttend(event)
@@ -108,14 +125,14 @@ class EventViewHolder(
             }
             menu.setOnClickListener { view ->
                 PopupMenu(view.context, view).apply {
-                    inflate(R.menu.event_options)
+                    inflate(R.menu.feed_item_options)
                     setOnMenuItemClickListener { item ->
                         when (item.itemId) {
-                            R.id.edit_event -> {
+                            R.id.edit_feed_item -> {
                                 onEventInteractionListener.onEdit(event)
                                 true
                             }
-                            R.id.remove_event -> {
+                            R.id.remove_feed_item -> {
                                 onEventInteractionListener.onRemove(event)
                                 true
                             }
@@ -127,12 +144,27 @@ class EventViewHolder(
         }
     }
 
+    private fun setupListeners(event: Event) {
+        setupCommonListeners(event)
+        setCustomOnClickListener(binding.viewEvent) {
+            onEventInteractionListener.onShowSingleEvent(event)
+        }
+    }
+
     private fun setupListenersGivenPayload(event: Event) {
         binding.apply {
             setCustomOnClickListener(attendIn) {
                 attendAnimation()
                 onEventInteractionListener.onAttend(event)
             }
+        }
+    }
+
+    private fun setupListenersOnSingleCardEvent(event: Event) {
+        setupCommonListeners(event)
+        setCustomOnClickListener(binding.viewEvent) {
+            if (binding.menu.hasOnClickListeners())
+                binding.menu.performClick()
         }
     }
 

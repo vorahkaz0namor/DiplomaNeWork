@@ -17,7 +17,7 @@
         android:paddingBottom="@dimen/main_indent"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/barrier_top"
+        app:layout_constraintBottom_toTopOf="@id/barrier_top"
         tools:srcCompat="@sample/attachment"
         tools:visibility="visible" />
 
@@ -28,7 +28,7 @@
         android:contentDescription="@string/attachment_media_type"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/barrier_top"
+        app:layout_constraintBottom_toTopOf="@id/barrier_top"
         app:tint="?attr/colorControlNormal"
         tools:srcCompat="@drawable/ic_video_attachment_48"
         tools:visibility="visible" />
@@ -64,7 +64,15 @@
             android:contentDescription="@string/event_type"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/second_barrier_bottom"
             tools:text="@sample/example_event.json/type" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/second_barrier_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="event_type" />
 
         <TextView
             android:id="@+id/event_name"
@@ -73,8 +81,26 @@
             android:layout_marginVertical="@dimen/main_indent"
             android:singleLine="true"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/event_type"
+            app:layout_constraintTop_toBottomOf="@id/second_barrier_bottom"
+            app:layout_constraintBottom_toTopOf="@id/second_barrier_top"
             tools:text="@sample/example_event.json/name" />
+
+        <TextView
+            android:id="@+id/event_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/main_indent"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/second_barrier_bottom"
+            app:layout_constraintBottom_toTopOf="@id/second_barrier_top"
+            tools:text="@sample/example_event.json/content" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/second_barrier_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="top"
+            app:constraint_referenced_ids="author" />
 
         <TextView
             android:id="@+id/author"
@@ -83,7 +109,7 @@
             android:layout_marginVertical="@dimen/main_indent"
             android:singleLine="true"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/event_name"
+            app:layout_constraintTop_toBottomOf="@id/second_barrier_top"
             tools:text="@sample/example_event.json/author" />
 
         <com.google.android.material.button.MaterialButton

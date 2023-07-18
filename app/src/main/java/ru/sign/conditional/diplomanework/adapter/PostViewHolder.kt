@@ -103,14 +103,14 @@ class PostViewHolder(
             }
             menu.setOnClickListener { view ->
                 PopupMenu(view.context, view).apply {
-                    inflate(R.menu.post_options)
+                    inflate(R.menu.feed_item_options)
                     setOnMenuItemClickListener { item ->
                         when (item.itemId) {
-                            R.id.edit_post -> {
+                            R.id.edit_feed_item -> {
                                 onPostInteractionListener.onEdit(post)
                                 true
                             }
-                            R.id.remove_post -> {
+                            R.id.remove_feed_item -> {
                                 onPostInteractionListener.onRemove(post)
                                 true
                             }

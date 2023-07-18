@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".activity.FeedFragment">
+    tools:context=".activity.FeedPostFragment">
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/posts_group_view"

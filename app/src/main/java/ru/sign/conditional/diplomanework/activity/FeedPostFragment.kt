@@ -1,7 +1,6 @@
 package ru.sign.conditional.diplomanework.activity
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.core.view.isVisible
@@ -33,7 +32,7 @@ import ru.sign.conditional.diplomanework.viewmodel.AttachmentViewModel
 import ru.sign.conditional.diplomanework.viewmodel.AuthViewModel
 import ru.sign.conditional.diplomanework.viewmodel.PostViewModel
 
-class FeedFragment : Fragment(R.layout.fragment_feed) {
+class FeedPostFragment : Fragment(R.layout.fragment_feed) {
     private val binding by viewBinding(FragmentFeedBinding::bind)
     private val authViewModel: AuthViewModel by activityViewModels()
     private val postViewModel: PostViewModel by activityViewModels()

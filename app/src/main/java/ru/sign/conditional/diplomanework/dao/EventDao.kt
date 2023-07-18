@@ -22,7 +22,7 @@ interface EventDao {
     fun getPage(lastId: Int, firstId: Int): PagingSource<Int, EventEntity>
 
     @Query("SELECT * FROM EventEntity WHERE id = :id")
-    suspend fun getEventById(id: Int): EventEntity?
+    fun getEventById(id: Int): Flow<EventEntity?>
 
     // CREATE & UPDATE functions
 

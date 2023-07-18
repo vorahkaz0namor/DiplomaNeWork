@@ -25,8 +25,8 @@
     <string name="post_menu">Post menu</string>
     <string name="post_attachment">Attachment of the post</string>
     <string name="likes_count">Likes count</string>
-    <string name="edit_post_title">Edit post</string>
-    <string name="remove_post_title">Remove post</string>
+    <string name="edit_feed_item_title">Edit</string>
+    <string name="remove_feed_item_title">Remove</string>
     <string name="posts_section">Posts</string>
     <string name="start_a_post">Start a post</string>
     <string name="error_message">Something\'s going wrong…</string>
@@ -63,8 +63,6 @@
     <string name="create_event">Create an event</string>
     <string name="event_card">Event card</string>
     <string name="event_menu">Event menu</string>
-    <string name="edit_event_title">Edit event</string>
-    <string name="remove_event_title">Remove event</string>
     <string name="unknown_type">Unknown ViewModel type</string>
     <string name="repeat_save_button">Save</string>
     <string name="repeat_save_desc">Save post to the server</string>
@@ -86,4 +84,5 @@
     <string name="description_label">Description</string>
     <string name="empty_event_card">All fields of the event card must be filled.\nAlso must be attached cover event.</string>
     <string name="incorrect_datetime">Enter correct event start time</string>
+    <string name="event_menu_title">Event menu</string>
 </resources>
