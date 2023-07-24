@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_main"
-    app:startDestination="@id/feedFragment">
+    app:startDestination="@id/feedPostFragment">
 
     <fragment
-        android:id="@+id/feedFragment"
+        android:id="@+id/feedPostFragment"
         android:name="ru.sign.conditional.diplomanework.activity.FeedPostFragment"
         tools:layout="@layout/fragment_feed">
         <action
@@ -47,6 +47,15 @@
         <action
             android:id="@+id/action_singleEventFragment_to_attachmentFragment"
             app:destination="@id/attachmentFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/feedJobFragment"
+        android:name="ru.sign.conditional.diplomanework.activity.FeedJobFragment"
+        tools:layout="@layout/fragment_feed_job">
+<!--        <action-->
+<!--            android:id="@+id/action_feedJobFragment_to_editJobFragment"-->
+<!--            />-->
     </fragment>
 
     <fragment

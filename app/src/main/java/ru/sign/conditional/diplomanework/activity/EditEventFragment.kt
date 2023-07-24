@@ -167,24 +167,24 @@ class EditEventFragment : Fragment(R.layout.fragment_edit_event) {
     }
 
     private fun setupListeners() {
-        binding.apply {
-            requireActivity().addMenuProvider(
-                /* provider = */ object : MenuProvider {
-                    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                        menuInflater.inflate(R.menu.edit_item_menu, menu)
-                    }
+        requireActivity().addMenuProvider(
+            /* provider = */ object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(R.menu.edit_item_menu, menu)
+                }
 
-                    override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
-                        when (menuItem.itemId) {
-                            R.id.publish -> {
-                                eventViewModel.datetimeValidationBeforeSaveEvent()
-                                true
-                            }
-                            else -> false
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                    when (menuItem.itemId) {
+                        R.id.publish -> {
+                            eventViewModel.datetimeValidationBeforeSaveEvent()
+                            true
                         }
-                },
-                /* owner = */ viewLifecycleOwner
-            )
+                        else -> false
+                    }
+            },
+            /* owner = */ viewLifecycleOwner
+        )
+        binding.apply {
             addCoverEvent.setOnClickListener {
                 ImagePicker.with(this@EditEventFragment)
                     .galleryOnly()

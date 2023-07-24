@@ -27,7 +27,7 @@ interface PostDao {
     suspend fun insertPost(post: PostEntity)
 
     @Insert(onConflict = REPLACE)
-    suspend fun updatePostsByIdFromServer(post: List<PostEntity>)
+    suspend fun updatePostsByIdFromServer(posts: List<PostEntity>)
 
     suspend fun savePost(post: PostEntity) =
         if (post.id == 0) {

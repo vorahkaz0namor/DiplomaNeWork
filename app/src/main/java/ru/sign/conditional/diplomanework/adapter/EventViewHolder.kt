@@ -5,7 +5,6 @@ import android.animation.PropertyValuesHolder
 import android.util.Log
 import android.view.View
 import android.view.animation.LinearInterpolator
-import android.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import ru.sign.conditional.diplomanework.R
@@ -18,6 +17,7 @@ import ru.sign.conditional.diplomanework.util.NeWorkHelper.datetimeCustomReprese
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.getEventNameFromContent
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.itemsCount
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.loadImage
+import ru.sign.conditional.diplomanework.util.NeWorkHelper.setFeedItemMenu
 
 class EventViewHolder(
     private val binding: CardEventBinding,
@@ -124,22 +124,10 @@ class EventViewHolder(
                 onEventInteractionListener.onShowAttachment(event)
             }
             menu.setOnClickListener { view ->
-                PopupMenu(view.context, view).apply {
-                    inflate(R.menu.feed_item_options)
-                    setOnMenuItemClickListener { item ->
-                        when (item.itemId) {
-                            R.id.edit_feed_item -> {
-                                onEventInteractionListener.onEdit(event)
-                                true
-                            }
-                            R.id.remove_feed_item -> {
-                                onEventInteractionListener.onRemove(event)
-                                true
-                            }
-                            else -> false
-                        }
-                    }
-                }.show()
+                view.setFeedItemMenu(
+                    actionEdit = { onEventInteractionListener.onEdit(event) },
+                    actionRemove = { onEventInteractionListener.onRemove(event) }
+                )
             }
         }
     }

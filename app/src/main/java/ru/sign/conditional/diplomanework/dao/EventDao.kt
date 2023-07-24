@@ -30,7 +30,7 @@ interface EventDao {
     suspend fun insertEvent(event: EventEntity)
 
     @Insert(onConflict = REPLACE)
-    suspend fun updateEventsByIdFromServer(event: List<EventEntity>)
+    suspend fun updateEventsByIdFromServer(events: List<EventEntity>)
 
     suspend fun saveEvent(event: EventEntity) =
         if (event.id == 0) {

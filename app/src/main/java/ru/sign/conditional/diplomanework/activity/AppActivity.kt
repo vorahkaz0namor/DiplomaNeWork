@@ -57,7 +57,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
             createActionProvider(
                 layoutId = R.layout.posts_action_provider,
                 viewId = R.id.show_posts,
-                destId = R.id.feedFragment
+                destId = R.id.feedPostFragment
             ) { appNavController.apply { navigate(graph.startDestinationId) } }
         eventsActionProvider =
             createActionProvider(
@@ -69,8 +69,8 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
             createActionProvider(
                 layoutId = R.layout.jobs_action_provider,
                 viewId = R.id.show_jobs,
-                destId = R.id.attachmentFragment // TODO Must be set in the future
-            ) { /* TODO Must be set in the future */ }
+                destId = R.id.feedJobFragment
+            ) { appNavController.navigate(R.id.feedJobFragment) }
     }
 
     private fun setAppMenu() {
@@ -125,8 +125,9 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
     private fun setupListeners() {
         appNavController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.feedFragment,
-                R.id.feedEventFragment -> {
+                R.id.feedPostFragment,
+                R.id.feedEventFragment,
+                R.id.feedJobFragment -> {
                     if (currentMenuProvider == null) setAppMenu()
                 }
                 R.id.loginFragment,

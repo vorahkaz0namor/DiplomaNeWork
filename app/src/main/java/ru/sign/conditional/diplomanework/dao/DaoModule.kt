@@ -24,6 +24,12 @@ class DaoModule {
 
     @Singleton
     @Provides
+    fun provideJobDao(
+        appDb: AppDb
+    ) : JobDao = appDb.jobDao()
+
+    @Singleton
+    @Provides
     fun providePostRemoteKeyDao(
         appDb: AppDb
     ) : PostRemoteKeyDao = appDb.postRemoteKeyDao()

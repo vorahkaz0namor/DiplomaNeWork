@@ -2,6 +2,7 @@
 <resources>
     <dimen name="zero_dp">0dp</dimen>
     <dimen name="stroke_width">2dp</dimen>
+    <dimen name="delimiter_indent">4dp</dimen>
     <dimen name="title_indent">6dp</dimen>
     <dimen name="scrollbar_width">8dp</dimen>
     <dimen name="card_padding">12dp</dimen>
@@ -10,6 +11,7 @@
     <dimen name="avatar_cancel">20dp</dimen>
     <dimen name="section_size">20sp</dimen>
     <dimen name="title_size">24sp</dimen>
+    <dimen name="job_menu_height">28dp</dimen>
     <dimen name="constraint_height">32dp</dimen>
     <dimen name="avatar_size">48dp</dimen>
     <dimen name="avatar_preview">56dp</dimen>

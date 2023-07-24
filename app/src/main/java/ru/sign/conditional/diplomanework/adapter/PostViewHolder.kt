@@ -2,7 +2,6 @@ package ru.sign.conditional.diplomanework.adapter
 
 import android.util.Log
 import android.view.View
-import android.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import ru.sign.conditional.diplomanework.R
@@ -13,6 +12,7 @@ import ru.sign.conditional.diplomanework.dto.Post
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.itemsCount
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.loadImage
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.publishedCustomRepresentation
+import ru.sign.conditional.diplomanework.util.NeWorkHelper.setFeedItemMenu
 
 class PostViewHolder(
     private val binding: CardPostBinding,
@@ -102,22 +102,10 @@ class PostViewHolder(
                 onPostInteractionListener.onRepeatSave(post)
             }
             menu.setOnClickListener { view ->
-                PopupMenu(view.context, view).apply {
-                    inflate(R.menu.feed_item_options)
-                    setOnMenuItemClickListener { item ->
-                        when (item.itemId) {
-                            R.id.edit_feed_item -> {
-                                onPostInteractionListener.onEdit(post)
-                                true
-                            }
-                            R.id.remove_feed_item -> {
-                                onPostInteractionListener.onRemove(post)
-                                true
-                            }
-                            else -> false
-                        }
-                    }
-                }.show()
+                view.setFeedItemMenu(
+                    actionEdit = { onPostInteractionListener.onEdit(post) },
+                    actionRemove = { onPostInteractionListener.onRemove(post) }
+                )
             }
         }
     }

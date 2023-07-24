@@ -6,12 +6,15 @@ import java.time.OffsetDateTime
 data class NeWorkDatetime(
     val year: CharSequence,
     val month: CharSequence,
-    val day: CharSequence,
-    val hour: CharSequence,
-    val minute: CharSequence
+    val day: CharSequence = "",
+    val hour: CharSequence = "",
+    val minute: CharSequence = ""
 ) {
-    val offsetDateTime: OffsetDateTime? =
-        if (propertiesValidation()) {
+    val offsetDateTime: OffsetDateTime? = toOffsetDateTime()
+    val jobDatetime: OffsetDateTime? = toOffsetDateTime(itIsJob = true)
+
+    private fun toOffsetDateTime(itIsJob: Boolean = false) =
+        if (propertiesValidation(itIsJob))
             LocalDateTime
                 .of(
                     /* year = */
@@ -19,22 +22,36 @@ data class NeWorkDatetime(
                     /* month = */
                     month.toString().toInt(),
                     /* dayOfMonth = */
-                    day.toString().toInt(),
+                    if (itIsJob)
+                        15
+                    else
+                        day.toString().toInt(),
                     /* hour = */
-                    hour.toString().toInt(),
+                    if (itIsJob)
+                        8
+                    else
+                        hour.toString().toInt(),
                     /* minute = */
-                    minute.toString().toInt(),
+                    if (itIsJob)
+                        0
+                    else
+                        minute.toString().toInt(),
                 )
                 .atOffset(OffsetDateTime.now().offset)
-        } else
+        else
             null
 
-    private fun propertiesValidation() =
+    private fun propertiesValidation(itIsJob: Boolean) =
         year.isNotBlank()
             .and(month.isNotBlank())
-            .and(day.isNotBlank())
-            .and(hour.isNotBlank())
-            .and(minute.isNotBlank())
+            .apply {
+                if (!itIsJob) {
+                    this
+                        .and(day.isNotBlank())
+                        .and(hour.isNotBlank())
+                        .and(minute.isNotBlank())
+                }
+            }
 
     override fun toString(): String =
         "$day.$month.$year $hour:$minute"

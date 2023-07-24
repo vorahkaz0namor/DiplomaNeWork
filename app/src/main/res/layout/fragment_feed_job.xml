@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activity.FeedJobFragment">
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/jobs_group_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:constraint_referenced_ids="
+            jobs, empty_view
+        "/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/jobs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        android:scrollbarSize="@dimen/scrollbar_width"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/card_job"/>
+
+    <include
+        android:id="@+id/empty_view"
+        layout="@layout/empty_jobs_layout"/>
+
+    <include
+        android:id="@+id/error_view"
+        layout="@layout/error_layout"/>
+
+    <include
+        android:id="@+id/progress_bar_view"
+        layout="@layout/progress_bar_view"/>
+
+</FrameLayout>

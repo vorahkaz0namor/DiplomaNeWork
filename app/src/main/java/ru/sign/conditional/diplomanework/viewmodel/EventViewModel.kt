@@ -70,7 +70,7 @@ class EventViewModel @Inject constructor(
     private val _eventIdToView = MutableLiveData(emptyEvent.id)
     val eventIdToView: LiveData<Int>
         get() = _eventIdToView
-    private var _datetimeForLayout = MutableLiveData<NeWorkDatetime?>(null)
+    private val _datetimeForLayout = MutableLiveData<NeWorkDatetime?>(null)
     val datetimeForLayout: LiveData<NeWorkDatetime?>
         get() = _datetimeForLayout
     private val _media = MutableLiveData<MediaModel?>(null)

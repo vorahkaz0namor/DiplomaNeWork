@@ -1,7 +1,9 @@
 package ru.sign.conditional.diplomanework.util
 
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
+import android.widget.PopupMenu
 import androidx.annotation.DrawableRes
 import androidx.paging.CombinedLoadStates
 import com.bumptech.glide.Glide
@@ -50,9 +52,12 @@ object NeWorkHelper {
             else -> HTTP_UNKNOWN_ERROR
         }
     }
+    private val parseDateTimeThroughInstant = { time: CharSequence ->
+        Instant.parse(time).atOffset(OffsetDateTime.now().offset)
+    }
 
     fun datetimeWithOffset(time: String): NeWorkDatetime =
-        Instant.parse(time).atOffset(OffsetDateTime.now().offset).let {
+        parseDateTimeThroughInstant(time).let {
             NeWorkDatetime(
                 year = it.year.toString(),
                 month = it.monthValue.toString(),
@@ -65,8 +70,7 @@ object NeWorkHelper {
     fun publishedCustomRepresentation(
         time: CharSequence,
         pattern: String = "dd MMMM yyyy, HH:mm:ss"
-    ): String = Instant.parse(time)
-        .atOffset(OffsetDateTime.now().offset)
+    ): String = parseDateTimeThroughInstant(time)
         .format(DateTimeFormatter.ofPattern(pattern))
 
     fun datetimeCustomRepresentation(time: CharSequence): String =
@@ -74,6 +78,34 @@ object NeWorkHelper {
             time = time,
             pattern = "E, MMM dd, yyyy, HH:mm"
         )
+
+    fun jobDatetimeCustomRepresentation(time: CharSequence): String =
+        publishedCustomRepresentation(
+            time = time,
+            pattern = "MMM yyyy"
+        )
+
+    fun View.setFeedItemMenu(
+        actionEdit: () -> Unit,
+        actionRemove: () -> Unit
+    ) {
+        PopupMenu(context, this).apply {
+            inflate(R.menu.feed_item_options)
+            setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.edit_feed_item -> {
+                        actionEdit()
+                        true
+                    }
+                    R.id.remove_feed_item -> {
+                        actionRemove()
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }.show()
+    }
 
     fun ImageView.loadImage(
         url: String,
@@ -128,6 +160,27 @@ object NeWorkHelper {
             }
         }
     }
+
+    fun jobDurationCount(start: String, finish: String?): String =
+        (finish?.let {
+            parseDateTimeThroughInstant(it)
+        } ?: Instant.now().atOffset(OffsetDateTime.now().offset))
+            .let { mappedFinish ->
+                val mappedStart = parseDateTimeThroughInstant(start)
+                var ys = mappedFinish.year - mappedStart.year
+                var mos = (mappedFinish.monthValue - mappedStart.monthValue)
+                    .plus(if (ys == 0) 1 else 13)
+                if (mos >= 12)
+                    mos -= 12
+                else
+                    ys -= 1
+                buildString {
+                    if (ys > 0)
+                        append(" %s ys".format(ys.toString()))
+                    if (mos > 0)
+                        append(" %s mos".format(mos.toString()))
+                }
+            }
 
     fun getEventNameFromContent(content: String) =
         content.substringBefore(".")

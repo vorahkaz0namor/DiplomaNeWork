@@ -28,7 +28,22 @@ class DatetimeKeeper {
             )
         )
 
-    private fun yearValidation(year: CharSequence): CharSequence =
+    fun jobDatetimeValidation(datetime: NeWorkDatetime): NeWorkDatetime =
+        NeWorkDatetime(
+            year = yearValidation(
+                year = datetime.year,
+                itIsJob = true
+            ),
+            month = valueValidation(
+                value = datetime.month,
+                limit = 13
+            )
+        )
+
+    private fun yearValidation(
+        year: CharSequence,
+        itIsJob: Boolean = false
+    ): CharSequence =
         year
             .filterNot { char ->
                 char.digitToIntOrNull() == null ||
@@ -39,7 +54,10 @@ class DatetimeKeeper {
                 val yearValidation =
                     correctedYear.isNotBlank() &&
                     correctedYear.length == 4 &&
-                    correctedYear.toString().toInt() < currentYear
+                    if (itIsJob)
+                        correctedYear.toString().toInt() > currentYear
+                    else
+                        correctedYear.toString().toInt() < currentYear
                 if (yearValidation)
                     ""
                 else

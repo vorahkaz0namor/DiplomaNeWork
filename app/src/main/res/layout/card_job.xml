@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/main_indent">
+
+    <TextView
+        android:id="@+id/position_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/scrollbar_width"
+        android:textSize="@dimen/section_size"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@sample/example_job.json/position" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/menu"
+        style="@style/Widget.AppTheme.MenuButton"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/job_menu_height"
+        android:contentDescription="@string/job_menu"
+        app:icon="@drawable/ic_menu_32"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/company_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_view_button_size"
+        app:layout_constraintTop_toBottomOf="@id/position_name"
+        tools:text="@sample/example_job.json/name" />
+
+    <TextView
+        android:id="@+id/work_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/work_duration"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/work_duration"
+        tools:text="@sample/example_job.json/start" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/delimiter"
+        style="@style/Widget.AppTheme.NeWorkDelimiter"
+        android:padding="@dimen/delimiter_indent"
+        android:text="@string/work_delimiter"
+        app:layout_constraintBottom_toBottomOf="@id/work_duration"
+        app:layout_constraintStart_toEndOf="@id/work_start"
+        app:layout_constraintTop_toTopOf="@id/work_duration" />
+
+    <TextView
+        android:id="@+id/work_finish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/work_duration"
+        app:layout_constraintStart_toEndOf="@id/delimiter"
+        app:layout_constraintTop_toTopOf="@id/work_duration"
+        tools:text="@sample/example_job.json/finish" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/work_duration"
+        style="@style/Widget.AppTheme.ParticipantsIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/work_duration"
+        app:icon="@drawable/ic_dot_16"
+        app:layout_constraintStart_toEndOf="@id/work_finish"
+        app:layout_constraintTop_toBottomOf="@id/company_name"
+        tools:text="@string/work_months_count" />
+
+    <TextView
+        android:id="@+id/link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="web"
+        app:layout_constraintTop_toBottomOf="@id/work_duration"
+        tools:text="@sample/example_job.json/link" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

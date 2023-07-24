@@ -186,6 +186,7 @@ class FeedPostFragment : Fragment(R.layout.fragment_feed) {
                             it.error.message ?: overview(HTTP_UNKNOWN_ERROR),
                             Snackbar.LENGTH_INDEFINITE
                         )
+                            .setTextMaxLines(3)
                             .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
                             .setAction(R.string.retry_loading) {
                                 snackbarDismiss()

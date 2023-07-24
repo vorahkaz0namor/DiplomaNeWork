@@ -85,4 +85,11 @@
     <string name="empty_event_card">All fields of the event card must be filled.\nAlso must be attached cover event.</string>
     <string name="incorrect_datetime">Enter correct event start time</string>
     <string name="event_menu_title">Event menu</string>
+    <string name="work_duration">Work duration in company</string>
+    <string name="work_months_count">Some mos</string>
+    <string name="work_delimiter">–</string>
+    <string name="empty_jobs_message">Your jobs list is empty</string>
+    <string name="work_until_present">Present</string>
+    <string name="job_menu">Job menu</string>
+    <string name="title_for_add_job_item">Add job</string>
 </resources>

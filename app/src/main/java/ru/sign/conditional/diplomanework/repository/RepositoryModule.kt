@@ -32,4 +32,10 @@ interface RepositoryModule {
     fun bindsEventRepository(
         impl: EventRepositoryImpl
     ): EventRepository
+
+    @Singleton
+    @Binds
+    fun bindsJobRepository(
+        impl: JobRepositoryImpl
+    ): JobRepository
 }

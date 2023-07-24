@@ -10,6 +10,7 @@ import ru.sign.conditional.diplomanework.entity.*
     entities = [
         PostEntity::class,
         EventEntity::class,
+        JobEntity::class,
         UserPreviewEntity::class,
         PostRemoteKeyEntity::class,
         EventRemoteKeyEntity::class,
@@ -22,6 +23,7 @@ import ru.sign.conditional.diplomanework.entity.*
 abstract class AppDb : RoomDatabase() {
     abstract fun postDao(): PostDao
     abstract fun eventDao(): EventDao
+    abstract fun jobDao(): JobDao
     abstract fun postRemoteKeyDao(): PostRemoteKeyDao
     abstract fun eventRemoteKeyDao(): EventRemoteKeyDao
     abstract fun auxDao(): AuxDao
