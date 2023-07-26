@@ -33,6 +33,7 @@ import ru.sign.conditional.diplomanework.util.AndroidUtils.viewScope
 import ru.sign.conditional.diplomanework.util.NeWorkDatetime
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.loadImage
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.overview
+import ru.sign.conditional.diplomanework.util.NeWorkHelper.setDatetimeToView
 import ru.sign.conditional.diplomanework.util.viewBinding
 import ru.sign.conditional.diplomanework.viewmodel.EventViewModel
 
@@ -65,17 +66,15 @@ class EditEventFragment : Fragment(R.layout.fragment_edit_event) {
 
     private fun initViews() {
         val draftCopy = eventViewModel.draftCopy
-        binding.apply {
-            description.editText?.setText(
-                if (draftCopy != null) {
-                    if (draftCopy.eventId == event?.id)
-                        draftCopy.eventContent
-                    else
-                        event?.content
-                } else
+        binding.description.editText?.setText(
+            if (draftCopy != null) {
+                if (draftCopy.eventId == event?.id)
+                    draftCopy.eventContent
+                else
                     event?.content
-            )
-        }
+            } else
+                event?.content
+        )
         imageLauncher =
             createImageLauncher(binding.root) { uri, file ->
                 eventViewModel.setImage(uri = uri, file = file)
@@ -111,11 +110,11 @@ class EditEventFragment : Fragment(R.layout.fragment_edit_event) {
             }
             datetimeForLayout.observe(viewLifecycleOwner) { datetime ->
                 binding.datetimeInput.apply {
-                    setDatetimeToView(startYear, datetime?.year)
-                    setDatetimeToView(startMonth, datetime?.month)
-                    setDatetimeToView(startDay, datetime?.day)
-                    setDatetimeToView(startHour, datetime?.hour)
-                    setDatetimeToView(startMinute, datetime?.minute)
+                    startYear.setDatetimeToView(datetime?.year)
+                    startMonth.setDatetimeToView(datetime?.month)
+                    startDay.setDatetimeToView(datetime?.day)
+                    startHour.setDatetimeToView(datetime?.hour)
+                    startMinute.setDatetimeToView(datetime?.minute)
                 }
                 eventBlankValidation()
             }
@@ -233,13 +232,6 @@ class EditEventFragment : Fragment(R.layout.fragment_edit_event) {
                     }
                 }
             }
-        }
-    }
-
-    private fun setDatetimeToView(view: TextInputLayout, text: CharSequence?) {
-        view.editText?.let { content ->
-            if (!content.text.contentEquals(text))
-                content.setText(text)
         }
     }
 

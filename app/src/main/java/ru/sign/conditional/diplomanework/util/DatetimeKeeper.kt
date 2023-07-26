@@ -28,14 +28,14 @@ class DatetimeKeeper {
             )
         )
 
-    fun jobDatetimeValidation(datetime: NeWorkDatetime): NeWorkDatetime =
+    fun jobDateValidation(date: NeWorkDatetime): NeWorkDatetime =
         NeWorkDatetime(
             year = yearValidation(
-                year = datetime.year,
+                year = date.year,
                 itIsJob = true
             ),
             month = valueValidation(
-                value = datetime.month,
+                value = date.month,
                 limit = 13
             )
         )

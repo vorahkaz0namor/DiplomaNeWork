@@ -41,17 +41,17 @@ data class NeWorkDatetime(
         else
             null
 
-    private fun propertiesValidation(itIsJob: Boolean) =
-        year.isNotBlank()
-            .and(month.isNotBlank())
-            .apply {
-                if (!itIsJob) {
-                    this
-                        .and(day.isNotBlank())
-                        .and(hour.isNotBlank())
-                        .and(minute.isNotBlank())
-                }
-            }
+    private fun propertiesValidation(itIsJob: Boolean): Boolean {
+        val validationForJob = year.isNotBlank() && month.isNotBlank()
+        return if (!itIsJob) {
+            validationForJob
+                .and(day.isNotBlank())
+                .and(hour.isNotBlank())
+                .and(minute.isNotBlank())
+        } else {
+            validationForJob
+        }
+    }
 
     override fun toString(): String =
         "$day.$month.$year $hour:$minute"

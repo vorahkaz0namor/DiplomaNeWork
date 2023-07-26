@@ -47,6 +47,9 @@
     <string name="new_event_was_created">New event was created successfully</string>
     <string name="the_event_was_saved">The event was saved successfully</string>
     <string name="error_saving_event">The event wasn\'t saved on server…\n(%1$s)\nTry to repeat saving from the event card</string>
+    <string name="job_was_added">The job was added successfully</string>
+    <string name="job_was_saved">The job was saved successfully</string>
+    <string name="error_saving_job">The job wasn\'t saved…\n(%1$s)</string>
     <string name="publish_item">Publish</string>
     <string name="empty_content">Content of the post can\'t be empty!</string>
     <string name="link_the_word">Link</string>
@@ -92,4 +95,10 @@
     <string name="work_until_present">Present</string>
     <string name="job_menu">Job menu</string>
     <string name="title_for_add_job_item">Add job</string>
+    <string name="position_field">Position</string>
+    <string name="company_name_field">Company name</string>
+    <string name="job_start">Job start</string>
+    <string name="job_finish">Job finish</string>
+    <string name="empty_job_card">Required fields of the job card must be filled</string>
+    <string name="incorrect_date">Enter correct start/finish date of job</string>
 </resources>

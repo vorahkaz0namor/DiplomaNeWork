@@ -6,7 +6,7 @@ import ru.sign.conditional.diplomanework.dto.Job
 
 @Entity
 data class JobEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Int,
     val idFromServer: Int,
     val name: String,

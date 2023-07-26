@@ -53,10 +53,15 @@
         android:id="@+id/feedJobFragment"
         android:name="ru.sign.conditional.diplomanework.activity.FeedJobFragment"
         tools:layout="@layout/fragment_feed_job">
-<!--        <action-->
-<!--            android:id="@+id/action_feedJobFragment_to_editJobFragment"-->
-<!--            />-->
+        <action
+            android:id="@+id/action_feedJobFragment_to_editJobFragment"
+            app:destination="@id/editJobFragment"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/editJobFragment"
+        android:name="ru.sign.conditional.diplomanework.activity.EditJobFragment"
+        tools:layout="@layout/fragment_edit_job"/>
 
     <fragment
         android:id="@+id/loginFragment"

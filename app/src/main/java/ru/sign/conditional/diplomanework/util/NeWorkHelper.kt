@@ -7,6 +7,7 @@ import android.widget.PopupMenu
 import androidx.annotation.DrawableRes
 import androidx.paging.CombinedLoadStates
 import com.bumptech.glide.Glide
+import com.google.android.material.textfield.TextInputLayout
 import okhttp3.internal.http.HTTP_FORBIDDEN
 import okhttp3.internal.http.HTTP_NOT_FOUND
 import okhttp3.internal.http.HTTP_NO_CONTENT
@@ -53,7 +54,7 @@ object NeWorkHelper {
         }
     }
     private val parseDateTimeThroughInstant = { time: CharSequence ->
-        Instant.parse(time).atOffset(OffsetDateTime.now().offset)
+        OffsetDateTime.parse(time)
     }
 
     fun datetimeWithOffset(time: String): NeWorkDatetime =
@@ -105,6 +106,13 @@ object NeWorkHelper {
                 }
             }
         }.show()
+    }
+
+    fun TextInputLayout.setDatetimeToView(text: CharSequence?) {
+        this.editText?.let { content ->
+            if (!content.text.contentEquals(text))
+                content.setText(text)
+        }
     }
 
     fun ImageView.loadImage(

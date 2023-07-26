@@ -134,7 +134,8 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                 R.id.editPostFragment,
                 R.id.editEventFragment,
                 R.id.singleEventFragment,
-                R.id.attachmentFragment -> {
+                R.id.attachmentFragment,
+                R.id.editJobFragment -> {
                     currentMenuProvider?.let {
                         removeMenuProvider(it)
                         currentMenuProvider = null

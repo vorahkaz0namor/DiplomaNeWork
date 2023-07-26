@@ -29,6 +29,11 @@ class FeedJobFragment : Fragment(R.layout.fragment_feed_job) {
     private lateinit var navController: NavController
     private var snackbar: Snackbar? = null
 
+    override fun onDestroyView() {
+        snackbarDismiss()
+        super.onDestroyView()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
@@ -57,12 +62,14 @@ class FeedJobFragment : Fragment(R.layout.fragment_feed_job) {
             // Отображение списка работ
             viewScopeWithRepeat {
                 data.collectLatest {
+                    snackbarDismiss()
                     jobAdapter.submitList(it)
                     binding.emptyView.emptyJobsList.isVisible = it.isEmpty()
                 }
             }
             // Состояние списка работ
             dataState.observe(viewLifecycleOwner) { state ->
+                snackbarDismiss()
                 binding.apply {
                     progressBarView.progressBar.isVisible = state.loading
                     jobsGroupView.isVisible = state.showing
@@ -72,9 +79,9 @@ class FeedJobFragment : Fragment(R.layout.fragment_feed_job) {
             // Редактирование работы
             edited.observe(viewLifecycleOwner) { job ->
                 if (job.id != 0)
-                    navController/*.navigate(
+                    navController.navigate(
                         R.id.action_feedJobFragment_to_editJobFragment
-                    )*/
+                    )
             }
             // Обработка ошибок при загрузке списка работ
             jobEvent.observe(viewLifecycleOwner) { code ->
@@ -86,6 +93,7 @@ class FeedJobFragment : Fragment(R.layout.fragment_feed_job) {
                     )
                         .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
                         .setAction(R.string.retry_loading) {
+                            snackbarDismiss()
                             data.retry()
                         }
                     snackbar?.show()
@@ -95,6 +103,7 @@ class FeedJobFragment : Fragment(R.layout.fragment_feed_job) {
     }
 
     private fun setUpListeners() {
+        // Добавление работы
         requireActivity().addMenuProvider(
             /* provider = */ object : MenuProvider {
                 override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -104,9 +113,9 @@ class FeedJobFragment : Fragment(R.layout.fragment_feed_job) {
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
                     when (menuItem.itemId) {
                         R.id.add_job -> {
-                            navController/*.navigate(
+                            navController.navigate(
                                 R.id.action_feedJobFragment_to_editJobFragment
-                            )*/
+                            )
                             true
                         }
                         else -> false
@@ -114,5 +123,12 @@ class FeedJobFragment : Fragment(R.layout.fragment_feed_job) {
             },
             /* owner = */ viewLifecycleOwner
         )
+    }
+
+    private fun snackbarDismiss() {
+        if (snackbar != null && snackbar?.isShown == true) {
+            snackbar?.dismiss()
+            snackbar = null
+        }
     }
 }

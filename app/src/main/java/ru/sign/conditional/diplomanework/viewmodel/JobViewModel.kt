@@ -15,6 +15,7 @@ import ru.sign.conditional.diplomanework.repository.JobRepository
 import ru.sign.conditional.diplomanework.util.AndroidUtils.defaultDispatcher
 import ru.sign.conditional.diplomanework.util.DatetimeKeeper
 import ru.sign.conditional.diplomanework.util.NeWorkDatetime
+import ru.sign.conditional.diplomanework.util.NeWorkHelper.datetimeWithOffset
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.exceptionCheck
 import ru.sign.conditional.diplomanework.util.SingleLiveEvent
 import java.time.Instant
@@ -40,9 +41,9 @@ class JobViewModel @Inject constructor(
     private val _jobEvent = SingleLiveEvent(HTTP_OK)
     val jobEvent: LiveData<Int>
         get() = _jobEvent
-    private val _datetimeIsntValid = SingleLiveEvent(true)
-    val datetimeIsntValid: LiveData<Boolean>
-        get() = _datetimeIsntValid
+    private val _datesIsntValid = SingleLiveEvent(true)
+    val datesIsntValid: LiveData<Boolean>
+        get() = _datesIsntValid
     private val _edited = MutableLiveData(emptyJob)
     val edited: LiveData<Job>
         get() = _edited
@@ -55,6 +56,8 @@ class JobViewModel @Inject constructor(
     private val keeper = DatetimeKeeper()
 
     init {
+        // READ functions
+
         @OptIn(ExperimentalCoroutinesApi::class)
         viewModelScope.launch {
             try {
@@ -79,33 +82,47 @@ class JobViewModel @Inject constructor(
 
     // CREATE & UPDATE functions
 
-    fun setEditJob(job: Job) { _edited.value = job }
-
-    fun setStart(datetime: NeWorkDatetime) {
-        _startForLayout.value = keeper.jobDatetimeValidation(datetime)
+    fun setEditJob(job: Job) {
+        viewModelScope.launch {
+            _edited.value = job
+            _startForLayout.value = datetimeWithOffset(job.start)
+            if (!job.finish.isNullOrBlank())
+                _finishForLayout.value = datetimeWithOffset(job.finish)
+        }
     }
 
-    fun setFinish(datetime: NeWorkDatetime) {
-        _finishForLayout.value = keeper.jobDatetimeValidation(datetime)
+    fun setStart(date: NeWorkDatetime) {
+        _startForLayout.value = keeper.jobDateValidation(date)
     }
 
-    fun datetimeValidationBeforeSaveJob() {
+    fun setFinish(date: NeWorkDatetime) {
+        _finishForLayout.value = keeper.jobDateValidation(date)
+    }
+
+    fun datesValidationBeforeSaveJob() {
         viewModelScope.launch {
             val now = Instant.now().atOffset(OffsetDateTime.now().offset)
-            _datetimeIsntValid.value =
+            _datesIsntValid.value =
                 (
                     startForLayout.value?.jobDatetime?.let {
                         it.year == now.year && it.monthValue > now.monthValue
                     } ?: true
                 ).or(
-                    finishForLayout.value?.jobDatetime?.let {
-                        it.year == now.year && it.monthValue > now.monthValue
+                    finishForLayout.value?.jobDatetime?.let { finish ->
+                        (finish.year == now.year && finish.monthValue > now.monthValue) ||
+                        startForLayout.value?.jobDatetime?.let { start ->
+                            start > finish
+                        } ?: true
                     } ?: false
                 )
         }
     }
 
-    fun saveJob(name: String, position: String) {
+    fun saveJob(
+        name: String,
+        position: String,
+        link: String?
+    ) {
         viewModelScope.launch {
             _jobEvent.value =
                 try {
@@ -115,7 +132,8 @@ class JobViewModel @Inject constructor(
                                 name = name,
                                 position = position,
                                 start = startForLayout.value?.jobDatetime.toString(),
-                                finish = finishForLayout.value?.jobDatetime.toString()
+                                finish = finishForLayout.value?.jobDatetime?.toString(),
+                                link = link
                             )
                         )
                     }
@@ -130,7 +148,7 @@ class JobViewModel @Inject constructor(
 
     fun clearEditJob() { _edited.value = emptyJob }
 
-    fun clearDatetime() {
+    fun clearDates() {
         _startForLayout.value = null
         _finishForLayout.value = null
     }
