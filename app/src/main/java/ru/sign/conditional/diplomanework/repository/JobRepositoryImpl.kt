@@ -20,34 +20,38 @@ class JobRepositoryImpl @Inject constructor(
     override suspend fun getMyJobs(): Flow<List<Job>> =
         jobDao.getMyJobs().mapLatest {
             val jobsFromDao = it.map(JobEntity::toDto)
-            val jobResponse = jobApiService.getMyJobs()
-            if (jobResponse.isSuccessful) {
-                val jobsFromServer = jobResponse.body()
-                    ?: throw HttpException(jobResponse)
-                val unloadedJobs =
-                    if (jobsFromDao.isEmpty() && jobsFromServer.isNotEmpty()) {
-                        jobsFromServer
-                    } else {
-                        val jobsIdsFromDao = jobsFromDao.map { it.idFromServer }
-                        jobsFromServer.filterNot { job ->
-                            jobsIdsFromDao.contains(job.id)
+            try {
+                val jobResponse = jobApiService.getMyJobs()
+                if (jobResponse.isSuccessful) {
+                    val jobsFromServer = jobResponse.body()
+                        ?: throw HttpException(jobResponse)
+                    val unloadedJobs =
+                        if (jobsFromDao.isEmpty() && jobsFromServer.isNotEmpty()) {
+                            jobsFromServer
+                        } else {
+                            val jobsIdsFromDao = jobsFromDao.map { it.idFromServer }
+                            jobsFromServer.filterNot { job ->
+                                jobsIdsFromDao.contains(job.id)
+                            }
                         }
-                    }
-                if (unloadedJobs.isNotEmpty()) {
-                    jobDao.updateJobsByIdFromServer(
-                        unloadedJobs.map {
-                            JobEntity.fromDto(
-                                it.copy(
-                                    id = 0,
-                                    idFromServer = it.id
+                    if (unloadedJobs.isNotEmpty()) {
+                        jobDao.updateJobsByIdFromServer(
+                            unloadedJobs.map {
+                                JobEntity.fromDto(
+                                    it.copy(
+                                        id = 0,
+                                        idFromServer = it.id
+                                    )
                                 )
-                            )
-                        }
-                    )
-                }
-                jobsFromDao
-            } else
-                throw HttpException(jobResponse)
+                            }
+                        )
+                    }
+                } else
+                    throw HttpException(jobResponse)
+            } catch (e: Exception) {
+                customLog("LOADING JOBS", e)
+            }
+            jobsFromDao
         }
             .flowOn(defaultDispatcher)
 

@@ -20,7 +20,6 @@
     <string name="wish_to_login">Do you wish to login?</string>
     <string name="auth_header">Authorization</string>
     <string name="successful_reg_in">You are registered successfully</string>
-    <string name="image_error">Loading image error</string>
     <string name="author_avatar">Author avatar</string>
     <string name="post_menu">Post menu</string>
     <string name="post_attachment">Attachment of the post</string>
@@ -99,6 +98,6 @@
     <string name="company_name_field">Company name</string>
     <string name="job_start">Job start</string>
     <string name="job_finish">Job finish</string>
-    <string name="empty_job_card">Required fields of the job card must be filled</string>
+    <string name="empty_fields">Required fields must be filled</string>
     <string name="incorrect_date">Enter correct start/finish date of job</string>
 </resources>

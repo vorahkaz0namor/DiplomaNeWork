@@ -16,7 +16,11 @@
 
     <style name="Theme.DiplomaNeWork.AppBar" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <item name="android:background">@color/ripple_button</item>
-        <item name="popupTheme">@style/ThemeOverlay.AppCompat.DayNight</item>
+        <item name="popupTheme">@style/Theme.DiplomaNeWork.PopupTheme</item>
+    </style>
+
+    <style name="Theme.DiplomaNeWork.PopupTheme" parent="@style/ThemeOverlay.AppCompat.DayNight">
+        <item name="android:backgroundTint">@color/toolbar_popup_background</item>
     </style>
 
 </resources>

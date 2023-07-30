@@ -2,6 +2,7 @@ package ru.sign.conditional.diplomanework.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.core.view.ActionProvider
 import android.view.LayoutInflater
 import android.view.Menu
@@ -20,6 +21,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
 import ru.sign.conditional.diplomanework.R
+import ru.sign.conditional.diplomanework.util.AndroidUtils.validationToCreateMenu
 import ru.sign.conditional.diplomanework.viewmodel.AuthViewModel
 
 @AndroidEntryPoint
@@ -31,14 +33,6 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
     private lateinit var eventsActionProvider: ActionProvider
     private lateinit var jobsActionProvider: ActionProvider
     private val authViewModel: AuthViewModel by viewModels()
-    private val validationForMenu: (MenuProvider?) -> Boolean = {
-        it == null &&
-                (appNavController
-                    .currentDestination
-                    ?.id == appNavController
-                    .graph
-                    .startDestinationId)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +52,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                 layoutId = R.layout.posts_action_provider,
                 viewId = R.id.show_posts,
                 destId = R.id.feedPostFragment
-            ) { appNavController.apply { navigate(graph.startDestinationId) } }
+            ) { appNavController.navigate(R.id.feedPostFragment) }
         eventsActionProvider =
             createActionProvider(
                 layoutId = R.layout.events_action_provider,
@@ -74,7 +68,16 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
     }
 
     private fun setAppMenu() {
-        if (validationForMenu(currentMenuProvider)) {
+        if (
+            currentMenuProvider.validationToCreateMenu(
+                controller = appNavController,
+                destIds = intArrayOf(
+                    R.id.feedPostFragment,
+                    R.id.feedEventFragment,
+                    R.id.feedJobFragment
+                )
+            )
+        ) {
             currentMenuProvider = object : MenuProvider {
                 override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                     menuInflater.inflate(R.menu.app_menu, menu)
@@ -84,8 +87,10 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                         postsActionProvider.onCreateActionView()
                     menu.findItem(R.id.events_list).actionView =
                         eventsActionProvider.onCreateActionView()
-                    menu.findItem(R.id.jobs_list).actionView =
-                        jobsActionProvider.onCreateActionView()
+                    if (authViewModel.authorized) {
+                        menu.findItem(R.id.jobs_list).actionView =
+                            jobsActionProvider.onCreateActionView()
+                    }
                 }
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean =

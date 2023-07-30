@@ -1,11 +1,8 @@
 package ru.sign.conditional.diplomanework.activity
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.View
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.view.MenuProvider
@@ -76,8 +73,8 @@ class EditJobFragment : Fragment(R.layout.fragment_edit_job) {
             }
             datesIsntValid.observe(viewLifecycleOwner) {
                 binding.apply {
+                    AndroidUtils.hideKeyboard(binding.root)
                     if (!jobIsBlank && !it) {
-                        AndroidUtils.hideKeyboard(root)
                         editJobGroup.isVisible = false
                         progressBarView.progressBar.isVisible = true
                         jobViewModel.saveJob(
@@ -94,7 +91,7 @@ class EditJobFragment : Fragment(R.layout.fragment_edit_job) {
                         Snackbar.make(
                             root,
                             if (jobIsBlank)
-                                R.string.empty_job_card
+                                R.string.empty_fields
                             else
                                 R.string.incorrect_date,
                             Snackbar.LENGTH_LONG
@@ -168,12 +165,10 @@ class EditJobFragment : Fragment(R.layout.fragment_edit_job) {
                     view = arrayOf(finishYear, finishMonth)
                 )
             }
-            position.editText?.addTextChangedListener {
-                jobBlankValidation()
-            }
-            companyName.editText?.addTextChangedListener {
-                jobBlankValidation()
-            }
+            setCustomTextChangeListener(
+                action = { jobBlankValidation() },
+                view = arrayOf(position, companyName)
+            )
         }
     }
 

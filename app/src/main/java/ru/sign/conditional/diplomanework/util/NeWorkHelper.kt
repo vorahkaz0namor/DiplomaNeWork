@@ -11,6 +11,7 @@ import com.google.android.material.textfield.TextInputLayout
 import okhttp3.internal.http.HTTP_FORBIDDEN
 import okhttp3.internal.http.HTTP_NOT_FOUND
 import okhttp3.internal.http.HTTP_NO_CONTENT
+import okhttp3.internal.http.HTTP_UNAUTHORIZED
 import retrofit2.HttpException
 import ru.sign.conditional.diplomanework.R
 import ru.sign.conditional.diplomanework.dto.*
@@ -36,6 +37,7 @@ object NeWorkHelper {
                 HTTP_CONNECTION_FAILED -> "Connection failed"
                 HTTP_NOT_FOUND -> "Not found"
                 HTTP_FORBIDDEN -> "Forbidden"
+                HTTP_UNAUTHORIZED -> "Unauthorized"
                 else -> "Bad request"
             }
             in 500..599 -> if (code == HTTP_UNKNOWN_ERROR)
@@ -131,9 +133,7 @@ object NeWorkHelper {
                 if (type == AttachmentType.AVATAR.name)
                     it.circleCrop()
                 else
-                    // TODO Temporarily was set small size
-                    // TODO Previously - dontTransform()
-                    it.sizeMultiplier(0.9F)
+                    it.dontTransform()
             }
             .into(this)
     }

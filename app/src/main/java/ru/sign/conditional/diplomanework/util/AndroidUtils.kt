@@ -1,17 +1,24 @@
 package ru.sign.conditional.diplomanework.util
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.IdRes
 import androidx.core.net.toFile
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavController
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
@@ -28,6 +35,15 @@ object AndroidUtils {
     fun hideKeyboard(view: View) {
         val imm = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    fun Activity.layoutSizeAdjust(rootView: View) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        } else {
+            window?.setDecorFitsSystemWindows(false)
+            rootView.onApplyWindowInsets(WindowInsets.CONSUMED)
+        }
     }
 
     fun Fragment.viewScopeWithRepeat(
@@ -67,4 +83,16 @@ object AndroidUtils {
             file: File
         )
     }
+
+    fun MenuProvider?.validationToCreateMenu(
+        controller: NavController,
+        @IdRes vararg destIds: Int
+    ): Boolean =
+        if (this == null) {
+            destIds.map {
+                controller.currentDestination?.id == it
+            }
+                .contains(true)
+        } else
+            false
 }

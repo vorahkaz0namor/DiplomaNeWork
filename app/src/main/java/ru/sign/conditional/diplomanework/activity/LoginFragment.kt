@@ -2,15 +2,11 @@ package ru.sign.conditional.diplomanework.activity
 
 import android.content.DialogInterface
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toFile
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
@@ -24,6 +20,8 @@ import okhttp3.internal.http.HTTP_OK
 import ru.sign.conditional.diplomanework.R
 import ru.sign.conditional.diplomanework.databinding.FragmentLoginBinding
 import ru.sign.conditional.diplomanework.util.AndroidUtils
+import ru.sign.conditional.diplomanework.util.AndroidUtils.createImageLauncher
+import ru.sign.conditional.diplomanework.util.AndroidUtils.layoutSizeAdjust
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.overview
 import ru.sign.conditional.diplomanework.util.viewBinding
 import ru.sign.conditional.diplomanework.viewmodel.AuthViewModel
@@ -42,29 +40,10 @@ class LoginFragment : DialogFragment(R.layout.fragment_login) {
 
     private fun initViews() {
         avatarLauncher =
-            registerForActivityResult(
-                ActivityResultContracts.StartActivityForResult()
-            ) { result ->
-                if (result.resultCode == ImagePicker.RESULT_ERROR)
-                    Snackbar.make(
-                        binding.root,
-                        getString(R.string.image_error),
-                        Snackbar.LENGTH_LONG
-                    )
-                        .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
-                        .show()
-                else
-                    (result.data?.data
-                        ?: return@registerForActivityResult).also {
-                            authViewModel.addAvatar(it, it.toFile())
-                        }
+            createImageLauncher(binding.root) { uri, file ->
+                authViewModel.addAvatar(uri = uri, file = file)
             }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R)
-            dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-        else {
-            dialog?.window?.setDecorFitsSystemWindows(false)
-            binding.root.onApplyWindowInsets(WindowInsets.CONSUMED)
-        }
+        requireActivity().layoutSizeAdjust(binding.root)
     }
 
     private fun subscribe() {
@@ -134,18 +113,20 @@ class LoginFragment : DialogFragment(R.layout.fragment_login) {
             clearAvatar.setOnClickListener { authViewModel.clearAvatar() }
             loginButton.setOnClickListener {
                 AndroidUtils.hideKeyboard(root)
-                if (textValidation())
+                if (textValidation()) {
                     authViewModel.login(
                         login = loginField.editText?.text.toString(),
                         password = passwordField.editText?.text.toString()
                     )
+                } else
+                    errorSnackbar()
             }
             regButton.setOnClickListener {
                 AndroidUtils.hideKeyboard(root)
                 avatarPreviewGroup.isVisible = false
                 if (textValidation() &&
                     passwordField.editText?.text
-                        .contentEquals(confirmPasswordField.editText?.text))
+                        .contentEquals(confirmPasswordField.editText?.text)) {
                     authViewModel.register(
                         login = loginField.editText?.text.toString(),
                         password = passwordField.editText?.text.toString(),
@@ -155,6 +136,8 @@ class LoginFragment : DialogFragment(R.layout.fragment_login) {
                         else
                             "User"
                     )
+                } else
+                    errorSnackbar()
             }
             cancelButton.setOnClickListener { customNavigateUp() }
         }
@@ -164,6 +147,16 @@ class LoginFragment : DialogFragment(R.layout.fragment_login) {
         !binding.loginField.editText?.text.isNullOrBlank() &&
         !binding.passwordField.editText?.text.isNullOrBlank()
     )
+
+    private fun errorSnackbar() {
+        Snackbar.make(
+            binding.root,
+            R.string.empty_fields,
+            Snackbar.LENGTH_LONG
+        )
+            .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
+            .show()
+    }
 
     private fun setInvisibleErrorWrongLoginPassword(vararg text: EditText?) {
         text.map {
