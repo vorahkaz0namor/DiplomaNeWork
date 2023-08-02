@@ -36,7 +36,6 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setSupportActionBar(findViewById(R.id.custom_toolbar))
         init()
         setAppMenu()
         subscribe()
@@ -44,6 +43,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
     }
 
     private fun init() {
+        setSupportActionBar(findViewById(R.id.custom_toolbar))
         appNavController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration = AppBarConfiguration(appNavController.graph)
         setupActionBarWithNavController(appNavController, appBarConfiguration)

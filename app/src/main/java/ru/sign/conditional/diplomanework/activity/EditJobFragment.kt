@@ -35,7 +35,7 @@ class EditJobFragment : Fragment(R.layout.fragment_edit_job) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireActivity().onBackPressedDispatcher.addCallback(this) {
-            customNavigateUp()
+            preNavigateUp()
         }
     }
 
@@ -121,7 +121,8 @@ class EditJobFragment : Fragment(R.layout.fragment_edit_job) {
                         ).show()
                     }
                 }
-                customNavigateUp()
+                preNavigateUp()
+                findNavController().navigateUp()
             }
         }
     }
@@ -190,11 +191,10 @@ class EditJobFragment : Fragment(R.layout.fragment_edit_job) {
         }
     }
 
-    private fun customNavigateUp() {
+    private fun preNavigateUp() {
         jobViewModel.apply {
             clearEditJob()
             clearDates()
         }
-        findNavController().navigateUp()
     }
 }

@@ -208,7 +208,7 @@ class FeedPostFragment : Fragment(R.layout.fragment_feed) {
         attachmentViewModel.viewAttachment.observe(viewLifecycleOwner) { item ->
             if (item.id != 0)
                 navController.navigate(
-                    R.id.action_feedFragment_to_attachmentFragment
+                    R.id.action_global_attachmentFragment
                 )
         }
         authViewModel.apply {

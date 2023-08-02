@@ -10,8 +10,8 @@ data class NeWorkDatetime(
     val hour: CharSequence = "",
     val minute: CharSequence = ""
 ) {
-    val offsetDateTime: OffsetDateTime? = toOffsetDateTime()
-    val jobDatetime: OffsetDateTime? = toOffsetDateTime(itIsJob = true)
+    fun offsetDateTime(): OffsetDateTime? = toOffsetDateTime()
+    fun jobDatetime(): OffsetDateTime? = toOffsetDateTime(itIsJob = true)
 
     private fun toOffsetDateTime(itIsJob: Boolean = false) =
         if (propertiesValidation(itIsJob))
@@ -42,6 +42,16 @@ data class NeWorkDatetime(
             null
 
     private fun propertiesValidation(itIsJob: Boolean): Boolean {
+//    val removeZeroes: (CharSequence) -> CharSequence = { value ->
+//        var sequence = value
+//        while (sequence.startsWith('0')) {
+//            sequence = sequence.trimStart { it == '0' }
+//        }
+//        sequence
+//    }
+//    properties = properties.map {
+//        removeZeroes(it)
+//    }
         val validationForJob = year.isNotBlank() && month.isNotBlank()
         return if (!itIsJob) {
             validationForJob

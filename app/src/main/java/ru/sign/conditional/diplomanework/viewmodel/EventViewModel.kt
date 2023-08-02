@@ -187,7 +187,7 @@ class EventViewModel @Inject constructor(
     fun datetimeValidationBeforeSaveEvent() {
         viewModelScope.launch {
             _datetimeIsntValid.value =
-                datetimeForLayout.value?.offsetDateTime?.let {
+                datetimeForLayout.value?.offsetDateTime()?.let {
                     it < Instant.now()
                             .atOffset(OffsetDateTime.now().offset)
                             .plusMinutes(5)
@@ -212,7 +212,7 @@ class EventViewModel @Inject constructor(
                             author = userPreview.name,
                             authorAvatar = userPreview.avatar,
                             content = description,
-                            datetime = datetimeForLayout.value?.offsetDateTime.toString(),
+                            datetime = datetimeForLayout.value?.offsetDateTime().toString(),
                             published = LocalDateTime.now().toString()
                         )
                         eventRepository.saveEvent(event, media.value)

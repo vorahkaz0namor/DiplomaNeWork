@@ -33,9 +33,7 @@ class SingleEventFragment : Fragment(R.layout.fragment_single_event) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
-            findNavController().navigateUp()
-        }
+        requireActivity().onBackPressedDispatcher.addCallback {}
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -108,14 +106,14 @@ class SingleEventFragment : Fragment(R.layout.fragment_single_event) {
             edited.observe(viewLifecycleOwner) { event ->
                 if (event.id != 0)
                     findNavController().navigate(
-                        R.id.action_singleEventFragment_to_editEventFragment
+                        R.id.action_global_editEventFragment
                     )
             }
         }
         attachmentViewModel.viewAttachment.observe(viewLifecycleOwner) { item ->
             if (item.id != 0)
                 findNavController().navigate(
-                    R.id.action_singleEventFragment_to_attachmentFragment
+                    R.id.action_global_attachmentFragment
                 )
         }
     }

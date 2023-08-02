@@ -2,7 +2,6 @@ package ru.sign.conditional.diplomanework.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -48,7 +47,7 @@ class EditEventFragment : Fragment(R.layout.fragment_edit_event) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireActivity().onBackPressedDispatcher.addCallback(this) {
-            customNavigateUp(
+            preNavigateUp(
                 DraftCopy(
                     eventId = event?.id ?: 0,
                     eventContent = binding.description.editText?.text.toString()
@@ -160,7 +159,8 @@ class EditEventFragment : Fragment(R.layout.fragment_edit_event) {
                             ).show()
                     }
                 }
-                customNavigateUp(null)
+                preNavigateUp(null)
+                findNavController().navigateUp()
             }
         }
     }
@@ -251,13 +251,12 @@ class EditEventFragment : Fragment(R.layout.fragment_edit_event) {
         }
     }
 
-    private fun customNavigateUp(draftCopy: DraftCopy?) {
+    private fun preNavigateUp(draftCopy: DraftCopy?) {
         eventViewModel.apply {
             saveDraftCopy(draftCopy)
             clearEditEvent()
             clearDatetime()
             clearImage()
         }
-        findNavController().navigateUp()
     }
 }

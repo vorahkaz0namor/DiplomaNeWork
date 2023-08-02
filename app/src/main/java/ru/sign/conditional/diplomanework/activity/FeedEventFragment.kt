@@ -192,7 +192,7 @@ class FeedEventFragment : Fragment(R.layout.fragment_feed_event) {
             edited.observe(viewLifecycleOwner) { event ->
                 if (event.id != 0)
                     navController.navigate(
-                        R.id.action_feedEventFragment_to_editEventFragment
+                        R.id.action_global_editEventFragment
                     )
             }
             // Переход на карточку события
@@ -207,7 +207,7 @@ class FeedEventFragment : Fragment(R.layout.fragment_feed_event) {
         attachmentViewModel.viewAttachment.observe(viewLifecycleOwner) { item ->
             if (item.id != 0)
                 navController.navigate(
-                    R.id.action_feedEventFragment_to_attachmentFragment
+                    R.id.action_global_attachmentFragment
                 )
         }
         authViewModel.apply {
@@ -255,7 +255,7 @@ class FeedEventFragment : Fragment(R.layout.fragment_feed_event) {
                 else {
                     eventViewModel.getDraftCopy()
                     navController.navigate(
-                        R.id.action_feedEventFragment_to_editEventFragment
+                        R.id.action_global_editEventFragment
                     )
                 }
             }

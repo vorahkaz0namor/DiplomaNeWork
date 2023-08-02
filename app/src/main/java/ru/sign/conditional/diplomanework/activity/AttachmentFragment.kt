@@ -6,7 +6,6 @@ import androidx.activity.addCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import ru.sign.conditional.diplomanework.R
 import ru.sign.conditional.diplomanework.databinding.FragmentAttachmentBinding
 import ru.sign.conditional.diplomanework.dto.Attachment
@@ -26,7 +25,6 @@ class AttachmentFragment : Fragment(R.layout.fragment_attachment) {
         super.onCreate(savedInstanceState)
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             attachmentViewModel.clearAttachment()
-            findNavController().navigateUp()
         }
         if (attachment != null) {
             if (attachment!!.type != AttachmentType.IMAGE)

@@ -39,7 +39,7 @@ class EditPostFragment : Fragment(R.layout.fragment_edit_post) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireActivity().onBackPressedDispatcher.addCallback(this) {
-            customNavigateUp(
+            preNavigateUp(
                 DraftCopy(
                     postId = post?.id ?: 0,
                     postContent = binding.postContent.text.toString()
@@ -124,7 +124,8 @@ class EditPostFragment : Fragment(R.layout.fragment_edit_post) {
                             ).show()
                     }
                 }
-                customNavigateUp(null)
+                preNavigateUp(null)
+                findNavController().navigateUp()
             }
         }
     }
@@ -190,12 +191,11 @@ class EditPostFragment : Fragment(R.layout.fragment_edit_post) {
         }
     }
 
-    private fun customNavigateUp(draftCopy: DraftCopy?) {
+    private fun preNavigateUp(draftCopy: DraftCopy?) {
         postViewModel.apply {
             saveDraftCopy(draftCopy)
             clearEditPost()
             clearImage()
         }
-        findNavController().navigateUp()
     }
 }

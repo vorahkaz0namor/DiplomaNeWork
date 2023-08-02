@@ -12,9 +12,6 @@
         <action
             android:id="@+id/action_feedFragment_to_editPostFragment"
             app:destination="@id/editPostFragment"/>
-        <action
-            android:id="@+id/action_feedFragment_to_attachmentFragment"
-            app:destination="@id/attachmentFragment"/>
     </fragment>
 
     <fragment
@@ -22,31 +19,22 @@
         android:name="ru.sign.conditional.diplomanework.activity.FeedEventFragment"
         tools:layout="@layout/fragment_feed_event">
         <action
-            android:id="@+id/action_feedEventFragment_to_editEventFragment"
-            app:destination="@id/editEventFragment"/>
-        <action
             android:id="@+id/action_feedEventFragment_to_singleEventFragment"
             app:destination="@id/singleEventFragment"/>
-        <action
-            android:id="@+id/action_feedEventFragment_to_attachmentFragment"
-            app:destination="@id/attachmentFragment"/>
     </fragment>
 
     <fragment
         android:id="@+id/editEventFragment"
         android:name="ru.sign.conditional.diplomanework.activity.EditEventFragment"
         tools:layout="@layout/fragment_edit_event"/>
+    <action
+        android:id="@+id/action_global_editEventFragment"
+        app:destination="@id/editEventFragment"/>
 
     <fragment
         android:id="@+id/singleEventFragment"
         android:name="ru.sign.conditional.diplomanework.activity.SingleEventFragment"
         tools:layout="@layout/fragment_single_event">
-        <action
-            android:id="@+id/action_singleEventFragment_to_editEventFragment"
-            app:destination="@id/editEventFragment"/>
-        <action
-            android:id="@+id/action_singleEventFragment_to_attachmentFragment"
-            app:destination="@id/attachmentFragment"/>
     </fragment>
 
     <fragment
@@ -77,5 +65,8 @@
         android:id="@+id/attachmentFragment"
         android:name="ru.sign.conditional.diplomanework.activity.AttachmentFragment"
         tools:layout="@layout/fragment_attachment"/>
+    <action
+        android:id="@+id/action_global_attachmentFragment"
+        app:destination="@id/attachmentFragment"/>
 
 </navigation>

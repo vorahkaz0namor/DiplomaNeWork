@@ -104,13 +104,13 @@ class JobViewModel @Inject constructor(
             val now = Instant.now().atOffset(OffsetDateTime.now().offset)
             _datesIsntValid.value =
                 (
-                    startForLayout.value?.jobDatetime?.let {
+                    startForLayout.value?.jobDatetime()?.let {
                         it.year == now.year && it.monthValue > now.monthValue
                     } ?: true
                 ).or(
-                    finishForLayout.value?.jobDatetime?.let { finish ->
+                    finishForLayout.value?.jobDatetime()?.let { finish ->
                         (finish.year == now.year && finish.monthValue > now.monthValue) ||
-                        startForLayout.value?.jobDatetime?.let { start ->
+                        startForLayout.value?.jobDatetime()?.let { start ->
                             start > finish
                         } ?: true
                     } ?: false
@@ -131,8 +131,8 @@ class JobViewModel @Inject constructor(
                             it.copy(
                                 name = name,
                                 position = position,
-                                start = startForLayout.value?.jobDatetime.toString(),
-                                finish = finishForLayout.value?.jobDatetime?.toString(),
+                                start = startForLayout.value?.jobDatetime().toString(),
+                                finish = finishForLayout.value?.jobDatetime()?.toString(),
                                 link = link
                             )
                         )
