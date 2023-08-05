@@ -198,14 +198,14 @@ object NeWorkHelper {
                 "DESCRIPTION => ${overview(exceptionCheck(e))}")
     }
 
-    fun loggingFeedItem(logType: String, id: Int, participatedByMe: Boolean?, participants: Int?) {
-        Log.d("[$logType]FEEDITEM $id",
-            "participatedByMe = ${participatedByMe.toString().uppercase()}\n" +
-                    "participants = $participants")
+    fun loggingFeedItem(logType: String, item: FeedItem?) {
+        Log.d("[$logType]FEEDITEM ${item?.id}",
+            "participatedByMe = ${(item as? Event)?.participatedByMe.toString().uppercase()}\n" +
+                    "participants = ${(item as? Event)?.participantsIds?.size}")
     }
 
-    fun diffLoggingItem(logType: String, item: Event?) {
-        Log.d("[$logType]EVENT ${(item as FeedItem).id}", item.toString())
+    fun diffLoggingItem(logType: String, item: FeedItem?) {
+        Log.d("[$logType]EVENT ${item?.id}", item.toString())
     }
 
     fun CombinedLoadStates.allStatesToString(): String =

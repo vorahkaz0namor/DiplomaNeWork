@@ -67,14 +67,6 @@ class FeedEventFragment : Fragment(R.layout.fragment_feed_event) {
         loadStateHeader = FeedItemLoadingStateAdapter { eventAdapter.retry() }
         loadStateFooter = FeedItemLoadingStateAdapter { eventAdapter.retry() }
         binding.recyclerView.events.apply {
-            // TODO: выявлена причина разных промежутков между событиями в списке -
-            // TODO: наличие пустых holder'ов
-            addItemDecoration(
-                DividerItemDecoration(
-                    requireContext(),
-                    DividerItemDecoration.VERTICAL
-                )
-            )
             adapter =
                 eventAdapter.withLoadStateHeaderAndFooter(
                     header = loadStateHeader,

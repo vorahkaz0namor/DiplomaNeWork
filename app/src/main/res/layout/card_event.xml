@@ -8,6 +8,15 @@
     android:padding="@dimen/scrollbar_width"
     tools:context=".activity.AppActivity">
 
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="top"
+        app:constraint_referenced_ids="
+            event_attachment, media_type
+        " />
+
     <ImageView
         android:id="@+id/event_attachment"
         android:layout_width="match_parent"
@@ -16,8 +25,8 @@
         android:contentDescription="@string/event_attachment"
         android:paddingBottom="@dimen/main_indent"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/barrier_top"
+        app:layout_constraintTop_toBottomOf="@id/barrier_top"
+        app:layout_constraintBottom_toTopOf="@id/pre_first_barrier_bottom"
         tools:srcCompat="@sample/attachment"
         tools:visibility="visible" />
 
@@ -27,25 +36,27 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/attachment_media_type"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/barrier_top"
+        app:layout_constraintTop_toBottomOf="@id/barrier_top"
+        app:layout_constraintBottom_toTopOf="@id/pre_first_barrier_bottom"
         app:tint="?attr/colorControlNormal"
         tools:srcCompat="@drawable/ic_video_attachment_48"
         tools:visibility="visible" />
 
     <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/barrier_top"
+        android:id="@+id/pre_first_barrier_bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:barrierDirection="top"
-        app:constraint_referenced_ids="card_event_layout" />
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="
+            event_attachment, media_type
+        " />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/card_event_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/card_padding"
-        app:layout_constraintTop_toBottomOf="@id/barrier_top">
+        app:layout_constraintTop_toBottomOf="@id/pre_first_barrier_bottom">
 
         <TextView
             android:id="@+id/datetime"

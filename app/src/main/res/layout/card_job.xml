@@ -20,11 +20,12 @@
         android:id="@+id/menu"
         style="@style/Widget.AppTheme.MenuButton"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/job_menu_height"
+        android:layout_height="wrap_content"
         android:contentDescription="@string/job_menu"
         app:icon="@drawable/ic_menu_32"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="@id/position_name"
+        app:layout_constraintTop_toTopOf="@id/position_name"
+        app:layout_constraintBottom_toBottomOf="@id/position_name" />
 
     <TextView
         android:id="@+id/company_name"

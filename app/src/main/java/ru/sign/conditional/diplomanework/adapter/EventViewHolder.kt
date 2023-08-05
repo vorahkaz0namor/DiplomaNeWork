@@ -25,18 +25,29 @@ class EventViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(event: Event) {
         fillingCardEvent(event)
-        setupListeners(event)
+        setupListeners(
+            event = event,
+            actionByViewEvent = {
+                onEventInteractionListener.onShowSingleEvent(event)
+            }
+        )
     }
 
     fun bind(payload: Payload, event: Event?) {
         fillingCardEvent(payload)
         if (event != null)
-            setupListenersGivenPayload(event)
+            setupAttendInListener(event)
     }
 
     fun bindSingleEvent(event: Event) {
         fillingSingleCardEvent(event)
-        setupListenersOnSingleCardEvent(event)
+        setupListeners(
+            event = event,
+            actionByViewEvent = {
+                if (binding.menu.hasOnClickListeners())
+                    binding.menu.performClick()
+            }
+        )
     }
 
     private fun commonFillingCardEvent(event: Event) {
@@ -114,15 +125,16 @@ class EventViewHolder(
         }
     }
 
-    private fun setupCommonListeners(event: Event) {
+    private fun setupListeners(
+        event: Event,
+        actionByViewEvent: () -> Unit
+    ) {
+        setupAttendInListener(event)
         binding.apply {
-            setCustomOnClickListener(attendIn) {
-                attendAnimation()
-                onEventInteractionListener.onAttend(event)
-            }
             setCustomOnClickListener(eventAttachment, mediaType) {
                 onEventInteractionListener.onShowAttachment(event)
             }
+            setCustomOnClickListener(viewEvent) { actionByViewEvent() }
             menu.setOnClickListener { view ->
                 view.setFeedItemMenu(
                     actionEdit = { onEventInteractionListener.onEdit(event) },
@@ -132,27 +144,19 @@ class EventViewHolder(
         }
     }
 
-    private fun setupListeners(event: Event) {
-        setupCommonListeners(event)
-        setCustomOnClickListener(binding.viewEvent) {
-            onEventInteractionListener.onShowSingleEvent(event)
-        }
-    }
-
-    private fun setupListenersGivenPayload(event: Event) {
-        binding.apply {
-            setCustomOnClickListener(attendIn) {
-                attendAnimation()
-                onEventInteractionListener.onAttend(event)
-            }
-        }
-    }
-
-    private fun setupListenersOnSingleCardEvent(event: Event) {
-        setupCommonListeners(event)
-        setCustomOnClickListener(binding.viewEvent) {
-            if (binding.menu.hasOnClickListeners())
-                binding.menu.performClick()
+    private fun setupAttendInListener(event: Event) {
+        setCustomOnClickListener(binding.attendIn) {
+            ObjectAnimator.ofPropertyValuesHolder(
+                binding.attendIn,
+                PropertyValuesHolder.ofFloat(View.SCALE_X, 1.2F, 1F),
+                PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.2F, 1F)
+            )
+                .apply {
+                    duration = 300
+                    interpolator = LinearInterpolator()
+                }
+                .start()
+            onEventInteractionListener.onAttend(event)
         }
     }
 
@@ -169,18 +173,5 @@ class EventViewHolder(
                 }
             }
         }
-    }
-
-    private fun attendAnimation() {
-        ObjectAnimator.ofPropertyValuesHolder(
-            binding.attendIn,
-            PropertyValuesHolder.ofFloat(View.SCALE_X, 1.2F, 1F),
-            PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.2F, 1F)
-        )
-            .apply {
-                duration = 300
-                interpolator = LinearInterpolator()
-            }
-            .start()
     }
 }

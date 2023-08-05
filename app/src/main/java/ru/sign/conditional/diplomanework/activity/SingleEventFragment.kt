@@ -44,16 +44,16 @@ class SingleEventFragment : Fragment(R.layout.fragment_single_event) {
 
     private fun init() {
         viewScopeWithRepeat {
+            val holder = EventViewHolder(
+                binding.singleEvent,
+                OnEventInteractionListenerImpl(
+                    eventViewModel = eventViewModel,
+                    attachmentViewModel = attachmentViewModel,
+                    authViewModel = authViewModel
+                )
+            )
             bindEvent = { oldItem: Event?, newItem: Event ->
                 if (oldItem != newItem) {
-                    EventViewHolder(
-                        binding.singleEvent,
-                        OnEventInteractionListenerImpl(
-                            eventViewModel = eventViewModel,
-                            attachmentViewModel = attachmentViewModel,
-                            authViewModel = authViewModel
-                        )
-                    ).let { holder ->
                         oldItem?.let {
                             val payload = Payload(
                                 id = newItem.id,
@@ -68,7 +68,6 @@ class SingleEventFragment : Fragment(R.layout.fragment_single_event) {
                                 )
                             )
                         } ?: holder.bindSingleEvent(newItem)
-                    }
                 }
             }
         }
