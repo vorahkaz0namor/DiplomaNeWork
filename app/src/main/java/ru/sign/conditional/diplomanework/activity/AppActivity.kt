@@ -95,6 +95,10 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
                     when (menuItem.itemId) {
+                        R.id.jobs_list -> {
+                            menuItem.actionView?.callOnClick()
+                            true
+                        }
                         R.id.login -> {
                             authViewModel.authShowing()
                             appNavController.navigate(R.id.loginFragment)

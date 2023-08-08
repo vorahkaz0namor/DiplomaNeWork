@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">DiplomaNeWork</string>
+    <string name="app_name">ArcanumAstra</string>
     <string name="login_item">Login</string>
     <string name="register_item">Register</string>
     <string name="logout_item">Logout</string>

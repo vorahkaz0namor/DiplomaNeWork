@@ -7,6 +7,8 @@ import android.widget.PopupMenu
 import androidx.annotation.DrawableRes
 import androidx.paging.CombinedLoadStates
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.textfield.TextInputLayout
 import okhttp3.internal.http.HTTP_FORBIDDEN
 import okhttp3.internal.http.HTTP_NOT_FOUND
@@ -20,6 +22,7 @@ import java.net.ConnectException
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
+import kotlin.math.ceil
 
 object NeWorkHelper {
     /** `520 Unknown Error` (non-standard HTTP code CloudFlare) */
@@ -57,6 +60,11 @@ object NeWorkHelper {
     }
     private val parseDateTimeThroughInstant = { time: CharSequence ->
         OffsetDateTime.parse(time)
+    }
+    private var roundingRadius = 0
+
+    fun setRoundingRadius(pixels: Float) {
+        roundingRadius = ceil(pixels).toInt()
     }
 
     fun datetimeWithOffset(time: String): NeWorkDatetime =
@@ -133,7 +141,9 @@ object NeWorkHelper {
                 if (type == AttachmentType.AVATAR.name)
                     it.circleCrop()
                 else
-                    it.dontTransform()
+                    it.transform(RoundedCorners(roundingRadius))
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
             }
             .into(this)
     }

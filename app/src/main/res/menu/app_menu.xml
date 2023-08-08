@@ -5,12 +5,12 @@
     <item
         android:id="@+id/posts_list"
         android:title="@string/posts_section"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/events_list"
         android:title="@string/events_section"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <group android:id="@+id/unauthorized">
         <item

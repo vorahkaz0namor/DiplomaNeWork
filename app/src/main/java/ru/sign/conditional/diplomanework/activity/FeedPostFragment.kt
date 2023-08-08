@@ -27,6 +27,7 @@ import ru.sign.conditional.diplomanework.util.AndroidUtils.viewScope
 import ru.sign.conditional.diplomanework.util.AndroidUtils.viewScopeWithRepeat
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.HTTP_UNKNOWN_ERROR
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.overview
+import ru.sign.conditional.diplomanework.util.NeWorkHelper.setRoundingRadius
 import ru.sign.conditional.diplomanework.util.viewBinding
 import ru.sign.conditional.diplomanework.viewmodel.AttachmentViewModel
 import ru.sign.conditional.diplomanework.viewmodel.AuthViewModel
@@ -72,8 +73,17 @@ class FeedPostFragment : Fragment(R.layout.fragment_feed) {
                     footer = loadStateFooter
                 )
         }
-        // Учет очередного запуска FeedFragment'а
-        postViewModel.appealTo()
+        viewScope.launch {
+            // Учет очередного запуска FeedFragment'а
+            postViewModel.appealTo()
+            // Задание радиуса скругления для метода
+            // NeWorkHelper.loadImage(...)
+            if (postViewModel.appealTo == 1L)
+                setRoundingRadius(
+                    requireContext()
+                        .resources
+                        .getDimension(R.dimen.card_padding))
+        }
         navController = findNavController()
     }
 
