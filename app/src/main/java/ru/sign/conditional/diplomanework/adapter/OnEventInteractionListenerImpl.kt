@@ -19,10 +19,6 @@ class OnEventInteractionListenerImpl(
         eventViewModel.setEditEvent(event)
     }
 
-    override fun onRepeatSave(event: Event) {
-        eventViewModel.repeatSaveEvent(event)
-    }
-
     override fun onRemove(event: Event) {
         eventViewModel.removeEventById(event)
     }

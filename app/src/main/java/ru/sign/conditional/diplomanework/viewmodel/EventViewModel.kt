@@ -1,7 +1,6 @@
 package ru.sign.conditional.diplomanework.viewmodel
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -136,7 +135,7 @@ class EventViewModel @Inject constructor(
 
     // READ functions
 
-    fun appealTo() = (++_appealTo)
+    fun appealTo() = ++_appealTo
 
     fun getEventById(id: Int) {
         viewModelScope.launch {
@@ -217,18 +216,6 @@ class EventViewModel @Inject constructor(
                         )
                         eventRepository.saveEvent(event, media.value)
                     }
-                    HTTP_OK
-                } catch (e: Exception) {
-                    exceptionCheck(e)
-                }
-        }
-    }
-
-    fun repeatSaveEvent(event: Event) {
-        viewModelScope.launch {
-            _eventOccurrence.value =
-                try {
-                    eventRepository.saveEvent(event, media.value)
                     HTTP_OK
                 } catch (e: Exception) {
                     exceptionCheck(e)

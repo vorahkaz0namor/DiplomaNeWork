@@ -14,7 +14,6 @@
     <dimen name="constraint_height">32dp</dimen>
     <dimen name="avatar_size">48dp</dimen>
     <dimen name="avatar_preview">56dp</dimen>
-    <dimen name="section_height">60dp</dimen>
     <dimen name="start_section_height">104dp</dimen>
     <dimen name="max_width_link">240dp</dimen>
     <dimen name="cover_skeleton">280dp</dimen>

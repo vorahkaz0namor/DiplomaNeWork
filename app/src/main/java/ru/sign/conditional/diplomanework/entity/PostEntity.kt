@@ -5,7 +5,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import ru.sign.conditional.diplomanework.dto.Attachment
 import ru.sign.conditional.diplomanework.dto.Post
-import ru.sign.conditional.diplomanework.dto.UserPreview
 
 @Entity
 data class PostEntity(

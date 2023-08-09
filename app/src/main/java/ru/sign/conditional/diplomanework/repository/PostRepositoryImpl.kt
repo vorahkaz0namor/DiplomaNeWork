@@ -1,6 +1,5 @@
 package ru.sign.conditional.diplomanework.repository
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingData
 import androidx.paging.map
@@ -116,8 +115,6 @@ class PostRepositoryImpl @Inject constructor(
                 )
             }
         postDao.savePost(PostEntity.fromDto(postToUpdate))
-//        Log.d("POST TO UPDATE", "likes = ${postToUpdate.likeOwnerIds}\n" +
-//                "likedByMe = ${postToUpdate.likedByMe}")
         val postResponse = postApiService.let {
             if (post.likedByMe)
                 it.unlikePostById(post.idFromServer)
@@ -127,8 +124,6 @@ class PostRepositoryImpl @Inject constructor(
         if (postResponse.isSuccessful) {
             val loadedPost = postResponse.body()
                 ?: throw HttpException(postResponse)
-//            Log.d("LOADED POST", "likes = ${loadedPost.likeOwnerIds}\n" +
-//                    "likedByMe = ${loadedPost.likedByMe}")
             postDao.savePost(PostEntity.fromDto(
                 loadedPost.copy(
                     id = post.id,

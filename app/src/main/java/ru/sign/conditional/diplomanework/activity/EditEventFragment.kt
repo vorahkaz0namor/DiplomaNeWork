@@ -133,7 +133,7 @@ class EditEventFragment : Fragment(R.layout.fragment_edit_event) {
                                 R.string.incorrect_datetime,
                             Snackbar.LENGTH_LONG
                         )
-                            .setTextMaxLines(3)
+                            .setTextMaxLines(4)
                             .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
                             .show()
                     }

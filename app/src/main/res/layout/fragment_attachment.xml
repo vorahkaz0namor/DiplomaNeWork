@@ -24,12 +24,6 @@
                 android:contentDescription="@string/post_attachment_full_view"
                 tools:srcCompat="@sample/attachment" />
 
-<!--            <com.google.android.material.button.MaterialButton-->
-<!--                android:id="@+id/play_button"-->
-<!--                style="@style/Widget.AppTheme.PlayButton"-->
-<!--                android:layout_width="@dimen/play_button_width"-->
-<!--                android:layout_height="wrap_content" />-->
-
         </FrameLayout>
 
     </ScrollView>

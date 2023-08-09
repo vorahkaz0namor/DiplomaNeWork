@@ -18,7 +18,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/position"
-        style="@style/Widget.AppTheme.NeWorkOutlinedTextInput"
+        style="@style/Widget.AppTheme.RequiredToFill"
         android:layout_width="match_parent"
         android:hint="@string/position_field"
         >
@@ -32,7 +32,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/company_name"
-        style="@style/Widget.AppTheme.NeWorkOutlinedTextInput"
+        style="@style/Widget.AppTheme.RequiredToFill"
         android:layout_width="match_parent"
         android:hint="@string/company_name_field"
         >
@@ -60,6 +60,17 @@
             android:inputType="textUri"/>
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/Widget.AppTheme.ParticipantsIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/ic_required_to_fill_12"
+        app:iconSize="@dimen/card_padding"
+        android:text="@string/must_be_filled"
+        android:textAlignment="viewStart"
+        />
+
 
     <include
         android:id="@+id/progress_bar_view"

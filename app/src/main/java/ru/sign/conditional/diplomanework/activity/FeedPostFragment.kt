@@ -19,7 +19,7 @@ import ru.sign.conditional.diplomanework.R
 import ru.sign.conditional.diplomanework.adapter.FeedItemAdapter
 import ru.sign.conditional.diplomanework.adapter.FeedItemLoadingStateAdapter
 import ru.sign.conditional.diplomanework.adapter.OnPostInteractionListenerImpl
-import ru.sign.conditional.diplomanework.databinding.FragmentFeedBinding
+import ru.sign.conditional.diplomanework.databinding.FragmentFeedPostBinding
 import ru.sign.conditional.diplomanework.model.RemotePresentationState.*
 import ru.sign.conditional.diplomanework.model.UiAction
 import ru.sign.conditional.diplomanework.model.asRemotePresentationState
@@ -33,8 +33,8 @@ import ru.sign.conditional.diplomanework.viewmodel.AttachmentViewModel
 import ru.sign.conditional.diplomanework.viewmodel.AuthViewModel
 import ru.sign.conditional.diplomanework.viewmodel.PostViewModel
 
-class FeedPostFragment : Fragment(R.layout.fragment_feed) {
-    private val binding by viewBinding(FragmentFeedBinding::bind)
+class FeedPostFragment : Fragment(R.layout.fragment_feed_post) {
+    private val binding by viewBinding(FragmentFeedPostBinding::bind)
     private val authViewModel: AuthViewModel by activityViewModels()
     private val postViewModel: PostViewModel by activityViewModels()
     private val attachmentViewModel: AttachmentViewModel by activityViewModels()
@@ -103,19 +103,15 @@ class FeedPostFragment : Fragment(R.layout.fragment_feed) {
                     .asRemotePresentationState()
                     .mapLatest { state ->
                         snackbarDismiss()
-//                        Log.d("POSTADAPTER LOADSTATE", state.name)
                         val presented = state == PRESENTED
                         val isShownAdapterFirstItem =
                             binding.recyclerView.posts
                                 .findViewHolderForAdapterPosition(0)
                                 ?.itemView
                                 ?.isShown
-//                        Log.d("1st ITEM IN ADAPTER",
-//                            "is shown = $isShownAdapterFirstItem")
                         if (presented &&
                             postViewModel.appealTo == 1L &&
                             isShownAdapterFirstItem != true) {
-//                            Log.d("SCROLLED BY FEEDPOST", "when appealTo = ${postViewModel.appealTo}")
                             binding.recyclerView.posts.smoothScrollToPosition(0)
                             stateChanger(UiAction.Scroll(currentId = totalState.value.id))
                         } else {
@@ -134,11 +130,9 @@ class FeedPostFragment : Fragment(R.layout.fragment_feed) {
                     }
                         .distinctUntilChanged()
                 shouldScrollToTop.collectLatest {
-//                    Log.d("SHOULD SCROLL TO TOP?", it.toString().uppercase())
                     if (it) {
                         binding.recyclerView.posts.smoothScrollToPosition(0)
                         val currentId = totalState.value.id
-//                        Log.d("SCROLLED TO MAX POST ID", currentId.toString())
                         stateChanger(UiAction.Scroll(currentId = currentId))
                     }
                 }
@@ -147,36 +141,25 @@ class FeedPostFragment : Fragment(R.layout.fragment_feed) {
             viewScope.launch {
                 postAdapter.loadStateFlow.collectLatest { loadState ->
                     snackbarDismiss()
-//                    var headerStateName: String
-//                    var footerStateName: String
                     loadStateHeader.loadState =
                         loadState.mediator?.refresh
                             .takeIf {
                                 it is LoadState.Loading ||
                                 it is LoadState.Error
                             }
-//                            .also { headerStateName = "mediator.refresh" }
                         ?: loadState.mediator?.prepend
                             .takeIf {
                                 it is LoadState.Loading ||
                                 it is LoadState.Error
                             }
-//                            .also { headerStateName = "mediator.prepend" }
                         ?: loadState.source.refresh
-//                            .also { headerStateName = "source.refresh" }
                     loadStateFooter.loadState =
                         loadState.mediator?.append
                             .takeIf {
                                 it is LoadState.Loading ||
                                 it is LoadState.Error
                             }
-//                            .also { footerStateName = "mediator.append" }
                         ?: loadState.source.append
-//                            .also { footerStateName = "source.append" }
-//                    Log.d("HEADER & FOOTER",
-//                        "INCOMING STATE =\n${loadState.allStatesToString()}\n" +
-//                                "HEADER STATE =\n$headerStateName = ${loadStateHeader.loadState}\n" +
-//                                "FOOTER STATE =\n$footerStateName = ${loadStateFooter.loadState}")
                     val errorState = loadState.refresh as? LoadState.Error
                         ?: loadState.prepend as? LoadState.Error
                         ?: loadState.append as? LoadState.Error

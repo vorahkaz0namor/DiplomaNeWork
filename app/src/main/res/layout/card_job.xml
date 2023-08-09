@@ -71,7 +71,7 @@
         app:icon="@drawable/ic_dot_16"
         app:layout_constraintStart_toEndOf="@id/work_finish"
         app:layout_constraintTop_toBottomOf="@id/company_name"
-        tools:text="@string/work_months_count" />
+        tools:text="@string/sample_work_months_count" />
 
     <TextView
         android:id="@+id/link"

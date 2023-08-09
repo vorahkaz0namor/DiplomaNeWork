@@ -141,6 +141,11 @@
         <item name="android:paddingBottom">@dimen/card_padding</item>
     </style>
 
+    <style name="Widget.AppTheme.RequiredToFill" parent="Widget.AppTheme.NeWorkOutlinedTextInput">
+        <item name="endIconMode">custom</item>
+        <item name="endIconDrawable">@drawable/ic_required_to_fill_12</item>
+    </style>
+
     <style name="Widget.AppTheme.SectionEditText" parent="ThemeOverlay.Material3.TextInputEditText">
         <item name="android:textSize">@dimen/section_size</item>
         <item name="android:padding">@dimen/scrollbar_width</item>

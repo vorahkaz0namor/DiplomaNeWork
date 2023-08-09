@@ -25,7 +25,7 @@ class PostViewHolder(
     fun bind(payload: Payload, post: Post?) {
         fillingCardPost(payload)
         if (post != null)
-            setupListenersGivenPayload(post)
+            setupOnLikeListener(post)
     }
 
     private fun fillingCardPost(post: Post) {
@@ -65,21 +65,15 @@ class PostViewHolder(
                 mediaType.isVisible = false
             }
             likes.apply {
-                isVisible = post.isOnServer
                 isChecked = post.likedByMe
                 text = itemsCount(post.likeOwnerIds.size)
             }
-            repeatSavePost.isVisible = !post.isOnServer
             link.text = post.link ?: ""
         }
     }
 
     private fun fillingCardPost(payload: Payload) {
         payload.apply {
-            isOnServer?.let {
-                binding.likes.isVisible = it
-                binding.repeatSavePost.isVisible = !it
-            }
             likedByMe?.let {
                 binding.likes.isChecked = it
             }
@@ -90,15 +84,10 @@ class PostViewHolder(
     }
 
     private fun setupListeners(post: Post) {
+        setupOnLikeListener(post)
         binding.apply {
-            setCustomOnClickListener(likes) {
-                onPostInteractionListener.onLike(post)
-            }
             setCustomOnClickListener(postAttachment, mediaType) {
                 onPostInteractionListener.onShowAttachment(post)
-            }
-            setCustomOnClickListener(repeatSavePost) {
-                onPostInteractionListener.onRepeatSave(post)
             }
             menu.setOnClickListener { view ->
                 view.setFeedItemMenu(
@@ -109,7 +98,7 @@ class PostViewHolder(
         }
     }
 
-    private fun setupListenersGivenPayload(post: Post) {
+    private fun setupOnLikeListener(post: Post) {
         binding.apply {
             setCustomOnClickListener(likes) {
                 onPostInteractionListener.onLike(post)

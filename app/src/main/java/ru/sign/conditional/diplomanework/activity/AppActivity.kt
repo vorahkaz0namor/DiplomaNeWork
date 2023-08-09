@@ -2,7 +2,6 @@ package ru.sign.conditional.diplomanework.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.core.view.ActionProvider
 import android.view.LayoutInflater
 import android.view.Menu
@@ -20,7 +19,11 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import ru.sign.conditional.diplomanework.R
+import ru.sign.conditional.diplomanework.util.AndroidUtils.defaultDispatcher
 import ru.sign.conditional.diplomanework.util.AndroidUtils.validationToCreateMenu
 import ru.sign.conditional.diplomanework.viewmodel.AuthViewModel
 
@@ -47,24 +50,30 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
         appNavController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration = AppBarConfiguration(appNavController.graph)
         setupActionBarWithNavController(appNavController, appBarConfiguration)
-        postsActionProvider =
-            createActionProvider(
-                layoutId = R.layout.posts_action_provider,
-                viewId = R.id.show_posts,
-                destId = R.id.feedPostFragment
-            ) { appNavController.navigate(R.id.feedPostFragment) }
-        eventsActionProvider =
-            createActionProvider(
-                layoutId = R.layout.events_action_provider,
-                viewId = R.id.show_events,
-                destId = R.id.feedEventFragment
-            ) { appNavController.navigate(R.id.feedEventFragment) }
-        jobsActionProvider =
-            createActionProvider(
-                layoutId = R.layout.jobs_action_provider,
-                viewId = R.id.show_jobs,
-                destId = R.id.feedJobFragment
-            ) { appNavController.navigate(R.id.feedJobFragment) }
+        CoroutineScope(defaultDispatcher).launch {
+            postsActionProvider =
+                createActionProvider(
+                    layoutId = R.layout.posts_action_provider,
+                    viewId = R.id.show_posts,
+                    destId = R.id.feedPostFragment
+                ) { appNavController.navigate(R.id.feedPostFragment) }
+        }
+        CoroutineScope(defaultDispatcher).launch {
+            eventsActionProvider =
+                createActionProvider(
+                    layoutId = R.layout.events_action_provider,
+                    viewId = R.id.show_events,
+                    destId = R.id.feedEventFragment
+                ) { appNavController.navigate(R.id.feedEventFragment) }
+        }
+        CoroutineScope(defaultDispatcher).launch {
+            jobsActionProvider =
+                createActionProvider(
+                    layoutId = R.layout.jobs_action_provider,
+                    viewId = R.id.show_jobs,
+                    destId = R.id.feedJobFragment
+                ) { appNavController.navigate(R.id.feedJobFragment) }
+        }
     }
 
     private fun setAppMenu() {

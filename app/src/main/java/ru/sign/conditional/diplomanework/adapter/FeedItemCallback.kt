@@ -23,8 +23,7 @@ class FeedItemCallback : DiffUtil.ItemCallback<FeedItem>() {
                 Payload(
                     id = newItem.id,
                     likeOwnerIds = newItem.likeOwnerIds.takeIf { it != oldItem.likeOwnerIds },
-                    likedByMe = newItem.likedByMe.takeIf { it != oldItem.likedByMe },
-                    isOnServer = newItem.isOnServer.takeIf { it != oldItem.isOnServer }
+                    likedByMe = newItem.likedByMe.takeIf { it != oldItem.likedByMe }
                 )
             }
             else -> {

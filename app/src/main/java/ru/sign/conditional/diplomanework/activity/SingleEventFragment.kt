@@ -1,7 +1,6 @@
 package ru.sign.conditional.diplomanework.activity
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.addCallback
 import androidx.core.view.isVisible
@@ -29,6 +28,7 @@ class SingleEventFragment : Fragment(R.layout.fragment_single_event) {
     private val eventViewModel: EventViewModel by activityViewModels()
     private val attachmentViewModel: AttachmentViewModel by activityViewModels()
     private val authViewModel: AuthViewModel by activityViewModels()
+    /** Lambda for single event binding */
     private lateinit var bindEvent: (Event?, Event) -> Unit
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,6 +75,7 @@ class SingleEventFragment : Fragment(R.layout.fragment_single_event) {
 
     private fun subscribe() {
         eventViewModel.apply {
+            /** Single event UI representation */
             viewScopeWithRepeat {
                 var oldItem: Event? = null
                 singleEvent.collectLatest { event ->
@@ -84,6 +85,7 @@ class SingleEventFragment : Fragment(R.layout.fragment_single_event) {
                     } ?: findNavController().navigateUp()
                 }
             }
+            /** Handling result of actions with event */
             eventOccurrence.observe(viewLifecycleOwner) { code ->
                 if (code != HTTP_OK) {
                     binding.apply {
@@ -102,6 +104,7 @@ class SingleEventFragment : Fragment(R.layout.fragment_single_event) {
                         .show()
                 }
             }
+            /** Go to edit event */
             edited.observe(viewLifecycleOwner) { event ->
                 if (event.id != 0)
                     findNavController().navigate(
@@ -109,6 +112,7 @@ class SingleEventFragment : Fragment(R.layout.fragment_single_event) {
                     )
             }
         }
+        /** View event attachment */
         attachmentViewModel.viewAttachment.observe(viewLifecycleOwner) { item ->
             if (item.id != 0)
                 findNavController().navigate(

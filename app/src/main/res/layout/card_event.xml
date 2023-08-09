@@ -180,8 +180,6 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/card_event_frame"
-        android:contentDescription="@string/event_card"
         style="@style/Widget.AppTheme.NeWorkCardFrame"
         android:layout_width="match_parent"
         android:layout_height="@dimen/zero_dp"

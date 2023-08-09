@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.PopupMenu
 import androidx.annotation.DrawableRes
-import androidx.paging.CombinedLoadStates
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -22,9 +21,12 @@ import java.net.ConnectException
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 import kotlin.math.ceil
 
 object NeWorkHelper {
+    /** Russian language code in ISO 639-1 standard */
+    private val russianLanguageCode = Locale("ru").language
     /** `520 Unknown Error` (non-standard HTTP code CloudFlare) */
     const val HTTP_UNKNOWN_ERROR = 520
     /** `444 Connection Failed` (thought up code) */
@@ -63,6 +65,14 @@ object NeWorkHelper {
     }
     private var roundingRadius = 0
 
+    private fun manyEndsWith(string: String, vararg ends: String): Boolean {
+        ends.map {
+            if (string.endsWith(it))
+                return true
+        }
+        return false
+    }
+
     fun setRoundingRadius(pixels: Float) {
         roundingRadius = ceil(pixels).toInt()
     }
@@ -80,14 +90,14 @@ object NeWorkHelper {
 
     fun publishedCustomRepresentation(
         time: CharSequence,
-        pattern: String = "dd MMMM yyyy, HH:mm:ss"
+        pattern: String = "dd MMMM yyyy, HH:mm"
     ): String = parseDateTimeThroughInstant(time)
         .format(DateTimeFormatter.ofPattern(pattern))
 
     fun datetimeCustomRepresentation(time: CharSequence): String =
         publishedCustomRepresentation(
             time = time,
-            pattern = "E, MMM dd, yyyy, HH:mm"
+            pattern = "E, dd MMMM, yyyy, HH:mm"
         )
 
     fun jobDatetimeCustomRepresentation(time: CharSequence): String =
@@ -148,8 +158,36 @@ object NeWorkHelper {
             .into(this)
     }
 
-    fun itemsCount(count: Int): String {
-        return when {
+    fun View.attendeesEndings(count: Int): String {
+        var result =
+            context.getString(
+                R.string.participants_count,
+                count.toString()
+            )
+        if (Locale.getDefault().language == russianLanguageCode) {
+            val string = count.toString()
+            result = result.plus(
+                when {
+                    manyEndsWith(
+                        string = string,
+                        ends = arrayOf("2", "3", "4")
+                    ) && !manyEndsWith(
+                        string = string,
+                        ends = arrayOf("12", "13", "14")
+                    ) -> "а"
+                    manyEndsWith(
+                        string = string,
+                        ends = arrayOf("0", "11")
+                    ) || !string.endsWith("1") -> "ов"
+                    else -> ""
+                }
+            )
+        }
+        return result
+    }
+
+    fun itemsCount(count: Int): String =
+        when {
             count < 0 -> "0"
             count < 1_000 -> count.toString()
             else -> {
@@ -177,9 +215,8 @@ object NeWorkHelper {
                 )}${digitsMap.getValue(divisor)}"
             }
         }
-    }
 
-    fun jobDurationCount(start: String, finish: String?): String =
+    fun View.jobDurationCount(start: String, finish: String?): String =
         (finish?.let {
             parseDateTimeThroughInstant(it)
         } ?: Instant.now().atOffset(OffsetDateTime.now().offset))
@@ -194,9 +231,19 @@ object NeWorkHelper {
                     ys -= 1
                 buildString {
                     if (ys > 0)
-                        append(" %s ys".format(ys.toString()))
+                        append(
+                            context.getString(
+                                R.string.work_years_count,
+                                ys.toString()
+                            )
+                        )
                     if (mos > 0)
-                        append(" %s mos".format(mos.toString()))
+                        append(
+                            context.getString(
+                                R.string.work_months_count,
+                                mos.toString()
+                            )
+                        )
                 }
             }
 
@@ -207,19 +254,4 @@ object NeWorkHelper {
         Log.d(action, "CAUGHT EXCEPTION => $e\n" +
                 "DESCRIPTION => ${overview(exceptionCheck(e))}")
     }
-
-    fun loggingFeedItem(logType: String, item: FeedItem?) {
-        Log.d("[$logType]FEEDITEM ${item?.id}",
-            "participatedByMe = ${(item as? Event)?.participatedByMe.toString().uppercase()}\n" +
-                    "participants = ${(item as? Event)?.participantsIds?.size}")
-    }
-
-    fun diffLoggingItem(logType: String, item: FeedItem?) {
-        Log.d("[$logType]EVENT ${item?.id}", item.toString())
-    }
-
-    fun CombinedLoadStates.allStatesToString(): String =
-        "CombinedLoadStates:\nrefresh = $refresh,\nprepend = $prepend,\nappend = $append;\n" +
-                "source.refresh = ${source.refresh},\nsource.prepend = ${source.prepend},\nsource.append = ${source.append};\n" +
-                "mediator.refresh = ${mediator?.refresh},\nmediator.prepend = ${mediator?.prepend},\nmediator.append = ${mediator?.append}."
 }

@@ -1,7 +1,6 @@
 package ru.sign.conditional.diplomanework.activity
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.core.view.isVisible
@@ -9,7 +8,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -27,7 +25,8 @@ import ru.sign.conditional.diplomanework.model.UiAction
 import ru.sign.conditional.diplomanework.model.asRemotePresentationState
 import ru.sign.conditional.diplomanework.util.AndroidUtils.viewScope
 import ru.sign.conditional.diplomanework.util.AndroidUtils.viewScopeWithRepeat
-import ru.sign.conditional.diplomanework.util.NeWorkHelper
+import ru.sign.conditional.diplomanework.util.NeWorkHelper.HTTP_UNKNOWN_ERROR
+import ru.sign.conditional.diplomanework.util.NeWorkHelper.overview
 import ru.sign.conditional.diplomanework.util.viewBinding
 import ru.sign.conditional.diplomanework.viewmodel.AttachmentViewModel
 import ru.sign.conditional.diplomanework.viewmodel.AuthViewModel
@@ -81,14 +80,14 @@ class FeedEventFragment : Fragment(R.layout.fragment_feed_event) {
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun subscribe() {
         eventViewModel.apply {
-            // Отображение списка событий
+            // Отображение списка мероприятий
             viewScopeWithRepeat {
                 dataFlow.collectLatest {
                     snackbarDismiss()
                     eventAdapter.submitData(it)
                 }
             }
-            // Прокрутка обновленного списка событий
+            // Прокрутка обновленного списка мероприятий
             viewScopeWithRepeat {
                 val presented = eventAdapter.loadStateFlow
                     .asRemotePresentationState()
@@ -128,7 +127,7 @@ class FeedEventFragment : Fragment(R.layout.fragment_feed_event) {
                     }
                 }
             }
-            // Состояние загрузки событий
+            // Состояние загрузки мероприятий
             viewScope.launch {
                 eventAdapter.loadStateFlow.collectLatest { loadState ->
                     snackbarDismiss()
@@ -167,7 +166,7 @@ class FeedEventFragment : Fragment(R.layout.fragment_feed_event) {
                     errorState?.let {
                         snackbar = Snackbar.make(
                             binding.root,
-                            it.error.message ?: NeWorkHelper.overview(NeWorkHelper.HTTP_UNKNOWN_ERROR),
+                            it.error.message ?: overview(HTTP_UNKNOWN_ERROR),
                             Snackbar.LENGTH_INDEFINITE
                         )
                             .setTextMaxLines(3)
@@ -180,14 +179,14 @@ class FeedEventFragment : Fragment(R.layout.fragment_feed_event) {
                     }
                 }
             }
-            // Редактирование события
+            // Редактирование мероприятия
             edited.observe(viewLifecycleOwner) { event ->
                 if (event.id != 0)
                     navController.navigate(
                         R.id.action_global_editEventFragment
                     )
             }
-            // Переход на карточку события
+            // Переход на карточку мероприятия
             eventIdToView.observe(viewLifecycleOwner) { id ->
                 if (id != 0)
                     navController.navigate(
@@ -195,7 +194,7 @@ class FeedEventFragment : Fragment(R.layout.fragment_feed_event) {
                     )
             }
         }
-        // Просмотр вложения события
+        // Просмотр вложения мероприятия
         attachmentViewModel.viewAttachment.observe(viewLifecycleOwner) { item ->
             if (item.id != 0)
                 navController.navigate(
@@ -237,7 +236,7 @@ class FeedEventFragment : Fragment(R.layout.fragment_feed_event) {
 
     private fun setupListeners() {
         binding.recyclerView.apply {
-            // Создание нового события
+            // Создание нового мероприятия
             createNewEvent.setOnClickListener {
                 if (!authViewModel.authorized)
                     AuthDialogFragment().show(
@@ -251,7 +250,7 @@ class FeedEventFragment : Fragment(R.layout.fragment_feed_event) {
                     )
                 }
             }
-            // Обновление списка событий после свайпа по нему
+            // Обновление списка мероприятий после свайпа по нему
             viewScope.launch {
                 eventsRefresh.setOnRefreshListener {
                     eventAdapter.refresh()

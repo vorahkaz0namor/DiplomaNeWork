@@ -22,7 +22,4 @@ interface EventRemoteKeyDao {
 
     @Insert(onConflict = REPLACE)
     suspend fun saveRemoteKeys(eventRemoteKeyEntities: List<EventRemoteKeyEntity>)
-
-    @Query("DELETE FROM EventRemoteKeyEntity")
-    suspend fun clearRemoteKey()
 }

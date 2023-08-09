@@ -19,10 +19,6 @@ class OnPostInteractionListenerImpl(
         postViewModel.setEditPost(post)
     }
 
-    override fun onRepeatSave(post: Post) {
-        postViewModel.repeatSavePost(post)
-    }
-
     override fun onRemove(post: Post) {
         postViewModel.removePostById(post)
     }

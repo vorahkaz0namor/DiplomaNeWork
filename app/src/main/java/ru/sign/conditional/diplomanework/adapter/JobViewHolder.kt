@@ -26,7 +26,7 @@ class JobViewHolder(
             job.finish?.let {
                 workFinish.text = jobDatetimeCustomRepresentation(it)
             } ?: workFinish.setText(R.string.work_until_present)
-            workDuration.text = jobDurationCount(
+            workDuration.text = workDuration.jobDurationCount(
                 start = job.start,
                 finish = job.finish
             )

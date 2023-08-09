@@ -6,6 +6,5 @@ data class Payload(
     val likedByMe: Boolean? = null,
     val participantsIds: List<Int>? = null,
     val participatedByMe: Boolean? = null,
-    override val attachment: Attachment? = null,
-    val isOnServer: Boolean? = null
+    override val attachment: Attachment? = null
 ): FeedItem

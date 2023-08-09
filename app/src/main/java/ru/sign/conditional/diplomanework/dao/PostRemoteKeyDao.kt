@@ -20,7 +20,4 @@ interface PostRemoteKeyDao {
 
     @Insert(onConflict = REPLACE)
     suspend fun saveRemoteKeys(postRemoteKeyEntities: List<PostRemoteKeyEntity>)
-
-    @Query("DELETE FROM PostRemoteKeyEntity")
-    suspend fun clearRemoteKey()
 }

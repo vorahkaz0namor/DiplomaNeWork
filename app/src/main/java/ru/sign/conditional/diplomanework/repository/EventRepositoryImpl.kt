@@ -1,6 +1,5 @@
 package ru.sign.conditional.diplomanework.repository
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingData
 import androidx.paging.map

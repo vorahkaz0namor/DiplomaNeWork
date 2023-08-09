@@ -12,6 +12,7 @@ import ru.sign.conditional.diplomanework.dto.AttachmentType
 import ru.sign.conditional.diplomanework.dto.Event
 import ru.sign.conditional.diplomanework.dto.EventType
 import ru.sign.conditional.diplomanework.dto.Payload
+import ru.sign.conditional.diplomanework.util.NeWorkHelper.attendeesEndings
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.datetimeCustomRepresentation
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.getEventNameFromContent
 import ru.sign.conditional.diplomanework.util.NeWorkHelper.itemsCount
@@ -82,10 +83,7 @@ class EventViewHolder(
             }
             author.text = event.author
             participants.apply {
-                text = context.getString(
-                    R.string.participants_count,
-                    itemsCount(event.participantsIds.size)
-                )
+                text = attendeesEndings(event.participantsIds.size)
             }
             attendIn.isChecked = event.participatedByMe
             menu.isVisible = event.ownedByMe
@@ -104,10 +102,7 @@ class EventViewHolder(
             }
             participantsIds?.let {
                 binding.participants.apply {
-                    text = context.getString(
-                        R.string.participants_count,
-                        itemsCount(it.size)
-                    )
+                    text = attendeesEndings(it.size)
                 }
             }
         }
@@ -120,7 +115,7 @@ class EventViewHolder(
             eventContent.isVisible = true
             eventContent.text = event.content
             viewEvent.isVisible = event.ownedByMe
-            viewEvent.setText(R.string.event_menu_title)
+            viewEvent.setText(R.string.event_menu)
         }
     }
 

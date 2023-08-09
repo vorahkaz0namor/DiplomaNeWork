@@ -37,6 +37,7 @@ object AndroidUtils {
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+    /** Adjusts resize of the fragment when it overlaps by the other objects */
     fun Activity.layoutSizeAdjust(rootView: View) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
             window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
@@ -56,6 +57,7 @@ object AndroidUtils {
         }
     }
 
+    /** Creates launcher to load the image */
     fun Fragment.createImageLauncher(
         view: View, action: ImageListener
     ): ActivityResultLauncher<Intent> =

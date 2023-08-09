@@ -6,7 +6,4 @@ import java.io.File
 data class MediaModel(
     val uri: Uri,
     val file: File
-) {
-    override fun toString(): String =
-        "Media model:\nUri = $uri\nFilename = ${file.name}"
-}
+)

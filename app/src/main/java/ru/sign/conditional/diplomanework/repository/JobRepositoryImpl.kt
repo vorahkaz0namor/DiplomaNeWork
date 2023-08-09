@@ -1,6 +1,5 @@
 package ru.sign.conditional.diplomanework.repository
 
-import android.util.Log
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import retrofit2.HttpException

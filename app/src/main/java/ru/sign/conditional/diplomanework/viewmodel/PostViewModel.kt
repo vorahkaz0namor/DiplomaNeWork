@@ -1,7 +1,6 @@
 package ru.sign.conditional.diplomanework.viewmodel
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -91,7 +90,6 @@ class PostViewModel @Inject constructor(
         cachedPagingDataFromRepo = postRepository.data
             .mapLatest {
                 val maxId = postRepository.getLatestPostId()
-//                Log.d("GOT MAX POST ID", maxId.toString())
                 stateChanger(UiAction.Get(id = maxId))
                 it
             }
@@ -106,7 +104,6 @@ class PostViewModel @Inject constructor(
                     id = get.id,
                     lastIdScrolled = scroll.currentId
                 )
-//                Log.d("UPDATE COMMON STATE", uiState.toString())
                 uiState
             }
             .stateIn(
@@ -115,13 +112,11 @@ class PostViewModel @Inject constructor(
                     .WhileSubscribed(stopTimeoutMillis = 7_000),
                 initialValue = UiState()
             )
-//        Log.d("INIT VIEW MODEL", "appealTo = $appealTo")
     }
 
     // READ functions
 
-    fun appealTo() = (++_appealTo)
-//        .also { Log.d("FEED START", "$it times") }
+    fun appealTo() = ++_appealTo
 
     fun getDraftCopy() {
         viewModelScope.launch {
@@ -171,18 +166,6 @@ class PostViewModel @Inject constructor(
                         )
                         postRepository.savePost(post, media.value)
                     }
-                    HTTP_OK
-                } catch (e: Exception) {
-                    exceptionCheck(e)
-                }
-        }
-    }
-
-    fun repeatSavePost(post: Post) {
-        viewModelScope.launch {
-            _postEvent.value =
-                try {
-                    postRepository.savePost(post, media.value)
                     HTTP_OK
                 } catch (e: Exception) {
                     exceptionCheck(e)

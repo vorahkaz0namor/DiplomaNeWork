@@ -36,6 +36,8 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/start_year"
                 style="@style/Widget.AppTheme.NeWorkDatetimeInput"
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/ic_required_to_fill_12"
                 android:hint="@string/year_label">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -52,6 +54,8 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/start_month"
                 style="@style/Widget.AppTheme.NeWorkDatetimeInput"
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/ic_required_to_fill_12"
                 android:hint="@string/month_label">
 
                 <com.google.android.material.textfield.TextInputEditText

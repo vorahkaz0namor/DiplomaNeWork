@@ -3,7 +3,6 @@ package ru.sign.conditional.diplomanework.repository
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import androidx.paging.PagingSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,7 +14,6 @@ import ru.sign.conditional.diplomanework.dao.*
 import ru.sign.conditional.diplomanework.db.AppDb
 import ru.sign.conditional.diplomanework.entity.EventEntity
 import ru.sign.conditional.diplomanework.entity.PostEntity
-import ru.sign.conditional.diplomanework.util.AndroidUtils.defaultDispatcher
 import javax.inject.Singleton
 
 @OptIn(ExperimentalPagingApi::class)

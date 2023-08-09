@@ -29,6 +29,7 @@ import ru.sign.conditional.diplomanework.viewmodel.AuthViewModel
 class LoginFragment : DialogFragment(R.layout.fragment_login) {
     private val binding by viewBinding(FragmentLoginBinding::bind)
     private val authViewModel: AuthViewModel by activityViewModels()
+    /** Variable for avatar attach */
     private lateinit var avatarLauncher: ActivityResultLauncher<Intent>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,11 +49,12 @@ class LoginFragment : DialogFragment(R.layout.fragment_login) {
 
     private fun subscribe() {
         binding.apply {
-            setInvisibleErrorWrongLoginPassword(loginField.editText, passwordField.editText)
+            setErrorVisibilityWrongLoginPassword(loginField.editText, passwordField.editText)
             if (authViewModel.authState.value?.regShowing == true)
-                setVisibilityErrorPasswordsDontMatch(passwordField.editText, confirmPasswordField.editText)
+                setErrorVisibilityPasswordsDontMatch(passwordField.editText, confirmPasswordField.editText)
         }
         authViewModel.apply {
+            /** Authentication state handling */
             authState.observe(viewLifecycleOwner) { state ->
                 binding.apply {
                     progressBarView.progressBar.isVisible = state.loading
@@ -61,15 +63,17 @@ class LoginFragment : DialogFragment(R.layout.fragment_login) {
                     commonViewGroup.isVisible = state.authShowing || state.regShowing
                 }
             }
+            /** Avatar representation */
             media.observe(viewLifecycleOwner) { avatar ->
                 binding.apply {
                     addAvatarImage.isVisible =
-                        avatar == null &&
-                        authState.value?.regShowing == true
+                        (avatar == null &&
+                         authState.value?.regShowing == true)
                     avatarPreviewGroup.isVisible = avatar != null
                     avatarPreview.setImageURI(avatar?.uri)
                 }
             }
+            /** Handling authentication result */
             authEvent.observe(viewLifecycleOwner) { code ->
                 if (code == HTTP_OK) {
                     if (authState.value?.regShowing == true)
@@ -102,6 +106,7 @@ class LoginFragment : DialogFragment(R.layout.fragment_login) {
 
     private fun setupListeners() {
         binding.apply {
+            /** Add avatar */
             addAvatarImage.setOnClickListener {
                 ImagePicker.with(this@LoginFragment)
                     .galleryOnly()
@@ -110,7 +115,9 @@ class LoginFragment : DialogFragment(R.layout.fragment_login) {
                         avatarLauncher.launch(intent)
                     }
             }
+            /** Remove avatar */
             clearAvatar.setOnClickListener { authViewModel.clearAvatar() }
+            /** Log in */
             loginButton.setOnClickListener {
                 AndroidUtils.hideKeyboard(root)
                 if (textValidation()) {
@@ -121,6 +128,7 @@ class LoginFragment : DialogFragment(R.layout.fragment_login) {
                 } else
                     errorSnackbar()
             }
+            /** Register */
             regButton.setOnClickListener {
                 AndroidUtils.hideKeyboard(root)
                 avatarPreviewGroup.isVisible = false
@@ -131,10 +139,10 @@ class LoginFragment : DialogFragment(R.layout.fragment_login) {
                         login = loginField.editText?.text.toString(),
                         password = passwordField.editText?.text.toString(),
                         name =
-                        if (!nameField.editText?.text.isNullOrBlank())
-                            nameField.editText?.text.toString()
-                        else
-                            "User"
+                            if (!nameField.editText?.text.isNullOrBlank())
+                                nameField.editText?.text.toString()
+                            else
+                                getString(R.string.default_name)
                     )
                 } else
                     errorSnackbar()
@@ -143,22 +151,25 @@ class LoginFragment : DialogFragment(R.layout.fragment_login) {
         }
     }
 
+    /** Main fields validation */
     private fun textValidation() = (
         !binding.loginField.editText?.text.isNullOrBlank() &&
         !binding.passwordField.editText?.text.isNullOrBlank()
     )
 
+    /** Shows error message */
     private fun errorSnackbar() {
         Snackbar.make(
             binding.root,
-            R.string.empty_fields,
+            R.string.all_empty_fields,
             Snackbar.LENGTH_LONG
         )
             .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
             .show()
     }
 
-    private fun setInvisibleErrorWrongLoginPassword(vararg text: EditText?) {
+    /** Sets error visibility depending of wrong login or password */
+    private fun setErrorVisibilityWrongLoginPassword(vararg text: EditText?) {
         text.map {
             it?.addTextChangedListener {
                 binding.wrongLoginPassword.isVisible = false
@@ -166,7 +177,8 @@ class LoginFragment : DialogFragment(R.layout.fragment_login) {
         }
     }
 
-    private fun setVisibilityErrorPasswordsDontMatch(vararg text: EditText?) {
+    /** Sets error visibility depending of match password and its confirm */
+    private fun setErrorVisibilityPasswordsDontMatch(vararg text: EditText?) {
         text.map {
             it?.addTextChangedListener { field ->
                 binding.passwordsDontMatch.isVisible =
