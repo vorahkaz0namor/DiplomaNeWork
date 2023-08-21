@@ -19,7 +19,7 @@ class AuthDialogFragment : DialogFragment() {
                     it.setTitle(getString(R.string.sure_to_logout))
                     it.setPositiveButton(getString(R.string.logout_item)) { _, _ ->
                         authViewModel.logout()
-                        findNavController().navigate(R.id.feedFragment)
+                        findNavController().navigate(R.id.feedPostFragment)
                     }
                 } else {
                     it.setTitle(getString(R.string.must_to_login))

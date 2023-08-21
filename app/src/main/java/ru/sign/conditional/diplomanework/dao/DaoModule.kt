@@ -18,9 +18,27 @@ class DaoModule {
 
     @Singleton
     @Provides
+    fun provideEventDao(
+        appDb: AppDb
+    ) : EventDao = appDb.eventDao()
+
+    @Singleton
+    @Provides
+    fun provideJobDao(
+        appDb: AppDb
+    ) : JobDao = appDb.jobDao()
+
+    @Singleton
+    @Provides
     fun providePostRemoteKeyDao(
         appDb: AppDb
     ) : PostRemoteKeyDao = appDb.postRemoteKeyDao()
+
+    @Singleton
+    @Provides
+    fun provideEventRemoteKeyDao(
+        appDb: AppDb
+    ) : EventRemoteKeyDao = appDb.eventRemoteKeyDao()
 
     @Singleton
     @Provides

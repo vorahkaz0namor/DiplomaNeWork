@@ -12,9 +12,7 @@ class FeedItemLoadingStateAdapter(
     override fun onBindViewHolder(
         holder: FeedItemLoadingStateViewHolder,
         loadState: LoadState
-    ) {
-        holder.bind(loadState)
-    }
+    ) { holder.bind(loadState) }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,

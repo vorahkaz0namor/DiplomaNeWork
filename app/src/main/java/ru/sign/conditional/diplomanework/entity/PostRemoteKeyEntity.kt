@@ -6,11 +6,6 @@ import androidx.room.PrimaryKey
 @Entity
 data class PostRemoteKeyEntity(
     @PrimaryKey
-    val type: KeyType,
+    val type: RemoteKeyType,
     val key: Int
-) {
-    enum class KeyType {
-        AFTER,
-        BEFORE
-    }
-}
+)

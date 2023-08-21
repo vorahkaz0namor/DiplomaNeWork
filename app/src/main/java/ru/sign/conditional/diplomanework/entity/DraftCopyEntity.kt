@@ -8,18 +8,24 @@ import ru.sign.conditional.diplomanework.dto.DraftCopy
 data class DraftCopyEntity(
     @PrimaryKey
     val postId: Int,
-    val content: String
+    val eventId: Int,
+    val postContent: String,
+    val eventContent: String
 ) {
     fun toDto() = DraftCopy(
         postId = postId,
-        content = content
+        eventId = eventId,
+        postContent = postContent,
+        eventContent = eventContent
     )
 
     companion object {
         fun fromDto(draftCopy: DraftCopy) =
             DraftCopyEntity(
                 postId = draftCopy.postId,
-                content = draftCopy.content ?: ""
+                eventId = draftCopy.eventId,
+                postContent = draftCopy.postContent ?: "",
+                eventContent = draftCopy.eventContent ?: ""
             )
     }
 }

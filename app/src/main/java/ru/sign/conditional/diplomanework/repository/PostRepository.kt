@@ -10,7 +10,6 @@ import ru.sign.conditional.diplomanework.model.MediaModel
 interface PostRepository {
     val data: Flow<PagingData<FeedItem>>
     suspend fun getLatestPostId(): Int
-    suspend fun getPostById(id: Int): Flow<Post?>
     suspend fun savePost(post: Post, media: MediaModel?)
     suspend fun likePostById(post: Post, ownerId: Int)
     suspend fun removePostById(post: Post)

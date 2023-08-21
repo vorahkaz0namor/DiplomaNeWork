@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.SingleEventFragment">
+
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/single_event"
+            layout="@layout/card_event"/>
+
+    </ScrollView>
+
+    <include
+        android:id="@+id/progress_bar_view"
+        layout="@layout/progress_bar_view"/>
+
+</FrameLayout>

@@ -13,7 +13,7 @@ data class Post(
     val likeOwnerIds: List<Int> = emptyList(),
     val mentionIds: List<Int> = emptyList(),
     val likedByMe: Boolean = false,
-    val attachment: Attachment? = null,
+    override val attachment: Attachment? = null,
     val ownedByMe: Boolean = false,
     val users: Map<String, UserPreview> = emptyMap()
 ) : FeedItem

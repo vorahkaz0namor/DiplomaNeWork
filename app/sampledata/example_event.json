@@ -1,1 +1,53 @@
-{"id": 12, "authorId": 1, "author": "\u041d\u0438\u043a\u0438\u0442\u0430", "authorAvatar": null, "authorJob": null, "content": "First party!", "datetime": "2022-07-12T20:13:56.012000Z", "published": "2022-07-13T16:14:18.032272Z", "coords": {"lat": "0.000000", "long": "0.000000"}, "type": "ONLINE", "likeOwnerIds": [145, 3, 7], "likedByMe": false, "speakerIds": [], "participantsIds": [65, 3, 7], "participatedByMe": false, "attachment": {"url": "https://ik.imagekit.io/jwudrxfj5ek/2e22bf7c-93b9-4288-aae2-123eac1453fb._y7NhAqTLj.jpg", "type": "IMAGE"}, "link": "ya.ru", "ownedByMe": false, "users": {"145": {"name": "Chepchik", "avatar": null}, "65": {"name": "VAsya", "avatar": null}, "7": {"name": "Stanislav", "avatar": null}, "3": {"name": "Artem", "avatar": "https://ik.imagekit.io/jwudrxfj5ek/ebc00137-a25f-4ef6-8b15-7b31587f24bb._c3xNLvlFOf.jpg"}}}
+{
+  "id": 12,
+  "authorId": 1,
+  "author": "\u041d\u0438\u043a\u0438\u0442\u0430",
+  "authorAvatar": null,
+  "authorJob": null,
+  "content": "Игровая мышь прослужила 6 лет. Начали выходить из строя кнопки. Новая мышь оказалась дороже, чем я ожидал. И т.к. я ещё не устроился на новую работу, не могу позволить себе новую. Нашел на озоне два микропереключателя, перепаял ЛКМ и кнопку колёсика мышки. Теперь ещё 6 лет можно наслаждаться тем, какая она точная и послушная )) всем добра ))",
+  "name": "Игровая мышь прослужила 6 лет",
+  "datetime": "2022-07-12T20:13:56.012000Z",
+  "published": "2022-07-13T16:14:18.032272Z",
+  "coords": {
+    "lat": "0.000000",
+    "long": "0.000000"
+  },
+  "type": "ONLINE",
+  "likeOwnerIds": [
+    145,
+    3,
+    7
+  ],
+  "likedByMe": false,
+  "speakerIds": [],
+  "participantsIds": [
+    65,
+    3,
+    7
+  ],
+  "participatedByMe": false,
+  "attachment": {
+    "url": "https://ik.imagekit.io/jwudrxfj5ek/2e22bf7c-93b9-4288-aae2-123eac1453fb._y7NhAqTLj.jpg",
+    "type": "IMAGE"
+  },
+  "link": "ya.ru",
+  "ownedByMe": false,
+  "users": {
+    "145": {
+      "name": "Chepchik",
+      "avatar": null
+    },
+    "65": {
+      "name": "VAsya",
+      "avatar": null
+    },
+    "7": {
+      "name": "Stanislav",
+      "avatar": null
+    },
+    "3": {
+      "name": "Artem",
+      "avatar": "https://ik.imagekit.io/jwudrxfj5ek/ebc00137-a25f-4ef6-8b15-7b31587f24bb._c3xNLvlFOf.jpg"
+    }
+  }
+}

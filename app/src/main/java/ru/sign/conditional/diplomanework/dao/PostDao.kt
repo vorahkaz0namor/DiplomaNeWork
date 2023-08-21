@@ -5,7 +5,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.Companion.REPLACE
 import androidx.room.Query
-import kotlinx.coroutines.flow.Flow
 import ru.sign.conditional.diplomanework.entity.PostEntity
 
 @Dao
@@ -21,16 +20,13 @@ interface PostDao {
     @Query("SELECT * FROM PostEntity WHERE idFromServer BETWEEN :lastId AND :firstId ORDER BY idFromServer DESC")
     fun getPage(lastId: Int, firstId: Int): PagingSource<Int, PostEntity>
 
-    @Query("SELECT * FROM PostEntity WHERE id = :id")
-    fun getPostById(id: Int): Flow<PostEntity?>
-
     // CREATE & UPDATE functions
 
     @Insert
     suspend fun insertPost(post: PostEntity)
 
     @Insert(onConflict = REPLACE)
-    suspend fun updatePostsByIdFromServer(post: List<PostEntity>)
+    suspend fun updatePostsByIdFromServer(posts: List<PostEntity>)
 
     suspend fun savePost(post: PostEntity) =
         if (post.id == 0) {

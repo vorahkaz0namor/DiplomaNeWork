@@ -12,6 +12,7 @@ import ru.sign.conditional.diplomanework.db.AppDb
 import ru.sign.conditional.diplomanework.dto.Post
 import ru.sign.conditional.diplomanework.entity.PostEntity
 import ru.sign.conditional.diplomanework.entity.PostRemoteKeyEntity
+import ru.sign.conditional.diplomanework.entity.RemoteKeyType
 import ru.sign.conditional.diplomanework.entity.UserPreviewEntity
 
 @OptIn(ExperimentalPagingApi::class)
@@ -60,11 +61,11 @@ class PostRemoteMediator(
                                 postRemoteKeyDao.saveRemoteKeys(
                                     listOf(
                                         PostRemoteKeyEntity(
-                                            PostRemoteKeyEntity.KeyType.AFTER,
+                                            RemoteKeyType.AFTER,
                                             firstId
                                         ),
                                         PostRemoteKeyEntity(
-                                            PostRemoteKeyEntity.KeyType.BEFORE,
+                                            RemoteKeyType.BEFORE,
                                             lastId
                                         )
                                     )
@@ -74,7 +75,7 @@ class PostRemoteMediator(
                                 postRemoteKeyDao.saveRemoteKeys(
                                     listOf(
                                         PostRemoteKeyEntity(
-                                            PostRemoteKeyEntity.KeyType.AFTER,
+                                            RemoteKeyType.AFTER,
                                             firstId
                                         )
                                     )
@@ -84,7 +85,7 @@ class PostRemoteMediator(
                                 postRemoteKeyDao.saveRemoteKeys(
                                     listOf(
                                         PostRemoteKeyEntity(
-                                            PostRemoteKeyEntity.KeyType.BEFORE,
+                                            RemoteKeyType.BEFORE,
                                             lastId
                                         )
                                     )
