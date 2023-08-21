@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.EditPostFragment">
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/edit_post_group"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:constraint_referenced_ids=
+            "post_bar, post_container"/>
+
+    <ScrollView
+        android:id="@+id/post_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/zero_dp"
+        app:layout_constraintBottom_toTopOf="@id/link_preview"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/post_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/custom_transparent"
+                android:hint="@string/new_post"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                android:padding="@dimen/main_indent" />
+
+            <FrameLayout
+                android:id="@+id/preview_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@id/post_bar">
+
+                <ImageView
+                    android:id="@+id/image_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    tools:srcCompat="@sample/attachment"
+                    android:contentDescription="@string/attachment_preview" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/delete_preview"
+                    style="@style/Widget.AppTheme.ClearPreviewButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:text="@string/delete_attachment" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/link_preview"
+        style="@style/Widget.AppTheme.NeWorkOutlinedTextInput"
+        android:hint="@string/link_the_word"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/post_bar"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textUri"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:id="@+id/post_bar"
+        android:background="@color/ripple_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageView
+            android:id="@+id/image_from_gallery"
+            style="@style/Widget.AppTheme.MenuButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_add_from_gallery_32"
+            android:contentDescription="@string/add_from_gallery" />
+
+        <ImageView
+            android:id="@+id/image_from_camera"
+            style="@style/Widget.AppTheme.MenuButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_add_from_camera_32"
+            android:contentDescription="@string/add_from_camera" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/add_link"
+            android:checkable="true"
+            style="@style/Widget.AppTheme.MenuButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/link_selector"
+            android:contentDescription="@string/link_description" />
+
+    </LinearLayout>
+
+    <include
+        android:id="@+id/progress_bar_view"
+        layout="@layout/progress_bar_view"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

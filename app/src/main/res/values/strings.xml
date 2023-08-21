@@ -1,0 +1,103 @@
+<resources>
+    <string name="app_name" translatable="false">Arcanum Astra</string>
+    <string name="login_item">Login</string>
+    <string name="register_item">Register</string>
+    <string name="logout_item">Log out</string>
+    <string name="auth_title">Authentication</string>
+    <string name="reg_title">Registration</string>
+    <string name="avatar_preview">Avatar preview</string>
+    <string name="cancel">Cancel</string>
+    <string name="name_field">Name</string>
+    <string name="password_field">Password</string>
+    <string name="confirm_password_field">Confirm password</string>
+    <string name="pass_don_t_match">Passwords don\'t match</string>
+    <string name="wrong_login_password">Wrong login or password</string>
+    <string name="log_in">Log in</string>
+    <string name="fragment_is_dead" translatable="false">Should not attempt to get binding when Fragment view is destroyed</string>
+    <string name="add_avatar">Add an avatar</string>
+    <string name="sure_to_logout">Are you sure?</string>
+    <string name="must_to_login">To perform the action, you need to log in</string>
+    <string name="wish_to_login">Do you wish to log in?</string>
+    <string name="auth_header" translatable="false">Authorization</string>
+    <string name="successful_reg_in">You are registered successfully</string>
+    <string name="author_avatar">Author avatar</string>
+    <string name="post_menu">Post menu</string>
+    <string name="post_attachment">Attachment of the post</string>
+    <string name="likes_count">Likes count</string>
+    <string name="edit_feed_item_title">Edit</string>
+    <string name="remove_feed_item_title">Remove</string>
+    <string name="posts_section">Posts</string>
+    <string name="start_a_post">Start a post</string>
+    <string name="error_message">Something\'s going wrong…</string>
+    <string name="jobs_item">Jobs</string>
+    <string name="empty_posts_message">The posts list is empty.\nWhen you create a new post, it will appear here.</string>
+    <string name="empty_events_message">The events list is empty.\nWhen you create a new event, it will appear here.</string>
+    <string name="retry_loading">Retry</string>
+    <string name="new_post">Start new post here…</string>
+    <string name="new_event">Create new event here…</string>
+    <string name="attachment_preview">Attachment preview</string>
+    <string name="delete_attachment">Delete</string>
+    <string name="add_from_gallery">Add image from gallery</string>
+    <string name="add_from_camera">Add image from camera</string>
+    <string name="error_loading">Loading image error</string>
+    <string name="new_post_was_created">New post was created successfully</string>
+    <string name="the_post_was_saved">The post was saved successfully</string>
+    <string name="error_saving_post">The post wasn\'t saved on server…\n(%1$s)\nTry it again</string>
+    <string name="new_event_was_created">New event was created successfully</string>
+    <string name="the_event_was_saved">The event was saved successfully</string>
+    <string name="error_saving_event">The event wasn\'t saved on server…\n(%1$s)\nTry it again</string>
+    <string name="job_was_added">The job was added successfully</string>
+    <string name="job_was_saved">The job was saved successfully</string>
+    <string name="error_saving_job">The job wasn\'t saved…\n(%1$s)\nTry it again</string>
+    <string name="publish_item">Publish</string>
+    <string name="empty_content">Content of the post can\'t be empty!</string>
+    <string name="link_the_word">Link</string>
+    <string name="link_description">Add/remove link</string>
+    <string name="post_attachment_full_view">Post attachment</string>
+    <string name="attachment_media_type">Attachment media type</string>
+    <string name="participants_count">%1$s attendees</string>
+    <string name="event_attachment">Event attachment</string>
+    <string name="event_type">Event type</string>
+    <string name="attendees_count">Attendees count</string>
+    <string name="participated_by_me">Take part</string>
+    <string name="view_event">View event</string>
+    <string name="events_section">Events</string>
+    <string name="create_event">Create an event</string>
+    <string name="event_menu">Event menu</string>
+    <string name="place_for_cover">Place for cover event image</string>
+    <string name="upload_cover_event">Upload event cover</string>
+    <string name="cover_event">Cover event image</string>
+    <string name="online_type" translatable="false">Online</string>
+    <string name="offline_type" translatable="false">Offline</string>
+    <string name="event_name_title">Event name</string>
+    <string name="start_date">Start date</string>
+    <string name="start_time">Start time</string>
+    <string name="date_delimiter" translatable="false">/</string>
+    <string name="time_delimiter" translatable="false">:</string>
+    <string name="year_label">Year</string>
+    <string name="month_label">Month</string>
+    <string name="day_label">Day</string>
+    <string name="hour_label">Hour</string>
+    <string name="minute_label">Minute</string>
+    <string name="description_label">Description</string>
+    <string name="empty_event_card">All fields of the event card must be filled.\nAlso event cover must be attached.</string>
+    <string name="incorrect_datetime">Enter correct event start date and time</string>
+    <string name="work_duration">Work duration in company</string>
+    <string name="sample_work_months_count">Some mos</string>
+    <string name="work_years_count"> %1$s ys</string>
+    <string name="work_months_count"> %1$s mos</string>
+    <string name="work_delimiter" translatable="false">–</string>
+    <string name="empty_jobs_message">Your jobs list is empty</string>
+    <string name="work_until_present">Present</string>
+    <string name="job_menu">Job menu</string>
+    <string name="title_for_add_job_item">Add job</string>
+    <string name="position_field">Position</string>
+    <string name="company_name_field">Company name</string>
+    <string name="job_start">Job start</string>
+    <string name="job_finish">Job finish</string>
+    <string name="empty_fields">Required fields must be filled</string>
+    <string name="all_empty_fields">All text fields must be filled</string>
+    <string name="incorrect_date">Enter correct start/finish date of job</string>
+    <string name="default_name">User</string>
+    <string name="must_be_filled">These text fields must be filled</string>
+</resources>

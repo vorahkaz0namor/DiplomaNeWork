@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_main"
+    app:startDestination="@id/feedPostFragment">
+
+    <fragment
+        android:id="@+id/feedPostFragment"
+        android:name="ru.sign.conditional.diplomanework.activity.FeedPostFragment"
+        tools:layout="@layout/fragment_feed_post">
+        <action
+            android:id="@+id/action_feedFragment_to_editPostFragment"
+            app:destination="@id/editPostFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/feedEventFragment"
+        android:name="ru.sign.conditional.diplomanework.activity.FeedEventFragment"
+        tools:layout="@layout/fragment_feed_event">
+        <action
+            android:id="@+id/action_feedEventFragment_to_singleEventFragment"
+            app:destination="@id/singleEventFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/editEventFragment"
+        android:name="ru.sign.conditional.diplomanework.activity.EditEventFragment"
+        tools:layout="@layout/fragment_edit_event"/>
+    <action
+        android:id="@+id/action_global_editEventFragment"
+        app:destination="@id/editEventFragment"/>
+
+    <fragment
+        android:id="@+id/singleEventFragment"
+        android:name="ru.sign.conditional.diplomanework.activity.SingleEventFragment"
+        tools:layout="@layout/fragment_single_event">
+    </fragment>
+
+    <fragment
+        android:id="@+id/feedJobFragment"
+        android:name="ru.sign.conditional.diplomanework.activity.FeedJobFragment"
+        tools:layout="@layout/fragment_feed_job">
+        <action
+            android:id="@+id/action_feedJobFragment_to_editJobFragment"
+            app:destination="@id/editJobFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/editJobFragment"
+        android:name="ru.sign.conditional.diplomanework.activity.EditJobFragment"
+        tools:layout="@layout/fragment_edit_job"/>
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="ru.sign.conditional.diplomanework.activity.LoginFragment"
+        tools:layout="@layout/fragment_login"/>
+
+    <fragment
+        android:id="@+id/editPostFragment"
+        android:name="ru.sign.conditional.diplomanework.activity.EditPostFragment"
+        tools:layout="@layout/fragment_edit_post"/>
+
+    <fragment
+        android:id="@+id/attachmentFragment"
+        android:name="ru.sign.conditional.diplomanework.activity.AttachmentFragment"
+        tools:layout="@layout/fragment_attachment"/>
+    <action
+        android:id="@+id/action_global_attachmentFragment"
+        app:destination="@id/attachmentFragment"/>
+
+</navigation>
