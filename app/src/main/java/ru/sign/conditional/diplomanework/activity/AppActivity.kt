@@ -20,7 +20,6 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.button.MaterialButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import ru.sign.conditional.diplomanework.R
 import ru.sign.conditional.diplomanework.util.AndroidUtils.defaultDispatcher
